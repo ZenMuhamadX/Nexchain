@@ -4,7 +4,9 @@
   "description": "blockChains experiment ",
   "main": "main.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build":"tsc",
+    "start":"tsc && node ./dist/src/BlockChains.js"
   },
   "repository": {
     "type": "git",
