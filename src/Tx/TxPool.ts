@@ -1,7 +1,9 @@
 import { transactionInterface } from './Tx'
 
 export class TxPool {
+  
   private pendingTx: transactionInterface[]
+
   constructor() {
     this.pendingTx = []
   }

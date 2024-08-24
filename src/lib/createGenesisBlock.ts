@@ -1,7 +1,12 @@
-import { block } from '../block/block'
+import { Block } from '../model/Block'
 import { generateTimestampz } from './generateTimestampz'
 
 export const createGenesisBlock = () => {
   const time = generateTimestampz()
-  return new block(0, time, [], '')
+  return new Block(
+    0,
+    time,
+    [{ sender: 'Genesis Block', receiver: 'Genesis Block', amount: 0 }],
+    ''
+  )
 }
