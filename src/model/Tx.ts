@@ -4,4 +4,5 @@ export interface TxInterface {
   amount: number
   sender: string
   recipient: string
+  message?: string
 }

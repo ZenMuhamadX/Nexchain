@@ -1,4 +1,4 @@
-import { TxInterface} from './Tx'
+import { TxInterface } from './Tx'
 import { generateBlockHash } from '../lib/generateHash'
 
 // models/Block.ts
@@ -12,7 +12,7 @@ export class Block {
   constructor(
     index: number,
     timestamp: string,
-    transactions: any[],
+    transactions: TxInterface[],
     previousHash: string
   ) {
     this.index = index
@@ -22,7 +22,7 @@ export class Block {
     this.hash = generateBlockHash(index, timestamp, transactions, previousHash)
   }
 
-  public getTransactions(): any[] {
+  public getTransactions(): TxInterface[] {
     return this.transactions
   }
 }

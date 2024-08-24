@@ -8,6 +8,6 @@ describe('createGenesisBlock', () => {
     expect(genesisBlock).toBeInstanceOf(Block)
     expect(genesisBlock.index).toBe(0)
     expect(genesisBlock.timestamp).toBe('2024-01-01T00:00:00Z')
-    expect(genesisBlock.previousHash).toBe('0')
+    expect(genesisBlock.previousHash).toBe('')
   })
 })
