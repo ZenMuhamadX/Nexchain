@@ -5,48 +5,42 @@ import { generateTimestampz } from '../lib/generateTimestampz'
 import { block } from './block'
 
 export class BlockChains {
-  private chains: block[] // Menyatakan bahwa chains adalah array dari block
+  private _chains: block[] // Menyatakan bahwa chains adalah array dari block
 
   constructor() {
-    this.chains = [createGenesisBlock()]
-  }
-
-  public getChains(): block[] {
-    return this.chains
+    this._chains = [createGenesisBlock()]
   }
 
   public addTxToBlock(tx: TxPool): void {
     let newBlock: block = new block(
-      this.chains.length,
+      this._chains.length,
       generateTimestampz(),
       tx.getPendingTx(),
-      this.getLastBlock().hash
+      this.getLatestBlock().hash
     )
-    newBlock.hash = generateBlockHash(
-      newBlock.index,
-      newBlock.timestamp,
-      newBlock.transactions,
-      newBlock.previousHash
-    )
-    this.chains.push(newBlock)
+    this._chains.push(newBlock)
     tx.clear()
   }
 
-  public getLastBlock(): block {
+  public getChains(): block[] {
+    return this._chains
+  }
+
+  public getLatestBlock(): block {
     // Memperbaiki metode untuk mengembalikan block
-    return this.chains[this.chains.length - 1]
+    return this._chains[this._chains.length - 1]
   }
 
   public isChainValid(): boolean {
-    for (let i = 1; i < this.chains.length; i++) {
-      const currentBlock = this.chains[i]
-      const previousBlock = this.chains[i - 1]
+    for (let i = 1; i < this._chains.length; i++) {
+      const currentBlock = this._chains[i]
+      const previousBlock = this._chains[i - 1]
 
       // Validasi Hash
       const calculatedHash = generateBlockHash(
         currentBlock.index,
         currentBlock.timestamp,
-        currentBlock.transactions, // Periksa nama property jika berbeda
+        currentBlock.getTransactions(),
         currentBlock.previousHash
       )
       if (currentBlock.hash !== calculatedHash) {

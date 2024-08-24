@@ -1,23 +1,23 @@
-import { transaction } from '../Tx/Tx'
+import { transactionInterface } from '../Tx/Tx'
+import { generateBlockHash } from '../lib/generateHash'
 
 export class block {
-  public index: number
-  public timestamp: string
-  public transactions: transaction[]
-  public previousHash: string
-  public hash: string
+  private _hash: string
+  private _transactions: transactionInterface[]
 
   constructor(
-    index: number,
-    timestamp: string,
-    Tx: transaction[],
-    previousHash: string = ''
+    public readonly index: number,
+    public readonly timestamp: string,
+    transactions: transactionInterface[],
+    public readonly previousHash: string
   ) {
-    this.index = index
-    this.timestamp = timestamp
-    this.transactions = Tx
-    this.previousHash = previousHash
-    this.hash = ''
-    return this
+    this._transactions = [...transactions]
+    this._hash = generateBlockHash(index, timestamp, transactions, previousHash)
+  }
+  public get hash(): string {
+    return this._hash
+  }
+  public getTransactions(): transactionInterface[] {
+    return [...this._transactions]
   }
 }

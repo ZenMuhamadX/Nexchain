@@ -1,16 +1,16 @@
-import { transaction } from './Tx'
+import { transactionInterface } from './Tx'
 
 export class TxPool {
-  private pendingTx: transaction[]
+  private pendingTx: transactionInterface[]
   constructor() {
     this.pendingTx = []
   }
 
-  addTx(tx: transaction) {
+  addTx(tx: transactionInterface) {
     this.pendingTx.push(tx)
   }
 
-  getPendingTx(): transaction[] {
+  getPendingTx(): transactionInterface[] {
     return this.pendingTx
   }
 
