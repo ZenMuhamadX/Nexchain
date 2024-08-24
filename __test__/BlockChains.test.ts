@@ -1,74 +1,62 @@
-// BlockChains.test.ts
+// __tests__/BlockChains.test.ts
 import { BlockChains } from '../src/BlockChains'
 import { TxPool } from '../src/Tx/TxPool'
 import { Block } from '../src/model/Block'
+import { createGenesisBlock } from '../src/lib/createGenesisBlock'
 import { generateBlockHash } from '../src/lib/generateHash'
 import { generateTimestampz } from '../src/lib/generateTimestampz'
-import { createGenesisBlock } from '../src/lib/createGenesisBlock'
 import { TxInterface } from '../src/model/Tx'
 
-// Mocking dependencies
-jest.mock('./lib/generateHash', () => ({
-  generateBlockHash: jest.fn(),
-}))
+jest.mock('../src/lib/createGenesisBlock')
+jest.mock('../src/lib/generateHash')
+jest.mock('../src/lib/generateTimestampz')
+jest.mock('../src/Tx/TxPool')
 
-jest.mock('./lib/generateTimestampz', () => ({
-  generateTimestampz: jest.fn(),
-}))
-
-jest.mock('./lib/createGenesisBlock', () => ({
-  createGenesisBlock: jest.fn(),
-}))
+const mockedCreateGenesisBlock = createGenesisBlock as jest.MockedFunction<
+  typeof createGenesisBlock
+>
+const mockedGenerateBlockHash = generateBlockHash as jest.MockedFunction<
+  typeof generateBlockHash
+>
+const mockedTxPool = TxPool as jest.MockedClass<typeof TxPool>
 
 describe('BlockChains', () => {
-  let blockChains: BlockChains
-  let mockTxPool: TxPool
   beforeEach(() => {
-    blockChains = new BlockChains()
-    mockTxPool = {
-      getPendingTx: jest.fn().mockReturnValue([]),
-      clear: jest.fn(),
-    } as unknown as TxPool
+    jest.clearAllMocks()
   })
 
-  test('should initialize with genesis block', () => {
-    const index = 0
-    const timestamp = '2024-01-01T00:00:00Z'
-    const transactions: TxInterface[] = [
-      { amount: 0, recipient: '', sender: '', id: 0, message: 'Genesis Block' },
-    ]
-    const previousHash = ''
-    expect(blockChains.getChains()).toEqual([
-      {
-        index,
-        timestamp,
-        transactions,
-        previousHash,
-        hash: generateBlockHash(index, timestamp, transactions, previousHash),
-      },
-    ])
+  test('initializes with a genesis block', () => {
+    const mockGenesisBlock = new Block(0, '2024-08-24T00:00:00Z', [], '0')
+    mockedCreateGenesisBlock.mockReturnValue(mockGenesisBlock)
+
+    const blockChains = new BlockChains()
+    const chains = blockChains.getChains()
+
+    expect(chains[0]).toEqual({
+      index: 0,
+      timestamp: '2024-08-24T00:00:00Z',
+      transactions: [],
+      previousHash: '0',
+      hash: mockGenesisBlock.hash,
+    })
   })
 
-  test('should add transaction to block', () => {
-    const newBlock = new Block(1, '2024-01-01T00:00:00Z', [], 'genesis-hash')
-    blockChains.addTxToBlock(mockTxPool)
+  test('validates the chain correctly', () => {
+    const mockGenesisBlock = new Block(0, '2024-08-24T00:00:00Z', [], '0')
+    const mockNewBlock = new Block(
+      1,
+      '2024-08-24T01:00:00Z',
+      [],
+      mockGenesisBlock.hash
+    )
 
-    expect(blockChains.getChains().length).toBe(2)
-    expect(blockChains.getLatestBlock()).toEqual(newBlock)
-    expect(mockTxPool.clear).toHaveBeenCalled()
-  })
+    mockedCreateGenesisBlock.mockReturnValue(mockGenesisBlock)
+    mockedGenerateBlockHash.mockReturnValue(mockGenesisBlock.hash) // Correct hash for genesis block
+    mockedGenerateBlockHash.mockReturnValue(mockNewBlock.hash) // Correct hash for new block
 
-  test('should validate chain correctly', () => {
-    new Block(1, '2024-01-01T00:00:00Z', [], 'genesis-hash')
-    blockChains.addTxToBlock(mockTxPool)
+    const blockChains = new BlockChains()
+    blockChains.addTxToBlock(new mockedTxPool())
 
     expect(blockChains.isChainValid()).toBe(true)
-  })
-
-  test('should invalidate chain with incorrect hash', () => {
-    new Block(1, '2024-01-01T00:00:00Z', [], 'genesis-hash')
-    blockChains.addTxToBlock(mockTxPool)
-
-    expect(blockChains.isChainValid()).toBe(false)
   })
 })

@@ -1,86 +1,93 @@
-// BlockChains.test.ts
-import { BlockChains } from './BlockChains'
+// BlockChains.ts
+import { TxInterface } from './model/Tx'
 import { TxPool } from './Tx/TxPool'
-import { Block } from './model/Block'
+import { createGenesisBlock } from './lib/createGenesisBlock'
 import { generateBlockHash } from './lib/generateHash'
 import { generateTimestampz } from './lib/generateTimestampz'
-import { createGenesisBlock } from './lib/createGenesisBlock'
+import { Block } from './model/Block'
 
-// Mocking dependencies
-jest.mock('./lib/generateHash', () => ({
-  generateBlockHash: jest.fn()
-}))
+interface ChainDetails {
+  index: number
+  timestamp: string
+  transactions: TxInterface[]
+  previousHash: string
+  hash: string
+}
 
-jest.mock('./lib/generateTimestampz', () => ({
-  generateTimestampz: jest.fn()
-}))
+export class BlockChains {
+  private _chains: Block[]
 
-jest.mock('./lib/createGenesisBlock', () => ({
-  createGenesisBlock: jest.fn()
-}))
+  constructor() {
+    this._chains = [createGenesisBlock()]
+  }
 
-describe('BlockChains', () => {
-  let blockChains: BlockChains
-  let mockTxPool: TxPool
-  let mockBlock: Block
+  public addTxToBlock(tx: TxPool): void {
+    const newBlock = this.createBlock(tx)
+    this._chains.push(newBlock)
+    tx.clear()
+  }
 
-  beforeEach(() => {
-    blockChains = new BlockChains()
-    mockTxPool = {
-      getPendingTx: jest.fn().mockReturnValue([]),
-      clear: jest.fn()
-    } as unknown as TxPool
-    mockBlock = new Block(0, '2024-01-01T00:00:00Z', [], '', 'genesis-hash')
-    
-    (createGenesisBlock as jest.Mock).mockReturnValue(mockBlock)
-    (generateBlockHash as jest.Mock).mockReturnValue('genesis-hash')
-    (generateTimestampz as jest.Mock).mockReturnValue('2024-01-01T00:00:00Z')
-  })
+  public getChains(): ChainDetails[] {
+    return this._chains
+  }
 
-  test('should initialize with genesis block', () => {
-    expect(blockChains.getChains()).toEqual([{
-      index: 0,
-      timestamp: '2024-01-01T00:00:00Z',
-      transactions: [],
-      previousHash: '',
-      hash: 'genesis-hash'
-    }])
-  })
+  public getLatestBlock(): Block {
+    return this._chains[this._chains.length - 1]
+  }
 
-  test('should add transaction to block', () => {
-    const newBlock = new Block(1, '2024-01-01T00:00:00Z', [], 'genesis-hash')
-    blockChains.addTxToBlock(mockTxPool)
+  public isChainValid(): boolean {
+    for (let i = 1; i < this._chains.length; i++) {
+      const currentBlock = this._chains[i]
+      const previousBlock = this._chains[i - 1]
 
-    expect(blockChains.getChains().length).toBe(2)
-    expect(blockChains.getLatestBlock()).toEqual(newBlock)
-    expect(mockTxPool.clear).toHaveBeenCalled()
-  })
+      if (
+        !this.isHashValid(currentBlock) ||
+        !this.isPreviousHashValid(currentBlock, previousBlock) ||
+        !this.isIndexValid(currentBlock, previousBlock)
+      ) {
+        return false
+      }
+    }
+    return true
+  }
 
-  test('should validate chain correctly', () => {
-    const validBlock = new Block(
-      1,
-      '2024-01-01T00:00:00Z',
-      [],
-      'genesis-hash',
-      'valid-hash'
+  private createBlock(tx: TxPool): Block {
+    const latestBlock = this.getLatestBlock()
+    return new Block(
+      this._chains.length,
+      generateTimestampz(),
+      tx.getPendingTx(),
+      latestBlock.hash
     )
-    (generateBlockHash as jest.Mock).mockReturnValue('valid-hash')
-    blockChains.addTxToBlock(mockTxPool)
+  }
 
-    expect(blockChains.isChainValid()).toBe(true)
-  })
-
-  test('should invalidate chain with incorrect hash', () => {
-    const invalidBlock = new Block(
-      1,
-      '2024-01-01T00:00:00Z',
-      [],
-      'genesis-hash',
-      'invalid-hash'
+  private isHashValid(currentBlock: Block): boolean {
+    const calculatedHash = generateBlockHash(
+      currentBlock.index,
+      currentBlock.timestamp,
+      currentBlock.getTransactions(),
+      currentBlock.previousHash
     )
-    (generateBlockHash as jest.Mock).mockReturnValue('valid-hash')
-    blockChains.addTxToBlock(mockTxPool)
+    if (currentBlock.hash !== calculatedHash) {
+      return false
+    }
+    return true
+  }
 
-    expect(blockChains.isChainValid()).toBe(false)
-  })
-})
+  private isPreviousHashValid(
+    currentBlock: Block,
+    previousBlock: Block
+  ): boolean {
+    if (currentBlock.previousHash !== previousBlock.hash) {
+      return false
+    }
+    return true
+  }
+
+  private isIndexValid(currentBlock: Block, previousBlock: Block): boolean {
+    if (currentBlock.index !== previousBlock.index + 1) {
+      return false
+    }
+    return true
+  }
+}

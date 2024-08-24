@@ -1,7 +1,7 @@
 import { TxInterface } from '../model/Tx'
 
 export class TxPool {
-  private pendingTx: TxInterface[]
+  public pendingTx: TxInterface[]
 
   constructor() {
     this.pendingTx = []
@@ -19,3 +19,5 @@ export class TxPool {
     this.pendingTx = []
   }
 }
+
+
