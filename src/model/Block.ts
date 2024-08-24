@@ -1,11 +1,11 @@
-import { transactionInterface } from '../Tx/Tx'
+import { TxInterface} from './Tx'
 import { generateBlockHash } from '../lib/generateHash'
 
 // models/Block.ts
 export class Block {
   public index: number
   public timestamp: string
-  public transactions: transactionInterface[]
+  public transactions: TxInterface[]
   public previousHash: string
   public hash: string
 

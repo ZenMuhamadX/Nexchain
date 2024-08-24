@@ -1,5 +1,5 @@
 // BlockChains.ts
-import { transactionInterface } from './Tx/Tx'
+import { TxInterface} from './model/Tx'
 import { TxPool } from './Tx/TxPool'
 import { createGenesisBlock } from './lib/createGenesisBlock'
 import { generateBlockHash } from './lib/generateHash'
@@ -9,7 +9,7 @@ import { Block } from './model/Block'
 interface ChainDetails {
   index: number
   timestamp: string
-  transactions: transactionInterface[] // Ganti `any` dengan tipe transaksi yang sesuai
+  transactions: TxInterface[] // Ganti `any` dengan tipe transaksi yang sesuai
   previousHash: string
   hash: string
 }
