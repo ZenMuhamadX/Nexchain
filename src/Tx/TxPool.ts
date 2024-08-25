@@ -27,7 +27,7 @@ export class TxPool {
     const timestampz = generateTimestampz() // Menghasilkan timestamp
     const newBlock = new pendingBlock(txForBlock, timestampz) // Membuat blok baru dengan 10 transaksi dan timestamp
     this.pendingBlocks.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
-    this.pendingTx = this.pendingTx.slice(10) // Menghapus 10 transaksi pertama dari array transaksi yang tertunda (sudah ditambahkan ke blok)
+    this.pendingTx = this.pendingTx.slice(9) // Menghapus 10 transaksi pertama dari array transaksi yang tertunda (sudah ditambahkan ke blok)
   }
 
   getPendingTx(): TxInterface[] {
@@ -137,4 +137,4 @@ x.addPendingTx({
 console.log(x.getPendingBlocks()[0].getTx())
 // console.log(x.getPendingBlocks()[0].getTimestamp())
 
-// console.log(x.getPendingBlocks())
+console.log(x.getPendingBlocks())
