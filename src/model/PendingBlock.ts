@@ -12,7 +12,7 @@ export class pendingBlock {
 
   // Konstruktor untuk kelas pendingBlock
   constructor(transaction: TxInterface[], timestamp: string) {
-    this.transaction = transaction
+    this.transaction = immutable(transaction) as TxInterface[]
     // Membuat timestamp immutable agar tidak bisa diubah
     this.timestamp = immutable(timestamp)
   }
@@ -21,4 +21,5 @@ export class pendingBlock {
   public getTx(): TxInterface[] {
     return this.transaction
   }
+
 }
