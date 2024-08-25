@@ -1,6 +1,6 @@
 // BlockChains.ts
 import immutable from 'deep-freeze'
-import { TxPool } from './Tx/TxPool'
+import { TransactionPool } from './Tx/TxPool'
 import { createGenesisBlock } from './lib/createGenesisBlock'
 import { generateTimestampz } from './lib/generateTimestampz'
 import { Block } from './model/Block'
@@ -14,7 +14,7 @@ export class BlockChains {
     this._chains = [createGenesisBlock()]
   }
 
-  public addTxToBlock(tx: TxPool) {
+  public addTxToBlock(tx: TransactionPool) {
     const newBlock = this.createBlock(tx)
     this._chains.push(newBlock)
     return newBlock
@@ -45,12 +45,13 @@ export class BlockChains {
     return true
   }
 
-  private createBlock(tx: TxPool): Block {
+  private createBlock(tx: TransactionPool): Block {
     const latestBlock = this.getLatestBlock()
     if (!latestBlock) {
       throw new Error('Latest block is undefined.')
     }
-    const TxBlock = tx.getBlockTx()
+    const TxBlock = tx.getPendingBlocks()
+    console.log(TxBlock)
     if (!TxBlock.length) {
       throw new Error('Pending Block Not Found')
     }
@@ -85,3 +86,76 @@ export class BlockChains {
     return currentBlock.index === previousBlock.index + 1
   }
 }
+
+const x = new BlockChains()
+const y  = new TransactionPool()
+
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+y.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+
+
+x.addTxToBlock(y)

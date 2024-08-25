@@ -22,12 +22,20 @@ export class TransactionPool {
 
   addTransactionToPool(transactionData: RawTransaction): void {
     // Fungsi untuk menambahkan transaksi ke array transaksi yang tertunda
-    let transaction: TxInterface = transactionData as TxInterface
+    const transaction: TxInterface = this.convertToTxInterface(transactionData)
     transaction.txHash = createTxHash(transaction, 1).hash
     this.pendingTransactions.push(transaction)
     if (this.pendingTransactions.length > 10) {
       // Jumlah transaksi yang tertunda melebihi 10
       this.createBlockFromPendingTransactions() // Membuat blok baru dari transaksi yang tertunda
+    }
+  }
+
+  private convertToTxInterface(rawTransaction: RawTransaction): TxInterface {
+    // Fungsi untuk mengonversi RawTransaction ke TxInterface
+    return {
+      ...rawTransaction,
+      txHash: '', // Inisialisasi txHash dengan nilai default
     }
   }
 
@@ -41,248 +49,6 @@ export class TransactionPool {
 
   getPendingBlocks() {
     // Fungsi untuk mendapatkan array blok yang tertunda
-    return immutable(this.pendingBlocks)
+    return this.pendingBlocks // Mengembalikan array blok yang dibekukan
   }
 }
-const x = new TransactionPool()
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-console.log(x.getPendingBlocks()[0].getTx())
