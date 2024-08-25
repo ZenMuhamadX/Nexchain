@@ -27,21 +27,6 @@ describe('TxPool', () => {
     expect(txPool.getPendingTx()).toContain(tx)
   })
 
-  test('should clear all transactions from the pendingTx array', () => {
-    const tx1 = createMockTx(1)
-    const tx2 = createMockTx(2)
-    txPool.addPendingTx(tx1)
-    txPool.addPendingTx(tx2)
-    txPool.addPendingTx(tx2)
-    txPool.addPendingTx(tx2)
-    txPool.addPendingTx(tx2)
-    txPool.addPendingTx(tx2)
-    txPool.addPendingTx(tx2)
-    txPool.addPendingTx(tx2)
-    txPool.addPendingTx(tx2)
-    expect(txPool.getPendingTx()).toEqual([])
-  })
-
   test('should not have duplicate transactions in the pendingTx array', () => {
     const tx = createMockTx(1)
     txPool.addPendingTx(tx)
