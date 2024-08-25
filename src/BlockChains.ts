@@ -157,6 +157,7 @@ y.addTransactionToPool({
   message: 'message',
 })
 x.addTxToBlock(y)
+console.log(`------------------first`)
 console.log(`------------------------------`)
 console.log(x.getChains())
 console.log(`------------------------------`)
