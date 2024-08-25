@@ -20,7 +20,7 @@ export class Block {
   constructor(
     index: number,
     timestamp: string,
-    transactions: TxBlock[],
+    transactions: TxInterface[],
     previousHash: string
   ) {
     this.index = index
@@ -36,10 +36,3 @@ export class Block {
     return this.transactions as TxInterface[]
   }
 }
-const x = new Block(
-  0,
-  '2024-01-01T00:00:00Z',
-  [{ sender: 'sender', receiver: 'receiver', amount: 100 }],
-  ''
-)
-console.log(x.getTransactions())
