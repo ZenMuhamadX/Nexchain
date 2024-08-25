@@ -50,9 +50,9 @@ export class BlockChains {
       throw new Error('Latest block is undefined.')
     }
     const pendingTx = tx.getPendingBlocks()
-    if (!pendingTx.length) {
-      throw new Error('Pending tx is undefined.')
-    }
+    // if (!pendingTx.length) {
+    //   throw new Error('Pending Block Not Found')
+    // }
     return new Block(
       this._chains.length,
       generateTimestampz(),
