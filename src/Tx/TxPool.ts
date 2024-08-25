@@ -105,5 +105,64 @@ x.addTransactionToPool({
   recipient: 'recipient',
   message: 'message',
 })
-
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
 console.log(x.getPendingBlocks());
