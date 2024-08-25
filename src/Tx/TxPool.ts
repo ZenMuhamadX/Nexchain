@@ -49,6 +49,6 @@ export class TransactionPool {
 
   getPendingBlocks() {
     // Fungsi untuk mendapatkan array blok yang tertunda
-    return this.pendingBlocks // Mengembalikan array blok yang dibekukan
+    return immutable(this.pendingBlocks) // Mengembalikan array blok yang dibekukan
   }
 }

@@ -1,3 +1,4 @@
+import immutable from 'deep-freeze'
 // Mengimpor fungsi untuk menghasilkan hash blok
 import { generateBlockHash } from '../lib/generateHash'
 import { TxBlock, TxInterface } from './TxBlock'
@@ -33,6 +34,6 @@ export class Block {
 
   // Mendapatkan transaksi yang termasuk dalam blok
   public getTransactions(): TxInterface[] {
-    return this.transactions as TxInterface[]
+    return immutable(this.transactions) as TxInterface[]
   }
 }

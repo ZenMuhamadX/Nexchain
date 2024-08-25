@@ -27,6 +27,11 @@ export class TxBlock {
 
   // Mendapatkan daftar transaksi dalam blok
   public getTx(): TxInterface[] {
-    return this.transaction
+    return immutable(this.transaction) as TxInterface[]
+  }
+
+  // Mendapatkan timestamp blok
+  public getTimestamp(): string {
+    return immutable(this.timestamp)
   }
 }
