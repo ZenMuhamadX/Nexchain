@@ -23,7 +23,7 @@ export class TxPool {
   addPendingTx(dataTx: rawTx): void {
     // Fungsi untuk menambahkan transaksi ke array transaksi yang tertunda
     let tx: TxInterface = dataTx
-    const nonceValid = findValidNonce(tx,1) 
+    const nonceValid = findValidNonce(tx, 1)
     tx.txHash = createTxHash(tx, nonceValid.nonce)
     this.pendingTx.push(tx)
     if (this.pendingTx.length > 10) {
@@ -64,6 +64,65 @@ x.addPendingTx({
   recipient: 'recipient2',
   message: 'test',
 })
-
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 200,
+  sender: 'sender2',
+  recipient: 'recipient2',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 200,
+  sender: 'sender2',
+  recipient: 'recipient2',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 200,
+  sender: 'sender2',
+  recipient: 'recipient2',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 200,
+  sender: 'sender2',
+  recipient: 'recipient2',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 200,
+  sender: 'sender2',
+  recipient: 'recipient2',
+  message: 'test',
+})
 console.log(x.getPendingTx())
 console.log(x.getPendingBlocks())
