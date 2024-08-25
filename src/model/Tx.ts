@@ -6,4 +6,5 @@ export interface TxInterface {
   sender: string
   recipient: string
   message?: string
+  nonce?: number
 }

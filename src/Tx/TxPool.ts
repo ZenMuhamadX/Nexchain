@@ -1,3 +1,4 @@
+import crypto from 'node:crypto'
 import { generateTimestampz } from './../lib/generateTimestampz' // Mengimpor fungsi untuk menghasilkan timestamp
 import { TxInterface } from '../model/Tx' // Mengimpor interface untuk objek transaksi
 import { pendingBlock } from '../model/PendingBlock' // Mengimpor class untuk blok yang tertunda
@@ -32,11 +33,34 @@ export class TxPool {
   }
 
   createPendingBlock(): void {
-    // Fungsi untuk membuat blok baru dari transaksi yang tertunda
     const txForBlock = this.pendingTx.splice(0, 10) // Mengambil dan menghapus 10 transaksi pertama
-    const timestampz = generateTimestampz() // Menghasilkan timestamp
-    const newBlock = new pendingBlock(txForBlock, timestampz) // Membuat blok baru dengan 10 transaksi dan timestamp
-    this.pendingBlocks.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
+    const timestampz = generateTimestampz()
+    let blockHash = ''
+    let nonce = 0
+
+    // Menetapkan nonce untuk setiap transaksi
+    txForBlock.forEach((tx) => {
+      tx.nonce = nonce // Mulai dengan nonce awal
+    })
+
+    // Mencoba berbagai nonce untuk menemukan hash yang valid
+    do {
+      txForBlock.forEach((tx) => {
+        tx.nonce = nonce
+      })
+
+      // Membuat hash blok
+      const blockData =
+        txForBlock.map((tx) => createTxHash(tx)).join('-') + `-${timestampz}`
+      blockHash = crypto.createHash('sha256').update(blockData).digest('hex')
+
+      // Increment nonce untuk percobaan berikutnya
+      nonce++
+    } while (!blockHash.startsWith('0')) // Memeriksa apakah hash dimulai dengan '0'
+
+    // Setelah menemukan nonce yang valid, buat blok baru
+    const newBlock = new pendingBlock(txForBlock, timestampz, blockHash)
+    this.pendingBlocks.push(newBlock)
   }
 
   getPendingTx(): TxInterface[] {

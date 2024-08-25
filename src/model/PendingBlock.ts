@@ -3,7 +3,7 @@ import immutable from 'deep-freeze'
 export class pendingBlock {
   private transaction: TxInterface[]
   private timestamp: string
-  constructor(transaction: TxInterface[], timestamp: string) {
+  constructor(transaction: TxInterface[], timestamp: string, hash: string) {
     this.transaction = transaction
     this.timestamp = immutable(timestamp)
   }
