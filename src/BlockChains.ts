@@ -1,18 +1,10 @@
 // BlockChains.ts
-import { TxInterface } from './model/Tx'
+import immutable from 'deep-freeze'
 import { TxPool } from './Tx/TxPool'
 import { createGenesisBlock } from './lib/createGenesisBlock'
-import { generateBlockHash } from './lib/generateHash'
 import { generateTimestampz } from './lib/generateTimestampz'
 import { Block } from './model/Block'
-
-interface ChainDetails {
-  index: number
-  timestamp: string
-  transactions: TxInterface[]
-  previousHash: string
-  hash: string
-}
+import { generateBlockHash } from './lib/generateHash'
 
 export class BlockChains {
   private _chains: Block[]
@@ -21,18 +13,20 @@ export class BlockChains {
     this._chains = [createGenesisBlock()]
   }
 
-  public addTxToBlock(tx: TxPool): void {
+  public addTxToBlock(tx: TxPool) {
     const newBlock = this.createBlock(tx)
     this._chains.push(newBlock)
     tx.clear()
+    return newBlock
   }
 
-  public getChains(): ChainDetails[] {
-    return this._chains
+  public getChains(): ReadonlyArray<Block> {
+    return immutable(this._chains) as ReadonlyArray<Block>
   }
 
-  public getLatestBlock(): Block {
-    return this._chains[this._chains.length - 1]
+  public getLatestBlock(): Block | undefined {
+    const latestBlock = this._chains[this._chains.length - 1]
+    return latestBlock ? (immutable(latestBlock) as Block) : undefined
   }
 
   public isChainValid(): boolean {
@@ -53,6 +47,13 @@ export class BlockChains {
 
   private createBlock(tx: TxPool): Block {
     const latestBlock = this.getLatestBlock()
+    if (!latestBlock) {
+      throw new Error('Latest block is undefined.')
+    }
+    const pendingTx = tx.getPendingTx()
+    if (!pendingTx.length) {
+      throw new Error('Pending tx is undefined.')
+    }
     return new Block(
       this._chains.length,
       generateTimestampz(),
@@ -68,26 +69,98 @@ export class BlockChains {
       currentBlock.getTransactions(),
       currentBlock.previousHash
     )
-    if (currentBlock.hash !== calculatedHash) {
-      return false
-    }
-    return true
+    return currentBlock.hash === calculatedHash
   }
 
   private isPreviousHashValid(
     currentBlock: Block,
     previousBlock: Block
   ): boolean {
-    if (currentBlock.previousHash !== previousBlock.hash) {
-      return false
-    }
-    return true
+    return currentBlock.previousHash === previousBlock.hash
   }
 
   private isIndexValid(currentBlock: Block, previousBlock: Block): boolean {
-    if (currentBlock.index !== previousBlock.index + 1) {
-      return false
-    }
-    return true
+    return currentBlock.index === previousBlock.index + 1
   }
 }
+
+const x = new BlockChains()
+const y = new TxPool()
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+y.addPendingTx({
+  amount: 100,
+  id: 1,
+  recipient: '0x1',
+  sender: '0x2',
+  message: 'OKEX',
+})
+console.log(x.addTxToBlock(y))
