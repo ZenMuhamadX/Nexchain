@@ -132,9 +132,9 @@ x.addPendingTx({
   recipient: 'recipient11',
 })
 
-console.log(x.getPendingTx())
+// console.log(x.getPendingTx())
 
-// console.log(x.getPendingBlocks()[0].getTx())
+console.log(x.getPendingBlocks()[0].getTx())
 // console.log(x.getPendingBlocks()[0].getTimestamp())
 
 // console.log(x.getPendingBlocks())
