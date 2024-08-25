@@ -16,7 +16,6 @@ export class BlockChains {
   public addTxToBlock(tx: TxPool) {
     const newBlock = this.createBlock(tx)
     this._chains.push(newBlock)
-    tx.clear()
     return newBlock
   }
 
@@ -50,7 +49,7 @@ export class BlockChains {
     if (!latestBlock) {
       throw new Error('Latest block is undefined.')
     }
-    const pendingTx = tx.getPendingTx()
+    const pendingTx = tx.getPendingBlocks()
     if (!pendingTx.length) {
       throw new Error('Pending tx is undefined.')
     }
