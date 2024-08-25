@@ -53,15 +53,14 @@ export class BlockChains {
     if (!pendingTx.length) {
       throw new Error('Pending Block Not Found')
     }
-    pendingTx.map((tx) => {
-      const newBlock = new Block(
-        this._chains.length,
-        generateTimestampz(),
-        tx.getTx(),
-        latestBlock.hash
-      )
-      return newBlock
-    })
+
+    const newBlock = new Block(
+      this._chains.length,
+      generateTimestampz(),
+      tx.getPendingTx(),
+      latestBlock.hash
+    )
+    return newBlock
   }
 
   private isHashValid(currentBlock: Block): boolean {
@@ -190,4 +189,4 @@ y.addPendingTx({
 })
 x.addTxToBlock(y)
 console.log(x.getChains())
-console.log(x.getLatestBlock()?.getTransactions())
+console.log(y.getPendingBlocks());
