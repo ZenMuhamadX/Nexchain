@@ -9,10 +9,11 @@ const createHash = (data: TxInterface, nonce: number): string => {
   const message = data.message || ''
 
   // Membuat hash dengan nonce
-  return crypto
+  const hash = crypto
     .createHash('sha256')
     .update(`${from}-${to}-${amount}-${message}-${nonce}`)
     .digest('hex')
+  return `0x${hash}`
 }
 
 // Fungsi untuk menemukan nonce yang valid sehingga hash dimulai dengan '0'
@@ -27,7 +28,7 @@ export const createTxHash = (
   do {
     hash = createHash(data, nonce)
     nonce++
-  } while (!hash.startsWith('0x'.repeat(difficulty))) // Memeriksa apakah hash dimulai dengan karakter '0' sesuai difficulty
+  } while (!hash.startsWith('0x0'.repeat(difficulty))) // Memeriksa apakah hash dimulai dengan karakter '0' sesuai difficulty
 
   return { nonce: nonce - 1, hash } // Kembalikan nonce terakhir yang valid dan hash
 }
