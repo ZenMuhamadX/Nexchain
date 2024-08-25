@@ -88,7 +88,7 @@ export class BlockChains {
 }
 
 const x = new BlockChains()
-const y  = new TransactionPool()
+const y = new TransactionPool()
 
 y.addTransactionToPool({
   amount: 100,
@@ -156,6 +156,7 @@ y.addTransactionToPool({
   recipient: 'recipient',
   message: 'message',
 })
-
-
 x.addTxToBlock(y)
+console.log(x.getChains())
+console.log(x.isChainValid())
+console.log(x.getLatestBlock())
