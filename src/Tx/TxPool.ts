@@ -56,7 +56,7 @@ export class TxPool {
 
       // Increment nonce untuk percobaan berikutnya
       nonce++
-    } while (!blockHash.startsWith('e')) // Memeriksa apakah hash dimulai dengan '0'
+    } while (!blockHash.startsWith('0')) // Memeriksa apakah hash dimulai dengan '0'
 
     // Setelah menemukan nonce yang valid, buat blok baru
     const newBlock = new pendingBlock(txForBlock, timestampz, blockHash)
@@ -75,6 +75,18 @@ export class TxPool {
 }
 
 const x = new TxPool()
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 200,
+  sender: 'sender2',
+  recipient: 'recipient2',
+  message: 'test',
+})
 x.addPendingTx({
   amount: 100,
   sender: 'sender1',
