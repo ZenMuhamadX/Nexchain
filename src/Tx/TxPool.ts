@@ -134,7 +134,7 @@ x.addPendingTx({
 
 console.log(x.getPendingTx())
 
-console.log(x.getPendingBlocks()[0].getTx())
-console.log(x.getPendingBlocks()[0].getTimestamp())
+// console.log(x.getPendingBlocks()[0].getTx())
+// console.log(x.getPendingBlocks()[0].getTimestamp())
 
-console.log(x.getPendingBlocks())
+// console.log(x.getPendingBlocks())
