@@ -157,6 +157,10 @@ y.addTransactionToPool({
   message: 'message',
 })
 x.addTxToBlock(y)
+console.log(`------------------------------`)
 console.log(x.getChains())
+console.log(`------------------------------`)
 console.log(x.isChainValid())
-console.log(x.getLatestBlock())
+console.log(`------------------------------`)
+console.log(x.getLatestBlock()?.getTransactions())
+console.log(`------------------------------`)
