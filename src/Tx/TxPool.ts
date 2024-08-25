@@ -23,7 +23,7 @@ export class TxPool {
 
   createPendingBlock(): void {
     // Fungsi untuk membuat blok baru dari transaksi yang tertunda
-    const txForBlock = this.pendingTx.splice(0, 11) // Mengambil 10 transaksi pertama dari array transaksi yang tertunda
+    const txForBlock = this.pendingTx.splice(0, 10) // Mengambil 10 transaksi pertama dari array transaksi yang tertunda
     const timestampz = generateTimestampz() // Menghasilkan timestamp
     const newBlock = new pendingBlock(txForBlock, timestampz) // Membuat blok baru dengan 10 transaksi dan timestamp
     this.pendingBlocks.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
