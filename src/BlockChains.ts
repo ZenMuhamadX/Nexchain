@@ -56,7 +56,7 @@ export class BlockChains {
     return new Block(
       this._chains.length,
       generateTimestampz(),
-      tx.getPendingBlocks(),
+      tx.getPendingBlocks()[0].getTx(),
       latestBlock.hash
     )
   }

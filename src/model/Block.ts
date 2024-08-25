@@ -22,7 +22,7 @@ export class Block {
   constructor(
     index: number,
     timestamp: string,
-    transactions: any,
+    transactions: TxInterface[],
     previousHash: string
   ) {
     this.index = index
