@@ -4,178 +4,106 @@ import { TxBlock } from '../model/TxBlock' // Mengimpor class untuk blok yang te
 import immutable from 'deep-freeze'
 import { createTxHash } from '../lib/createTxHash'
 
-interface rawTx {
+interface RawTransaction {
   amount: number
   sender: string
   recipient: string
   message?: string
 }
 
-export class TxPool {
-  private pendingTx: TxInterface[] // Array untuk menyimpan transaksi yang tertunda
-  private txBlock: TxBlock[] // Array untuk menyimpan blok yang tertunda
+export class TransactionPool {
+  private pendingTransactions: TxInterface[] // Array untuk menyimpan transaksi yang tertunda
+  private pendingBlocks: TxBlock[] // Array untuk menyimpan blok yang tertunda
 
   constructor() {
-    this.pendingTx = [] // Inisialisasi array transaksi yang tertunda sebagai array kosong
-    this.txBlock = [] // Inisialisasi array blok yang tertunda sebagai array kosong
+    this.pendingTransactions = [] // Inisialisasi array transaksi yang tertunda sebagai array kosong
+    this.pendingBlocks = [] // Inisialisasi array blok yang tertunda sebagai array kosong
   }
 
-  addPendingTx(dataTx: rawTx): void {
+  addTransactionToPool(transactionData: RawTransaction): void {
     // Fungsi untuk menambahkan transaksi ke array transaksi yang tertunda
-    let tx: TxInterface = dataTx
-    tx.txHash = createTxHash(tx, 1).hash
-    this.pendingTx.push(tx)
-    if (this.pendingTx.length > 10) {
-      // jumlah transaksi yang tertunda melebihi 10)
-      this.createPendingBlock() // Membuat blok baru dari transaksi yang tertunda
+    let transaction: TxInterface = transactionData as TxInterface
+    transaction.txHash = createTxHash(transaction, 1).hash
+    this.pendingTransactions.push(transaction)
+    if (this.pendingTransactions.length > 10) {
+      // Jumlah transaksi yang tertunda melebihi 10
+      this.createBlockFromPendingTransactions() // Membuat blok baru dari transaksi yang tertunda
     }
   }
 
-  private createPendingBlock(): void {
+  private createBlockFromPendingTransactions(): void {
     // Fungsi untuk membuat blok baru dari transaksi yang tertunda
-    const txForBlock = this.pendingTx.splice(0, 10) // Mengambil dan menghapus 10 transaksi pertama
-    const timestampz = generateTimestampz() // Menghasilkan timestamp
-    const newBlock = new TxBlock(txForBlock, timestampz) // Membuat blok baru dengan 10 transaksi dan timestamp
-    this.txBlock.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
+    const transactionsForBlock = this.pendingTransactions.splice(0, 10) // Mengambil dan menghapus 10 transaksi pertama
+    const timestamp = generateTimestampz() // Menghasilkan timestamp
+    const newBlock = new TxBlock(transactionsForBlock, timestamp) // Membuat blok baru dengan 10 transaksi dan timestamp
+    this.pendingBlocks.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
   }
 
-  getBlockTx() {
+  getPendingBlocks() {
     // Fungsi untuk mendapatkan array blok yang tertunda
-    return this.txBlock
+    return immutable(this.pendingBlocks)
   }
 }
+const x = new TransactionPool()
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addTransactionToPool({
+  amount: 200,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
 
-const x = new TxPool()
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-console.log(x.getBlockTx())
+console.log(x.getPendingBlocks());
