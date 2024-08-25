@@ -112,4 +112,70 @@ x.addPendingTx({
   recipient: 'recipient',
   message: 'message',
 })
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
 console.log(x.getBlockTx())
