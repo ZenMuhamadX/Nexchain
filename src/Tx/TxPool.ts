@@ -33,7 +33,7 @@ export class TransactionPool {
 
   private createBlockFromPendingTransactions(): void {
     // Fungsi untuk membuat blok baru dari transaksi yang tertunda
-    const transactionsForBlock = this.pendingTransactions.splice(0, 10) // Mengambil dan menghapus 10 transaksi pertama
+    const transactionsForBlock = this.pendingTransactions.splice(0, 9) // Mengambil dan menghapus 10 transaksi pertama
     const timestamp = generateTimestampz() // Menghasilkan timestamp
     const newBlock = new TxBlock(transactionsForBlock, timestamp) // Membuat blok baru dengan 10 transaksi dan timestamp
     this.pendingBlocks.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
@@ -45,12 +45,6 @@ export class TransactionPool {
   }
 }
 const x = new TransactionPool()
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
 x.addTransactionToPool({
   amount: 100,
   sender: 'sender',
