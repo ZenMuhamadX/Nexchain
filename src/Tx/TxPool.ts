@@ -118,4 +118,4 @@ x.addPendingTx({
   recipient: 'recipient2',
   message: 'test',
 })
-console.log(x.getPendingBlocks())
+console.log(x.getPendingBlocks()[0].getTx())
