@@ -2,6 +2,14 @@ import { generateTimestampz } from './../lib/generateTimestampz' // Mengimpor fu
 import { TxInterface } from '../model/Tx' // Mengimpor interface untuk objek transaksi
 import { pendingBlock } from '../model/PendingBlock' // Mengimpor class untuk blok yang tertunda
 import immutable from 'deep-freeze'
+import { createTxHash } from '../lib/createTxHash'
+
+interface rawTx {
+  amount: number
+  sender: string
+  recipient: string
+  message?: string
+}
 
 export class TxPool {
   private pendingTx: TxInterface[] // Array untuk menyimpan transaksi yang tertunda
@@ -12,8 +20,10 @@ export class TxPool {
     this.pendingBlocks = [] // Inisialisasi array blok yang tertunda sebagai array kosong
   }
 
-  addPendingTx(tx: TxInterface): void {
+  addPendingTx(dataTx: rawTx): void {
     // Fungsi untuk menambahkan transaksi ke array transaksi yang tertunda
+    let tx: TxInterface = dataTx
+    tx.txHash = createTxHash(dataTx)
     this.pendingTx.push(tx)
     if (this.pendingTx.length > 10) {
       // jumlah transaksi yang tertunda melebihi 10)
@@ -39,3 +49,20 @@ export class TxPool {
     return immutable(this.pendingBlocks) as pendingBlock[]
   }
 }
+
+const x = new TxPool()
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 200,
+  sender: 'sender2',
+  recipient: 'recipient2',
+  message: 'test',
+})
+
+console.log(x.getPendingTx())
+console.log(x.getPendingBlocks())
