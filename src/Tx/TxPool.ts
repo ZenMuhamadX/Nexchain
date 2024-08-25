@@ -56,7 +56,7 @@ export class TxPool {
 
       // Increment nonce untuk percobaan berikutnya
       nonce++
-    } while (!blockHash.startsWith('0')) // Memeriksa apakah hash dimulai dengan '0'
+    } while (!blockHash.startsWith('e')) // Memeriksa apakah hash dimulai dengan '0'
 
     // Setelah menemukan nonce yang valid, buat blok baru
     const newBlock = new pendingBlock(txForBlock, timestampz, blockHash)
