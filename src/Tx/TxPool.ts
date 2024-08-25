@@ -23,11 +23,10 @@ export class TxPool {
 
   createPendingBlock(): void {
     // Fungsi untuk membuat blok baru dari transaksi yang tertunda
-    const txForBlock = this.pendingTx.splice(0, 10) // Mengambil 10 transaksi pertama dari array transaksi yang tertunda
+    const txForBlock = this.pendingTx.splice(0, 10) // Mengambil dan menghapus 10 transaksi pertama
     const timestampz = generateTimestampz() // Menghasilkan timestamp
     const newBlock = new pendingBlock(txForBlock, timestampz) // Membuat blok baru dengan 10 transaksi dan timestamp
     this.pendingBlocks.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
-    this.pendingTx = this.pendingTx.slice(10) // Menghapus 10 transaksi pertama dari array transaksi yang tertunda (sudah ditambahkan ke blok)
   }
 
   getPendingTx(): TxInterface[] {
