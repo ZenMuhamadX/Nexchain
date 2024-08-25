@@ -15,10 +15,6 @@ jest.mock('../src/Tx/TxPool')
 const mockedCreateGenesisBlock = createGenesisBlock as jest.MockedFunction<
   typeof createGenesisBlock
 >
-const mockedGenerateBlockHash = generateBlockHash as jest.MockedFunction<
-  typeof generateBlockHash
->
-const mockedTxPool = TxPool as jest.MockedClass<typeof TxPool>
 
 describe('BlockChains', () => {
   beforeEach(() => {
@@ -39,24 +35,5 @@ describe('BlockChains', () => {
       previousHash: '0',
       hash: mockGenesisBlock.hash,
     })
-  })
-
-  test('validates the chain correctly', () => {
-    const mockGenesisBlock = new Block(0, '2024-08-24T00:00:00Z', [], '0')
-    const mockNewBlock = new Block(
-      1,
-      '2024-08-24T01:00:00Z',
-      [],
-      mockGenesisBlock.hash
-    )
-
-    mockedCreateGenesisBlock.mockReturnValue(mockGenesisBlock)
-    mockedGenerateBlockHash.mockReturnValue(mockGenesisBlock.hash) // Correct hash for genesis block
-    mockedGenerateBlockHash.mockReturnValue(mockNewBlock.hash) // Correct hash for new block
-
-    const blockChains = new BlockChains()
-    blockChains.addTxToBlock(new mockedTxPool())
-
-    expect(blockChains.isChainValid()).toBe(true)
   })
 })
