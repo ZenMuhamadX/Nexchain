@@ -1,6 +1,6 @@
 import { generateTimestampz } from './../lib/generateTimestampz' // Mengimpor fungsi untuk menghasilkan timestamp
-import { TxInterface } from '../model/Tx' // Mengimpor interface untuk objek transaksi
-import { TxBlock } from '../model/PendingBlock' // Mengimpor class untuk blok yang tertunda
+import { TxInterface } from '../model/TxBlock' // Mengimpor interface untuk objek transaksi
+import { TxBlock } from '../model/TxBlock' // Mengimpor class untuk blok yang tertunda
 import immutable from 'deep-freeze'
 import { createTxHash } from '../lib/createTxHash'
 
@@ -39,14 +39,9 @@ export class TxPool {
     this.txBlock.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
   }
 
-  getPendingTx(): TxInterface[] {
-    // Fungsi untuk mendapatkan array transaksi yang tertunda
-    return immutable(this.pendingTx) as TxInterface[]
-  }
-
-  getBlockTx(): TxBlock[] {
+  getBlockTx() {
     // Fungsi untuk mendapatkan array blok yang tertunda
-    return immutable(this.txBlock) as TxBlock[]
+    return this.txBlock
   }
 }
 

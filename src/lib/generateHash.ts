@@ -1,10 +1,10 @@
 import crypto from 'node:crypto'
-import { TxInterface } from '../model/Tx'
+import { TxBlock, TxInterface } from '../model/TxBlock'
 
 export const generateBlockHash = (
   index: number,
   timestamp: string,
-  Tx: TxInterface[],
+  Tx: TxInterface[] | TxBlock[],
   previousHash: string
 ) => {
   const hash = crypto.createHash('sha256')

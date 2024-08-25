@@ -1,7 +1,15 @@
 // Mengimpor antarmuka transaksi
-import { TxInterface } from './Tx'
 // Mengimpor fungsi untuk membuat objek immutable
 import immutable from 'deep-freeze'
+
+export interface TxInterface {
+  txHash?: string
+  amount: number
+  sender: string
+  recipient: string
+  message?: string
+  nonce?: number
+}
 
 // Kelas untuk blok yang masih menunggu (pending)
 export class TxBlock {

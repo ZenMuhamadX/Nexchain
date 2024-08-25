@@ -5,6 +5,7 @@ import { createGenesisBlock } from './lib/createGenesisBlock'
 import { generateTimestampz } from './lib/generateTimestampz'
 import { Block } from './model/Block'
 import { generateBlockHash } from './lib/generateHash'
+import { TxBlock, TxInterface } from './model/TxBlock'
 
 export class BlockChains {
   private _chains: Block[]
@@ -49,15 +50,15 @@ export class BlockChains {
     if (!latestBlock) {
       throw new Error('Latest block is undefined.')
     }
-    const pendingBlock = tx.getBlockTx()
-    if (!pendingBlock.length) {
+    const TxBlock = tx.getBlockTx()
+    if (!TxBlock.length) {
       throw new Error('Pending Block Not Found')
     }
 
     const newBlock = new Block(
       this._chains.length,
       generateTimestampz(),
-      tx.getPendingTx(),
+      TxBlock,
       latestBlock.hash
     )
     return newBlock
