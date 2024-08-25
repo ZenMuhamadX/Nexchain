@@ -4,7 +4,7 @@ import { TxInterface } from './Tx'
 import immutable from 'deep-freeze'
 
 // Kelas untuk blok yang masih menunggu (pending)
-export class pendingBlock {
+export class TxBlock {
   // Daftar transaksi dalam blok
   private transaction: TxInterface[]
   // Timestamp blok
@@ -21,5 +21,4 @@ export class pendingBlock {
   public getTx(): TxInterface[] {
     return this.transaction
   }
-
 }

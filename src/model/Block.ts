@@ -2,7 +2,6 @@
 import { TxInterface } from './Tx'
 // Mengimpor fungsi untuk menghasilkan hash blok
 import { generateBlockHash } from '../lib/generateHash'
-import { pendingBlock } from './PendingBlock'
 
 // models/Block.ts
 // Kelas ini merepresentasikan blok dalam blockchain

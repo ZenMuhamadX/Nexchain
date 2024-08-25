@@ -1,6 +1,6 @@
 import { generateTimestampz } from './../lib/generateTimestampz' // Mengimpor fungsi untuk menghasilkan timestamp
 import { TxInterface } from '../model/Tx' // Mengimpor interface untuk objek transaksi
-import { pendingBlock } from '../model/PendingBlock' // Mengimpor class untuk blok yang tertunda
+import { TxBlock } from '../model/PendingBlock' // Mengimpor class untuk blok yang tertunda
 import immutable from 'deep-freeze'
 import { createTxHash } from '../lib/createTxHash'
 
@@ -13,11 +13,11 @@ interface rawTx {
 
 export class TxPool {
   private pendingTx: TxInterface[] // Array untuk menyimpan transaksi yang tertunda
-  private pendingBlocks: pendingBlock[] // Array untuk menyimpan blok yang tertunda
+  private txBlock: TxBlock[] // Array untuk menyimpan blok yang tertunda
 
   constructor() {
     this.pendingTx = [] // Inisialisasi array transaksi yang tertunda sebagai array kosong
-    this.pendingBlocks = [] // Inisialisasi array blok yang tertunda sebagai array kosong
+    this.txBlock = [] // Inisialisasi array blok yang tertunda sebagai array kosong
   }
 
   addPendingTx(dataTx: rawTx): void {
@@ -31,12 +31,12 @@ export class TxPool {
     }
   }
 
-  createPendingBlock(): void {
+  private createPendingBlock(): void {
     // Fungsi untuk membuat blok baru dari transaksi yang tertunda
     const txForBlock = this.pendingTx.splice(0, 10) // Mengambil dan menghapus 10 transaksi pertama
     const timestampz = generateTimestampz() // Menghasilkan timestamp
-    const newBlock = new pendingBlock(txForBlock, timestampz) // Membuat blok baru dengan 10 transaksi dan timestamp
-    this.pendingBlocks.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
+    const newBlock = new TxBlock(txForBlock, timestampz) // Membuat blok baru dengan 10 transaksi dan timestamp
+    this.txBlock.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
   }
 
   getPendingTx(): TxInterface[] {
@@ -44,8 +44,77 @@ export class TxPool {
     return immutable(this.pendingTx) as TxInterface[]
   }
 
-  getPendingBlocks(): pendingBlock[] {
+  getBlockTx(): TxBlock[] {
     // Fungsi untuk mendapatkan array blok yang tertunda
-    return immutable(this.pendingBlocks) as pendingBlock[]
+    return immutable(this.txBlock) as TxBlock[]
   }
 }
+
+const x = new TxPool()
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender',
+  recipient: 'recipient',
+  message: 'message',
+})
+console.log(x.getBlockTx())

@@ -49,8 +49,8 @@ export class BlockChains {
     if (!latestBlock) {
       throw new Error('Latest block is undefined.')
     }
-    const pendingTx = tx.getPendingBlocks()
-    if (!pendingTx.length) {
+    const pendingBlock = tx.getBlockTx()
+    if (!pendingBlock.length) {
       throw new Error('Pending Block Not Found')
     }
 
@@ -84,109 +84,3 @@ export class BlockChains {
     return currentBlock.index === previousBlock.index + 1
   }
 }
-
-const x = new BlockChains()
-const y = new TxPool()
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender2',
-  recipient: 'recipient2',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender3',
-  recipient: 'recipient3',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender2',
-  recipient: 'recipient2',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender3',
-  recipient: 'recipient3',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender2',
-  recipient: 'recipient2',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender3',
-  recipient: 'recipient3',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender2',
-  recipient: 'recipient2',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender3',
-  recipient: 'recipient3',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender2',
-  recipient: 'recipient2',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender3',
-  recipient: 'recipient3',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender2',
-  recipient: 'recipient2',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender3',
-  recipient: 'recipient3',
-})
-y.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-})
-x.addTxToBlock(y)
-console.log(x.getChains())
-console.log(y.getPendingBlocks());
