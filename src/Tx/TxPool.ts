@@ -285,4 +285,4 @@ x.addTransactionToPool({
   recipient: 'recipient',
   message: 'message',
 })
-console.log(x.getPendingBlocks())
+console.log(x.getPendingBlocks()[0].getTx())
