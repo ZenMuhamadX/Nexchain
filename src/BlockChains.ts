@@ -147,5 +147,5 @@ y.addPendingTx({
 })
 
 x.addTxToBlock(y)
-console.log(x.getLatestBlock())
+console.log(x.getLatestBlock()?.getTransactions())
 console.log(x.getChains())
