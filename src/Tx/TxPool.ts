@@ -52,7 +52,7 @@ x.addTransactionToPool({
   message: 'message',
 })
 x.addTransactionToPool({
-  amount: 200,
+  amount: 100,
   sender: 'sender',
   recipient: 'recipient',
   message: 'message',
@@ -64,7 +64,7 @@ x.addTransactionToPool({
   message: 'message',
 })
 x.addTransactionToPool({
-  amount: 200,
+  amount: 100,
   sender: 'sender',
   recipient: 'recipient',
   message: 'message',
@@ -76,7 +76,7 @@ x.addTransactionToPool({
   message: 'message',
 })
 x.addTransactionToPool({
-  amount: 200,
+  amount: 100,
   sender: 'sender',
   recipient: 'recipient',
   message: 'message',
@@ -88,7 +88,7 @@ x.addTransactionToPool({
   message: 'message',
 })
 x.addTransactionToPool({
-  amount: 200,
+  amount: 100,
   sender: 'sender',
   recipient: 'recipient',
   message: 'message',
@@ -100,69 +100,9 @@ x.addTransactionToPool({
   message: 'message',
 })
 x.addTransactionToPool({
-  amount: 200,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
   amount: 100,
   sender: 'sender',
   recipient: 'recipient',
   message: 'message',
 })
-x.addTransactionToPool({
-  amount: 200,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 200,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 200,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 200,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 100,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-x.addTransactionToPool({
-  amount: 200,
-  sender: 'sender',
-  recipient: 'recipient',
-  message: 'message',
-})
-console.log(x.getPendingBlocks());
+console.log(x.getPendingBlocks())
