@@ -30,8 +30,4 @@ export class TxBlock {
     return immutable(this.transaction) as TxInterface[]
   }
 
-  // Mendapatkan timestamp blok
-  public getTimestamp(): string {
-    return immutable(this.timestamp)
-  }
 }

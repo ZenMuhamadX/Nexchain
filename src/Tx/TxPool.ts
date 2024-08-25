@@ -13,7 +13,7 @@ interface RawTransaction {
 
 export class TransactionPool {
   private pendingTransactions: TxInterface[] // Array untuk menyimpan transaksi yang tertunda
-  private pendingBlocks: TxBlock[] // Array untuk menyimpan blok yang tertunda
+  private pendingBlocks: any // Array untuk menyimpan blok yang tertunda
 
   constructor() {
     this.pendingTransactions = [] // Inisialisasi array transaksi yang tertunda sebagai array kosong
@@ -49,6 +49,6 @@ export class TransactionPool {
 
   getPendingBlocks() {
     // Fungsi untuk mendapatkan array blok yang tertunda
-    return immutable(this.pendingBlocks) // Mengembalikan array blok yang dibekukan
+    return this.pendingBlocks // Mengembalikan array blok yang dibekukan
   }
 }
