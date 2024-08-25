@@ -123,5 +123,29 @@ x.addPendingTx({
   recipient: 'recipient2',
   message: 'test',
 })
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 200,
+  sender: 'sender2',
+  recipient: 'recipient2',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+  message: 'test',
+})
+x.addPendingTx({
+  amount: 200,
+  sender: 'sender2',
+  recipient: 'recipient2',
+  message: 'test',
+})
 console.log(x.getPendingTx())
 console.log(x.getPendingBlocks())
