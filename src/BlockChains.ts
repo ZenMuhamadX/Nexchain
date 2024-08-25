@@ -145,7 +145,66 @@ y.addPendingTx({
   sender: 'sender3',
   recipient: 'recipient3',
 })
-
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender2',
+  recipient: 'recipient2',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender3',
+  recipient: 'recipient3',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender2',
+  recipient: 'recipient2',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender3',
+  recipient: 'recipient3',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender2',
+  recipient: 'recipient2',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender3',
+  recipient: 'recipient3',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender2',
+  recipient: 'recipient2',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender3',
+  recipient: 'recipient3',
+})
 x.addTxToBlock(y)
 console.log(x.getLatestBlock()?.getTransactions())
 console.log(x.getChains())
