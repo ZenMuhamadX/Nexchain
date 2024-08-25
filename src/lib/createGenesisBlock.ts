@@ -1,5 +1,5 @@
 import { Block } from '../model/Block'
-
+// Create Genesis Block
 export const createGenesisBlock = () => {
   return new Block(
     0,

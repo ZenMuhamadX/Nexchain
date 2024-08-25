@@ -1,5 +1,4 @@
 // models/TxInterface.ts
-import crypto from 'crypto'
 export interface TxInterface {
   txHash?: string
   amount: number

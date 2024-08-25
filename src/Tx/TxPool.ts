@@ -31,7 +31,7 @@ export class TxPool {
     }
   }
 
-  createPendingBlock(): void {
+  private createPendingBlock(): void {
     // Fungsi untuk membuat blok baru dari transaksi yang tertunda
     const txForBlock = this.pendingTx.splice(0, 10) // Mengambil dan menghapus 10 transaksi pertama
     const timestampz = generateTimestampz() // Menghasilkan timestamp
@@ -44,78 +44,3 @@ export class TxPool {
     return immutable(this.pendingBlocks) as pendingBlock[]
   }
 }
-
-const x = new TxPool()
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 200,
-  sender: 'sender2',
-  recipient: 'recipient2',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 200,
-  sender: 'sender2',
-  recipient: 'recipient2',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 200,
-  sender: 'sender2',
-  recipient: 'recipient2',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 200,
-  sender: 'sender2',
-  recipient: 'recipient2',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 200,
-  sender: 'sender2',
-  recipient: 'recipient2',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 100,
-  sender: 'sender1',
-  recipient: 'recipient1',
-  message: 'test',
-})
-x.addPendingTx({
-  amount: 200,
-  sender: 'sender2',
-  recipient: 'recipient2',
-  message: 'test',
-})
-console.log(x.getPendingBlocks()[0].getTx())

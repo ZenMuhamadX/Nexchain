@@ -56,7 +56,7 @@ export class BlockChains {
     return new Block(
       this._chains.length,
       generateTimestampz(),
-      tx.getPendingTx(),
+      tx.getPendingBlocks(),
       latestBlock.hash
     )
   }
@@ -82,3 +82,70 @@ export class BlockChains {
     return currentBlock.index === previousBlock.index + 1
   }
 }
+
+const x = new BlockChains()
+const y = new TxPool()
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender2',
+  recipient: 'recipient2',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender3',
+  recipient: 'recipient3',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender2',
+  recipient: 'recipient2',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender3',
+  recipient: 'recipient3',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender2',
+  recipient: 'recipient2',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender3',
+  recipient: 'recipient3',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender1',
+  recipient: 'recipient1',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender2',
+  recipient: 'recipient2',
+})
+y.addPendingTx({
+  amount: 100,
+  sender: 'sender3',
+  recipient: 'recipient3',
+})
+
+x.addTxToBlock(y)
+console.log(x.getLatestBlock())
+console.log(x.getChains())
