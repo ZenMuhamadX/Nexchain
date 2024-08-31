@@ -1,5 +1,5 @@
 interface errorInfo {
-  error: string
+  error: string | any,
   time: string
   hint?: string
   warning?: any

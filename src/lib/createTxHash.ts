@@ -29,7 +29,7 @@ export const createTxHash = (
   do {
     hash = createHash(data, nonce)
     nonce++
-  } while (!hash.startsWith('0x0'.repeat(difficulty))) // Memeriksa apakah hash dimulai dengan jumlah '0' yang dibutuhkan.
+  } while (!hash.startsWith('0x'.repeat(difficulty))) // Memeriksa apakah hash dimulai dengan jumlah '0' yang dibutuhkan.
 
   // Mengembalikan nonce dan hash.
   return { nonce: nonce - 1, hash }

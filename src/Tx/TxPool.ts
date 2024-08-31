@@ -4,6 +4,7 @@ import { TxBlock } from '../model/TxBlock' // Mengimpor class untuk blok yang te
 import { createTxHash } from '../lib/createTxHash'
 import { validatorIntercafeTx } from '../txValidator/interfaceTxValidator'
 import { loggingErr } from '../logging/errorLog'
+import { succesLog } from '../logging/succesLog'
 
 interface RawTransaction {
   amount: number
@@ -24,7 +25,7 @@ export class TransactionPool {
     this.timestamp = generateTimestampz() // Menghasilkan timestamp saat inisialisasi
   }
 
-  addTransactionToPool(transactionData: RawTransaction): void {
+  public addTransactionToPool(transactionData: RawTransaction): void {
     // Fungsi untuk menambahkan transaksi ke array transaksi yang tertunda
     const { error, value, warning } =
       validatorIntercafeTx.validate(transactionData)
@@ -65,7 +66,7 @@ export class TransactionPool {
     this.pendingBlocks.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
   }
 
- public getPendingBlocks() {
+  public getPendingBlocks() {
     // Fungsi untuk mendapatkan array blok yang tertunda
     return this.pendingBlocks // Mengembalikan array blok yang dibekukan
   }

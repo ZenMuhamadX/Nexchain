@@ -1,6 +1,5 @@
 import immutable from 'deep-freeze'
 // Mengimpor fungsi untuk menghasilkan hash blok
-import { generateBlockHash } from '../lib/generateHash'
 import { TxBlock, TxInterface } from './TxBlock'
 
 // models/Block.ts
@@ -16,20 +15,26 @@ export class Block {
   public previousHash: string
   // Hash dari blok ini
   public hash: string
+  // Signature
+  public signature: string
 
   // Konstruktor untuk kelas Block
   constructor(
     index: number,
     timestamp: string,
     transactions: TxInterface[],
-    previousHash: string
+    previousHash: string,
+    validHash: string,
+    signature: string
   ) {
     this.index = index
     this.timestamp = timestamp
     this.transactions = transactions
     this.previousHash = previousHash
     // Menghasilkan hash blok
-    this.hash = generateBlockHash(index, timestamp, transactions, previousHash)
+    this.hash = validHash
+    // Menambahkan tanda tangan (signature)
+    this.signature = signature
   }
 
   public getBlock() {
