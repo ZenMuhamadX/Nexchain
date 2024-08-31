@@ -32,6 +32,10 @@ export class Block {
     this.hash = generateBlockHash(index, timestamp, transactions, previousHash)
   }
 
+  public getBlock() {
+    return immutable(this) as Block
+  }
+
   // Mendapatkan transaksi yang termasuk dalam blok
   public getTransactions(): TxInterface[] {
     return immutable(this.transactions) as TxInterface[]

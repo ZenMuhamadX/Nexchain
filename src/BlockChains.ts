@@ -5,7 +5,8 @@ import { createGenesisBlock } from './lib/createGenesisBlock'
 import { generateTimestampz } from './lib/generateTimestampz'
 import { Block } from './model/Block'
 import { generateBlockHash } from './lib/generateHash'
-import { TxBlock, TxInterface } from './model/TxBlock'
+import { saveBlock } from './lib/writeBlock'
+import { loggingErr } from './logging/errorLog'
 
 export class BlockChains {
   private _chains: Block[]
@@ -14,9 +15,10 @@ export class BlockChains {
     this._chains = [createGenesisBlock()]
   }
 
-  public addTxToBlock(tx: TransactionPool) {
+  public addTxToBlockChains(tx: TransactionPool) {
     const newBlock = this.createBlock(tx)
     this._chains.push(newBlock)
+    saveBlock(newBlock)
     return newBlock
   }
 
@@ -48,11 +50,18 @@ export class BlockChains {
   private createBlock(tx: TransactionPool): Block {
     const latestBlock = this.getLatestBlock()
     if (!latestBlock) {
+      loggingErr({
+        error: 'Latest block is undefined.',
+        time: generateTimestampz(),
+      })
       throw new Error('Latest block is undefined.')
     }
     const TxBlock = tx.getPendingBlocks()
-    console.log(TxBlock)
     if (!TxBlock.length) {
+      loggingErr({
+        error: 'Pending Block Not Found',
+        time: generateTimestampz(),
+      })
       throw new Error('Pending Block Not Found')
     }
 
