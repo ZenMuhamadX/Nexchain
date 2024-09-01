@@ -47,4 +47,4 @@ const blockNew = new Block(
   result.hash,
   generateSignature(result.hash)
 )
-console.log(blockNew)
+console.log(blockNew);
