@@ -11,7 +11,7 @@ export const createGenesisBlock = () => {
     const genesisBlock = new Block(
       0,
       `${generateTimestampz()}`,
-      [],
+      [{ amount: 0, sender: '0', recipient: '0', message: 'Genesis Block' }],
       '0',
       `${generateBlockHash(0, '01/01/2023', [], '0')}`,
       `${generateSignature(`${generateBlockHash(0, '01/01/2023', [], '0')}`)}`
