@@ -19,5 +19,5 @@ export const succesLog = (blockInfo: blockInfo) => {
     nonce: blockInfo.nonce,
   }
 
-  console.table([blockInfoParsed])
+  console.info(blockInfoParsed)
 }
