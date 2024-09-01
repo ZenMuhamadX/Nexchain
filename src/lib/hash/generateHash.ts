@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-import { TxBlock, TxInterface } from '../model/TxBlock'
+import { TxBlock, TxInterface } from '../../model/TxBlock'
 
 export const generateBlockHash = (
   index: number,

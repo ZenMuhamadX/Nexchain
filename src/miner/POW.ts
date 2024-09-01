@@ -1,7 +1,7 @@
 import * as crypto from 'crypto'
 import { BlockChains } from '../BlockChains'
 import { TransactionPool } from '../Tx/TxPool'
-import { generateTimestampz } from '../lib/generateTimestampz'
+import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { BSON } from 'bson'
 
 interface blockData {
@@ -12,7 +12,9 @@ interface blockData {
   signature: string
 }
 
-export const proofOfWork = (blockData: blockData): { nonce: number; hash: string } => {
+export const proofOfWork = (
+  blockData: blockData
+): { nonce: number; hash: string } => {
   let nonce = 0
 
   while (true) {

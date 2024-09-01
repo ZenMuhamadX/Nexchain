@@ -1,9 +1,9 @@
-import { loggingErr } from '../logging/errorLog'
-import { proofOfWork } from '../miner/POW'
-import { Block } from '../model/Block'
-import { generateBlockHash } from './generateHash'
-import { generateSignature } from './generateSIgnature'
-import { generateTimestampz } from './generateTimestampz'
+import { loggingErr } from '../../logging/errorLog'
+import { proofOfWork } from '../../miner/POW'
+import { Block } from '../../model/Block'
+import { generateBlockHash } from '../hash/generateHash'
+import { generateSignature } from '../hash/generateSIgnature'
+import { generateTimestampz } from '../timestamp/generateTimestampz'
 
 // Create Genesis Block
 export const createGenesisBlock = () => {

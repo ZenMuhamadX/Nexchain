@@ -1,7 +1,7 @@
-import { generateTimestampz } from './../lib/generateTimestampz' // Mengimpor fungsi untuk menghasilkan timestamp
+import { generateTimestampz } from '../lib/timestamp/generateTimestampz' // Mengimpor fungsi untuk menghasilkan timestamp
 import { TxInterface } from '../model/TxBlock' // Mengimpor interface untuk objek transaksi
 import { TxBlock } from '../model/TxBlock' // Mengimpor class untuk blok yang tertunda
-import { createTxHash } from '../lib/createTxHash'
+import { createTxHash } from '../lib/hash/createTxHash'
 import { validatorIntercafeTx } from '../txValidator/interfaceTxValidator'
 import { loggingErr } from '../logging/errorLog'
 import { succesLog } from '../logging/succesLog'

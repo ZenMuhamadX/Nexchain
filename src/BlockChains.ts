@@ -1,15 +1,15 @@
 // BlockChains.ts
 import immutable from 'deep-freeze'
 import { TransactionPool } from './Tx/TxPool'
-import { createGenesisBlock } from './lib/createGenesisBlock'
-import { generateTimestampz } from './lib/generateTimestampz'
+import { createGenesisBlock } from './lib/block/createGenesisBlock'
+import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/Block'
-import { generateBlockHash } from './lib/generateHash'
-import { saveBlock } from './lib/saveBlock'
+import { generateBlockHash } from './lib/hash/generateHash'
+import { saveBlock } from './lib/block/saveBlock'
 import { loggingErr } from './logging/errorLog'
 import { succesLog } from './logging/succesLog'
-import { generateSignature } from './lib/generateSIgnature'
-import { proofOfWork} from './miner/POW'
+import { generateSignature } from './lib/hash/generateSIgnature'
+import { proofOfWork } from './miner/POW'
 
 export class BlockChains {
   private _chains: Block[]
