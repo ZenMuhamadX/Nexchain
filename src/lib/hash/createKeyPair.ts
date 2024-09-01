@@ -5,8 +5,8 @@ import * as path from 'path'
 // Fungsi untuk menghasilkan pasangan kunci atau membacanya dari file
 export const createKeyPair = () => {
   // Tentukan path file kunci
-  const publicKeyPath = path.join(__dirname, '../../key/public.pem')
-  const privateKeyPath = path.join(__dirname, '../../key/private.pem')
+  const publicKeyPath = path.join(__dirname, '../../../key/public.pem')
+  const privateKeyPath = path.join(__dirname, '../../../key/private.pem')
 
   // Cek apakah file kunci sudah ada
   if (fs.existsSync(publicKeyPath) && fs.existsSync(privateKeyPath)) {
