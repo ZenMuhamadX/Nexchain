@@ -17,6 +17,8 @@ export class Block {
   public hash: string
   // Signature
   public signature: string
+  // Nonce
+  public nonce?: number
 
   // Konstruktor untuk kelas Block
   constructor(
@@ -25,7 +27,8 @@ export class Block {
     transactions: TxInterface[],
     previousHash: string,
     validHash: string,
-    signature: string
+    signature: string,
+    nonce?: number
   ) {
     this.index = index
     this.timestamp = timestamp
@@ -35,6 +38,8 @@ export class Block {
     this.hash = validHash
     // Menambahkan tanda tangan (signature)
     this.signature = signature
+    // Menambahkan nonce (opsional)
+    this.nonce = nonce
   }
 
   public getBlock() {

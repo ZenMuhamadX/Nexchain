@@ -8,6 +8,6 @@ export const generateBlockHash = (
   previousHash?: string
 ) => {
   const hash = crypto.createHash('sha256')
-  hash.update(`${index}-${timestamp}-${Tx}-${previousHash}`)
+  hash.update(`${index}-${timestamp}-${Tx}-${previousHash}-0`)
   return hash.digest('hex')
 }

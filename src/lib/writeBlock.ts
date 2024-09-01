@@ -65,7 +65,7 @@ export const saveBlock = (blockData: Block): boolean => {
 export const loadBlock = (fileName: string): Block | null => {
   try {
     // Baca Buffer dari file
-    const buffer = fs.readFileSync(`${fileName}.bin`)
+    const buffer = fs.readFileSync(`${fileName}.dat`)
     // Deserialize buffer ke dalam objek Block
     return deserializeBlockFromBinary(buffer)
   } catch (error) {

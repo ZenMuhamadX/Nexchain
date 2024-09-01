@@ -1,7 +1,8 @@
 import * as crypto from 'crypto'
 import { BlockChains } from '../BlockChains'
-import { Block } from '../model/Block'
-import { generateSignature } from '../lib/generateSIgnature'
+import { TransactionPool } from '../Tx/TxPool'
+import { generateTimestampz } from '../lib/generateTimestampz'
+import { BSON } from 'bson'
 
 interface blockData {
   index: number
@@ -11,40 +12,116 @@ interface blockData {
   signature: string
 }
 
-export const POW = (blockData: blockData): { nonce: number; hash: string } => {
+export const proofOfWork = (blockData: blockData): { nonce: number; hash: string } => {
   let nonce = 0
 
   while (true) {
-    // Gabungkan prefix dan nonce
-    const data = `${blockData}-${nonce}`
+    // Gabungkan prefix dan nonce ke dalam objek
+    const combinedData = {
+      nonce,
+      index: blockData.index,
+      timestamp: blockData.timestamp,
+      transactions: blockData.transactions,
+      previousHash: blockData.previousHash,
+      signature: blockData.signature,
+    }
+
+    // Ubah objek menjadi BSON Buffer
+    const dataBuffer = BSON.serialize(combinedData)
 
     // Hitung hash SHA-256
-    const hash = crypto.createHash('sha256').update(data).digest('hex')
+    const hash = crypto.createHash('sha256').update(dataBuffer).digest('hex')
 
     // Periksa apakah hash dimulai dengan awalan yang diinginkan
-    if (hash.startsWith('00000')) {
+    if (hash.startsWith('000')) {
       return { nonce, hash }
     }
 
     nonce++ // Tambah nonce dan coba lagi
   }
 }
-const latestBlock = new BlockChains().getLatestBlock()
 
-const result = POW({
-  index: latestBlock!.index + 1,
-  timestamp: latestBlock!.timestamp,
-  transactions: latestBlock!.getTransactions(),
-  previousHash: latestBlock!.hash,
-  signature: latestBlock!.signature,
+const block = new BlockChains()
+const latestBlock = block.getLatestBlock()
+const txPool = new TransactionPool()
+
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 10000,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
+})
+txPool.addTransactionToPool({
+  sender: '0x',
+  amount: 12,
+  recipient: '0x1',
+  timestamp: generateTimestampz(),
+  message: 'first',
 })
 
-const blockNew = new Block(
-  latestBlock!.index + 1,
-  latestBlock!.timestamp,
-  latestBlock!.getTransactions(),
-  latestBlock!.hash,
-  result.hash,
-  generateSignature(result.hash)
-)
-console.log(blockNew);
+block.addBlockToChain(txPool)
+console.log(block.getChains())

@@ -1,5 +1,5 @@
 import { loggingErr } from '../logging/errorLog'
-import { succesLog } from '../logging/succesLog'
+import { proofOfWork } from '../miner/POW'
 import { Block } from '../model/Block'
 import { generateBlockHash } from './generateHash'
 import { generateSignature } from './generateSIgnature'
@@ -11,18 +11,13 @@ export const createGenesisBlock = () => {
     const genesisBlock = new Block(
       0,
       `${generateTimestampz()}`,
-      [{ amount: 0, sender: '0', recipient: '0', message: 'Genesis Block' }],
+      [],
       '0',
       `${generateBlockHash(0, '01/01/2023', [], '0')}`,
-      `${generateSignature(`${generateBlockHash(0, '01/01/2023', [], '0')}`)}`
+      `0`,
+      0
     )
-    succesLog({
-      hash: genesisBlock.hash,
-      previousHash: genesisBlock.previousHash,
-      index: genesisBlock.index,
-      signature: genesisBlock.signature,
-      timestamp: genesisBlock.timestamp,
-    })
+    genesisBlock.signature = generateSignature(genesisBlock.hash)
     return genesisBlock
   } catch (error) {
     loggingErr({
