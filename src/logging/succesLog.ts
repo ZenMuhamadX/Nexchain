@@ -1,4 +1,8 @@
-interface blockInfo {
+import * as fs from 'fs'
+import * as path from 'path'
+
+// Definisi interface BlockInfo
+interface BlockInfo {
   timestamp?: string
   hash?: string
   previousHash?: string
@@ -8,16 +12,35 @@ interface blockInfo {
   nonce?: number
 }
 
-export const succesLog = (blockInfo: blockInfo) => {
-  const blockInfoParsed = {
-    index: blockInfo.index,
-    timestamp: blockInfo.timestamp,
-    hash: blockInfo.hash,
-    previousHash: blockInfo.previousHash,
-    signature: blockInfo.signature,
-    message: blockInfo.message,
-    nonce: blockInfo.nonce,
-  }
+// Fungsi untuk menyimpan log ke dalam file
+export const successLog = (blockInfo: BlockInfo) => {
+  // Format log sebagai string teks
+  const logMessage =
+    [
+      `Timestamp: ${blockInfo.timestamp || 'N/A'}`,
+      `Hash: ${blockInfo.hash || 'N/A'}`,
+      `Message: ${blockInfo.message || 'N/A'}`,
+      `Nonce: ${blockInfo.nonce !== undefined ? blockInfo.nonce : 'N/A'}`,
+      '----------------------------------', // Separator for readability
+    ].join('\n') + '\n'
 
-  console.info(blockInfoParsed)
+  // Tentukan path direktori dan file log
+  const logDirPath = path.join(__dirname, '../../log')
+  const logFilePath = path.join(logDirPath, 'blockfile.log')
+
+  try {
+    // Membuat direktori jika belum ada
+    if (!fs.existsSync(logDirPath)) {
+      fs.mkdirSync(logDirPath, { recursive: true })
+    }
+
+    // Menulis log ke dalam file
+    fs.appendFileSync(logFilePath, logMessage, 'utf8')
+
+    // Juga mencetak log ke konsol untuk konfirmasi (opsional)
+    console.info('Log saved:', logMessage)
+  } catch (error) {
+    // Menangani kesalahan jika proses penyimpanan gagal
+    console.error('Error saving log:', error)
+  }
 }

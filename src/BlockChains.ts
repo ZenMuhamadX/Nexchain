@@ -7,7 +7,7 @@ import { Block } from './model/Block'
 import { generateBlockHash } from './lib/hash/generateHash'
 import { saveBlock } from './lib/block/saveBlock'
 import { loggingErr } from './logging/errorLog'
-import { succesLog } from './logging/succesLog'
+import { successLog } from './logging/succesLog'
 import { generateSignature } from './lib/hash/generateSIgnature'
 import { proofOfWork } from './miner/POW'
 
@@ -23,7 +23,7 @@ export class BlockChains {
       const newBlock = this.createBlock(transaction)
       saveBlock(newBlock)
       this._chains.push(newBlock)
-      succesLog({
+      successLog({
         hash: newBlock.hash,
         index: newBlock.index,
         previousHash: newBlock.previousHash,
