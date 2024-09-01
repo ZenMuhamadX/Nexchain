@@ -2,6 +2,7 @@ import fs from 'fs'
 import { Block } from '../../model/Block'
 import path from 'path'
 import { serializeBlockToBinary } from '../utils/serialize';
+import { createBlockName } from '../utils/createBlockName';
 
 
 // Fungsi untuk menyimpan Block ke dalam file
@@ -11,7 +12,7 @@ export const saveBlock = (blockData: Block): boolean => {
     const serializeBlock = serializeBlockToBinary(blockData);
 
     // Dapatkan nama file untuk menyimpan block
-    const fileName = getBlockName();
+    const fileName = createBlockName();
 
     // Tentukan path file (opsional, jika ingin menyimpan di direktori tertentu)
     const dirPath = path.join(__dirname, '../../blocks');

@@ -2,7 +2,7 @@
 let currentNum = 0
 
 // Fungsi untuk mendapatkan nama file block berikutnya dengan nomor urut yang di-format
-const getBlockName = (): string => {
+export const createBlockName = (): string => {
   // Increment nomor urut
   currentNum++
   // Format nomor dengan jumlah digit yang diinginkan, misalnya 10 digit
