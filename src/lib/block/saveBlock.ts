@@ -16,7 +16,7 @@ export const saveBlock = (blockData: Block): boolean => {
 
     // Tentukan path file (opsional, jika ingin menyimpan di direktori tertentu)
     const dirPath = path.join(__dirname, '../../blocks');
-    const filePath = path.join(dirPath, `${fileName}.dat`);
+    const filePath = path.join(dirPath, `${fileName}.bin`);
 
     // Membuat direktori jika belum ada
     if (!fs.existsSync(dirPath)) {
