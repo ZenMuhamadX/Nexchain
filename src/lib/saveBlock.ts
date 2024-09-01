@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { Block } from '../model/Block'
 import { BSON } from 'bson'
+import path from 'path'
 
 // Menyimpan nomor urut terakhir dalam variabel global untuk menghasilkan nama file yang unik
 let currentNum = 0
@@ -48,18 +49,29 @@ const getBlockName = (): string => {
 export const saveBlock = (blockData: Block): boolean => {
   try {
     // Serialize blockData ke dalam format binary
-    const serializeBlock = serializeBlockToBinary(blockData)
+    const serializeBlock = serializeBlockToBinary(blockData);
+
     // Dapatkan nama file untuk menyimpan block
-    const fileName = getBlockName()
+    const fileName = getBlockName();
+
+    // Tentukan path file (opsional, jika ingin menyimpan di direktori tertentu)
+    const dirPath = path.join(__dirname, '../../blocks');
+    const filePath = path.join(dirPath, `${fileName}.dat`);
+
+    // Membuat direktori jika belum ada
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+
     // Tulis Buffer ke dalam file dengan nama yang dihasilkan
-    fs.writeFileSync(`${fileName}.dat`, serializeBlock, 'binary')
-    return true
+    fs.writeFileSync(filePath, serializeBlock, 'binary');
+    return true;
   } catch (error) {
     // Tangani error jika proses penyimpanan gagal
-    console.error('Error saving block:', error)
-    return false
+    console.error('Error saving block:', error);
+    return false;
   }
-}
+};
 
 // Fungsi untuk memuat Block dari file
 export const loadBlock = (fileName: string): Block | null => {
