@@ -15,6 +15,19 @@ interface BlockInfo {
 // Fungsi untuk menyimpan log ke dalam file
 export const successLog = (blockInfo: BlockInfo) => {
   // Format log sebagai string teks
+  const saveLogMessage =
+    [
+      `Timestamp: ${blockInfo.timestamp || 'N/A'}`,
+      `index: ${blockInfo.index || 'N/A'}`,
+      `Message: ${blockInfo.message || 'N/A'}`,
+      `Hash: ${blockInfo.hash || 'N/A'}`,
+      `previousHash: ${blockInfo.previousHash || 'N/A'}`,
+      `Nonce: ${blockInfo.nonce !== undefined ? blockInfo.nonce : 'N/A'}`,
+      `signature: ${blockInfo.signature || 'N/A'}`,
+      '----------------------------------', // Separator for readability
+    ].join('\n') + '\n'
+
+  // Format log untuk mencetak ke konsol
   const logMessage =
     [
       `Timestamp: ${blockInfo.timestamp || 'N/A'}`,
@@ -35,7 +48,7 @@ export const successLog = (blockInfo: BlockInfo) => {
     }
 
     // Menulis log ke dalam file
-    fs.appendFileSync(logFilePath, logMessage, 'utf8')
+    fs.appendFileSync(logFilePath, saveLogMessage, 'utf8')
 
     // Juga mencetak log ke konsol untuk konfirmasi (opsional)
     console.info('Log saved:', logMessage)
