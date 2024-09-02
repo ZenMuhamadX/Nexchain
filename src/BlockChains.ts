@@ -1,18 +1,15 @@
 // BlockChains.ts
-import { TxInterface } from './model/Tx'
-import { TxPool } from './Tx/TxPool'
-import { createGenesisBlock } from './lib/createGenesisBlock'
-import { generateBlockHash } from './lib/generateHash'
-import { generateTimestampz } from './lib/generateTimestampz'
+import immutable from 'deep-freeze'
+import { TransactionPool } from './Tx/TxPool'
+import { createGenesisBlock } from './lib/block/createGenesisBlock'
+import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/Block'
-
-interface ChainDetails {
-  index: number
-  timestamp: string
-  transactions: TxInterface[]
-  previousHash: string
-  hash: string
-}
+import { generateBlockHash } from './lib/hash/generateHash'
+import { saveBlock } from './lib/block/saveBlock'
+import { loggingErr } from './logging/errorLog'
+import { successLog } from './logging/succesLog'
+import { generateSignature } from './lib/hash/generateSIgnature'
+import { proofOfWork } from './miner/POW'
 
 export class BlockChains {
   private _chains: Block[]
@@ -21,18 +18,37 @@ export class BlockChains {
     this._chains = [createGenesisBlock()]
   }
 
-  public addTxToBlock(tx: TxPool): void {
-    const newBlock = this.createBlock(tx)
-    this._chains.push(newBlock)
-    tx.clear()
+  public addBlockToChain(transaction: TransactionPool) {
+    try {
+      const newBlock = this.createBlock(transaction)
+      saveBlock(newBlock)
+      this._chains.push(newBlock)
+      successLog({
+        hash: newBlock.hash,
+        index: newBlock.index,
+        previousHash: newBlock.previousHash,
+        signature: newBlock.signature,
+        message: 'Block added to the chain',
+        timestamp: generateTimestampz(),
+        nonce: newBlock.nonce,
+      })
+    } catch (error) {
+      loggingErr({
+        error: error as string,
+        time: generateTimestampz(),
+        hint: 'Error in addBlockToChain',
+      })
+      throw error
+    }
   }
 
-  public getChains(): ChainDetails[] {
-    return this._chains
+  public getChains(): ReadonlyArray<Block> {
+    return immutable(this._chains) as ReadonlyArray<Block>
   }
 
-  public getLatestBlock(): Block {
-    return this._chains[this._chains.length - 1]
+  public getLatestBlock(): Block | undefined {
+    const latestBlock = this._chains[this._chains.length - 1]
+    return latestBlock ? (immutable(latestBlock) as Block) : undefined
   }
 
   public isChainValid(): boolean {
@@ -51,14 +67,48 @@ export class BlockChains {
     return true
   }
 
-  private createBlock(tx: TxPool): Block {
+  private createBlock(tx: TransactionPool): Block {
     const latestBlock = this.getLatestBlock()
-    return new Block(
+    if (!latestBlock) {
+      loggingErr({
+        error: 'Latest block is undefined.',
+        time: generateTimestampz(),
+      })
+      throw new Error('Latest block is undefined.')
+    }
+    const TxBlock = tx.getPendingBlocks()
+    if (!TxBlock.length) {
+      loggingErr({
+        error: 'Pending Block Not Found',
+        time: generateTimestampz(),
+      })
+      throw new Error('Pending Block Not Found')
+    }
+
+    const newBlock = new Block(
       this._chains.length,
       generateTimestampz(),
-      tx.getPendingTx(),
-      latestBlock.hash
+      TxBlock,
+      latestBlock.hash,
+      '',
+      generateSignature(latestBlock.hash),
+      0
     )
+    newBlock.hash = proofOfWork({
+      index: newBlock.index,
+      timestamp: newBlock.timestamp,
+      transactions: newBlock.getTransactions(),
+      previousHash: newBlock.previousHash,
+      signature: newBlock.signature,
+    }).hash
+    newBlock.nonce = proofOfWork({
+      index: newBlock.index,
+      timestamp: newBlock.timestamp,
+      transactions: newBlock.getTransactions(),
+      previousHash: newBlock.previousHash,
+      signature: newBlock.signature,
+    }).nonce
+    return newBlock
   }
 
   private isHashValid(currentBlock: Block): boolean {
@@ -68,26 +118,17 @@ export class BlockChains {
       currentBlock.getTransactions(),
       currentBlock.previousHash
     )
-    if (currentBlock.hash !== calculatedHash) {
-      return false
-    }
-    return true
+    return currentBlock.hash === calculatedHash
   }
 
   private isPreviousHashValid(
     currentBlock: Block,
     previousBlock: Block
   ): boolean {
-    if (currentBlock.previousHash !== previousBlock.hash) {
-      return false
-    }
-    return true
+    return currentBlock.previousHash === previousBlock.hash
   }
 
   private isIndexValid(currentBlock: Block, previousBlock: Block): boolean {
-    if (currentBlock.index !== previousBlock.index + 1) {
-      return false
-    }
-    return true
+    return currentBlock.index === previousBlock.index + 1
   }
 }
