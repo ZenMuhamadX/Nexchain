@@ -1,40 +1,36 @@
-import * as fs from 'fs'
+import pino from 'pino'
 import * as path from 'path'
 
 // Definisi interface Status
 interface Status {
   mined_at: string
-  hash: string
+  hash: string | any
   miner: string
   difficulty: number
-  nonce: number
+  nonce: number | any
 }
 
-// Fungsi untuk menyimpan log mining ke dalam file
-export const mineLog = (status: Status) => {
-  // Format log sebagai string teks
-  const logMessage =
-    [
-      `Mined At: ${status.mined_at}`,
-      `Hash: ${status.hash}`,
-      `Miner: ${status.miner}`,
-      `Difficulty: ${status.difficulty}`,
-      `Nonce: ${status.nonce}`,
-      '----------------------------------', // Separator for readability
-    ].join('\n') + '\n'
+// Tentukan path direktori dan file log
+const logDirPath = path.join(__dirname, '../../log')
+const logFilePath = path.join(logDirPath, 'mining_log.log')
 
-  // Tentukan path direktori dan file log
-  const logDirPath = path.join(__dirname, '../../log')
-  const logFilePath = path.join(logDirPath, 'mining_log.log')
+// Buat logger Pino dengan transportasi ke file
+const logger = pino({ level: 'info' },pino.destination(logFilePath))
+
+// Fungsi untuk menyimpan log mining menggunakan Pino
+export const mineLog = (status: Status) => {
+  // Format log message
+  const logMessage = {
+    mined_at: status.mined_at,
+    hash: status.hash,
+    miner: status.miner,
+    difficulty: status.difficulty,
+    nonce: status.nonce,
+  }
 
   try {
-    // Membuat direktori jika belum ada
-    if (!fs.existsSync(logDirPath)) {
-      fs.mkdirSync(logDirPath, { recursive: true })
-    }
-
     // Menulis log ke dalam file
-    fs.appendFileSync(logFilePath, logMessage, 'utf8')
+    logger.info(logMessage)
 
     // Juga mencetak log ke konsol untuk konfirmasi (opsional)
     console.info('Mining log saved:', logMessage)

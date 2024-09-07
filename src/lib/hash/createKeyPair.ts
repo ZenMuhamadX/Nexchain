@@ -40,4 +40,3 @@ export const createKeyPair = () => {
     return { publicKey, privateKey }
   }
 }
-createKeyPair()

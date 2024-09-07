@@ -5,5 +5,4 @@ export const validatorIntercafeTx = Joi.object({
   sender: Joi.string().required(),
   recipient: Joi.string().required(),
   message: Joi.string().optional(),
-  timestamp: Joi.string().required(),
 })

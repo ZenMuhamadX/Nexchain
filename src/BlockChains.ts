@@ -1,16 +1,16 @@
 // BlockChains.ts
 import immutable from 'deep-freeze'
+import crypto from 'crypto'
 import { TransactionPool } from './Tx/TxPool'
 import { createGenesisBlock } from './lib/block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/Block'
-import { generateBlockHash } from './lib/hash/generateHash'
 import { saveBlock } from './lib/block/saveBlock'
 import { loggingErr } from './logging/errorLog'
 import { successLog } from './logging/succesLog'
 import { generateSignature } from './lib/hash/generateSIgnature'
 import { proofOfWork } from './miner/POW'
-
+import { BSON } from 'bson'
 export class BlockChains {
   private _chains: Block[]
 
@@ -18,7 +18,7 @@ export class BlockChains {
     this._chains = [createGenesisBlock()]
   }
 
-  public addBlockToChain(transaction: TransactionPool) {
+  public addBlockToChain(transaction: TransactionPool): boolean {
     try {
       const newBlock = this.createBlock(transaction)
       saveBlock(newBlock)
@@ -32,11 +32,13 @@ export class BlockChains {
         timestamp: generateTimestampz(),
         nonce: newBlock.nonce,
       })
+      return true
     } catch (error) {
       loggingErr({
         error: error as string,
         time: generateTimestampz(),
         hint: 'Error in addBlockToChain',
+        stack: new Error().stack,
       })
       throw error
     }
@@ -51,36 +53,21 @@ export class BlockChains {
     return latestBlock ? (immutable(latestBlock) as Block) : undefined
   }
 
-  public isChainValid(): boolean {
-    for (let i = 1; i < this._chains.length; i++) {
-      const currentBlock = this._chains[i]
-      const previousBlock = this._chains[i - 1]
-
-      if (
-        !this.isHashValid(currentBlock) ||
-        !this.isPreviousHashValid(currentBlock, previousBlock) ||
-        !this.isIndexValid(currentBlock, previousBlock)
-      ) {
-        return false
-      }
-    }
-    return true
-  }
-
-  private createBlock(tx: TransactionPool): Block {
+  private createBlock(pendingBlock: any): Block {
     const latestBlock = this.getLatestBlock()
     if (!latestBlock) {
       loggingErr({
         error: 'Latest block is undefined.',
         time: generateTimestampz(),
+        stack: new Error().stack,
       })
       throw new Error('Latest block is undefined.')
     }
-    const TxBlock = tx.getPendingBlocks()
-    if (!TxBlock.length) {
+    if (!pendingBlock) {
       loggingErr({
         error: 'Pending Block Not Found',
         time: generateTimestampz(),
+        stack: new Error().stack,
       })
       throw new Error('Pending Block Not Found')
     }
@@ -88,7 +75,7 @@ export class BlockChains {
     const newBlock = new Block(
       this._chains.length,
       generateTimestampz(),
-      TxBlock,
+      pendingBlock,
       latestBlock.hash,
       '',
       generateSignature(latestBlock.hash),
@@ -111,24 +98,48 @@ export class BlockChains {
     return newBlock
   }
 
-  private isHashValid(currentBlock: Block): boolean {
-    const calculatedHash = generateBlockHash(
-      currentBlock.index,
-      currentBlock.timestamp,
-      currentBlock.getTransactions(),
-      currentBlock.previousHash
-    )
-    return currentBlock.hash === calculatedHash
+  private verifyBlockHash(block: Block): boolean {
+    // Hitung hash dari block berdasarkan data block dan nonce
+    const combinedData = {
+      nonce: block.nonce,
+      index: block.index,
+      timestamp: block.timestamp,
+      transactions: block.getTransactions(),
+      previousHash: block.previousHash,
+      signature: block.signature,
+    }
+
+    // Ubah objek menjadi BSON Buffer
+    const dataBuffer = BSON.serialize(combinedData)
+
+    // Hitung hash SHA-256
+    const calculatedHash = crypto
+      .createHash('sha256')
+      .update(dataBuffer)
+      .digest('hex')
+
+    // Bandingkan hash yang dihitung dengan hash block
+    return block.hash === calculatedHash
   }
 
-  private isPreviousHashValid(
-    currentBlock: Block,
-    previousBlock: Block
-  ): boolean {
-    return currentBlock.previousHash === previousBlock.hash
+  // Verifikasi proof of work
+  private verifyProofOfWork(block: Block): boolean {
+    // Definisikan tingkat kesulitan (jumlah nol yang diperlukan di awal hash)
+    const difficulty = 4
+    const target = '0'.repeat(difficulty)
+
+    // Periksa apakah hash block memenuhi kriteria kesulitan
+    return block.hash.startsWith(target)
   }
 
-  private isIndexValid(currentBlock: Block, previousBlock: Block): boolean {
-    return currentBlock.index === previousBlock.index + 1
+  public verifyBlock(block: Block): boolean {
+    // Verifikasi hash block
+    const isHashValid = this.verifyBlockHash(block)
+
+    // Verifikasi proof of work
+    const isPowValid = this.verifyProofOfWork(block)
+
+    // Kembalikan true jika semua verifikasi berhasil
+    return isHashValid && isPowValid
   }
 }

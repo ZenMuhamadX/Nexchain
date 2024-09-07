@@ -4,16 +4,13 @@ import { TxBlock } from '../model/TxBlock' // Mengimpor class untuk blok yang te
 import { createTxHash } from '../lib/hash/createTxHash'
 import { validatorIntercafeTx } from '../txValidator/interfaceTxValidator'
 import { loggingErr } from '../logging/errorLog'
-import { succesLog } from '../logging/succesLog'
 
 interface RawTransaction {
   amount: number
   sender: string
   recipient: string
   message?: string
-  timestamp: string
 }
-
 export class TransactionPool {
   private pendingTransactions: TxInterface[] // Array untuk menyimpan transaksi yang tertunda
   private pendingBlocks: any // Array untuk menyimpan blok yang tertunda
@@ -35,6 +32,7 @@ export class TransactionPool {
         time: this.timestamp,
         warning: warning,
         hint: 'Invalid transaction data',
+        stack: new Error().stack
       })
     }
     const transaction: TxInterface = this.convertToTxInterface(value)
