@@ -1,16 +1,9 @@
 import { tcpNet } from './L1Net/tcp'
-import os from 'os'
+import { getIpv4 } from './lib/ip'
 import 'dotenv/config'
 
 const PORT = process.env.PORT || 5000
-
-const ip = os.networkInterfaces().eth0!
-let ipAddress = ''
-ip.forEach((details) => {
-  if (details.family === 'IPv4') {
-    ipAddress = details.address
-  }
-})
+const ipAddress = getIpv4()
 
 // Mulai server dan mendengarkan pada port
 tcpNet.listen(PORT, () => {
