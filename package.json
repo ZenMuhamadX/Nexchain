@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "start": "tsc && node ./dist/src/BlockChains.js"
+    "start": "tsc && node ./dist/src/network/mainNet.js",
+    "dev": "bun run --watch ./src/network/mainNet.ts"
   },
   "repository": {
     "type": "git",
