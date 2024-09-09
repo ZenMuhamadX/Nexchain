@@ -6,9 +6,11 @@ const PORT = process.env.PORT || 5000
 
 const ip = os.networkInterfaces().eth0!
 let ipAddress = ''
-if (ip[0].family === 'IPv4') {
-  ipAddress = ip[0].address
-}
+ip.forEach((details) => {
+  if (details.family === 'IPv4') {
+    ipAddress = details.address
+  }
+})
 
 // Mulai server dan mendengarkan pada port
 tcpNet.listen(PORT, () => {
