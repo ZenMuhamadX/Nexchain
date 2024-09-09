@@ -10,7 +10,7 @@ export const tcpNet = net.createServer((socket) => {
 
   // Ketika data diterima dari client
   socket.on('data', (data) => {
-    // Membersihkan data dari whitespace
+    // parse data
     const message = data.toString()
 
     console.log(`Received Command: ${message}`)
