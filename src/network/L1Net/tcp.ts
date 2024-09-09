@@ -12,7 +12,8 @@ export const tcpNet = net.createServer((socket) => {
   socket.on('data', (data) => {
     // parse data
     const message = data.toString()
-
+    console.log(message);
+return
     console.log(`Received Command: ${message}`)
 
     // Memproses pesan
