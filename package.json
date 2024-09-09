@@ -30,6 +30,7 @@
   "dependencies": {
     "bson": "^6.8.0",
     "deep-freeze": "^0.0.1",
+    "dotenv": "^16.4.5",
     "joi": "^17.13.3",
     "msgpack5": "^6.0.2",
     "navigator": "^1.0.1",
