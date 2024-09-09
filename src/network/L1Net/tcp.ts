@@ -11,8 +11,10 @@ export const tcpNet = net.createServer((socket) => {
   // Ketika data diterima dari client
   socket.on('data', (data) => {
 
+    const message = data.toString()
+
     // Memproses pesan
-    const response = processMessage(data)
+    const response = processMessage(message)
 
     // Mengirimkan balasan ke client
     socket.write(response)
