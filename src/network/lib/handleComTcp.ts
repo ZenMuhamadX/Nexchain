@@ -1,9 +1,9 @@
 // Fungsi untuk memproses pesan
-export const processMessage = (message: string): any => {
+export const processMessage = (message: Buffer): any => {
   // Contoh pemrosesan pesan
-  if (message.toLowerCase() === 'mine') {
+  if (message.toString() === 'mine') {
     return 'Hi there!'
-  } else if (message.toLowerCase() === 'hi') {
+  } else if (message.toString() === 'hi') {
     return 'Goodbye!'
   } else {
     return `You said: ${message}`
