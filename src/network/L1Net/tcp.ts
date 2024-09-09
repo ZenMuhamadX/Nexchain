@@ -15,7 +15,7 @@ export const tcpNet = net.createServer((socket) => {
     const response = processMessage(data)
 
     // Mengirimkan balasan ke client
-    socket.write(`asuuuu`,)
+    socket.write(response)
   })
 
   // Ketika client disconnect
