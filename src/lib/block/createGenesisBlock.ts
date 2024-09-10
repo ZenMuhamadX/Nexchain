@@ -7,15 +7,8 @@ import { generateTimestampz } from '../timestamp/generateTimestampz'
 // Create Genesis Block
 export const createGenesisBlock = () => {
   try {
-    const genesisBlock = new Block(
-      0,
-      `${generateTimestampz()}`,
-      [],
-      '0',
-      `${generateBlockHash(0, '01/01/2023', [], '0')}`,
-      `0`,
-      0,
-    )
+    const genesisBlock = new Block(0, generateTimestampz(), [], '0', '', '', 0)
+    genesisBlock.hash = generateBlockHash(0, generateTimestampz(), [], '0')
     genesisBlock.signature = generateSignature(genesisBlock.hash)
     return genesisBlock
   } catch (error) {

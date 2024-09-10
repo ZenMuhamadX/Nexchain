@@ -11,6 +11,7 @@ import { successLog } from './logging/succesLog'
 import { generateSignature } from './lib/hash/generateSIgnature'
 import { proofOfWork } from './miner/POW'
 import { BSON } from 'bson'
+
 export class BlockChains {
   private _chains: Block[]
 
@@ -143,3 +144,6 @@ export class BlockChains {
     return isHashValid && isPowValid
   }
 }
+
+const y = new BlockChains()
+console.log(y.getChains()[0].getWalletData())

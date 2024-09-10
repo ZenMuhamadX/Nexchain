@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "start": "lint && format && tsc && node ./dist/src/network/mainNet.js",
+    "start": "bun run lint && bun run format && tsc && node ./dist/src/network/mainNet.js",
     "dev": "bun run --watch ./src/network/mainNet.ts",
     "lint": "eslint .",
     "format": "prettier --write ."

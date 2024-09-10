@@ -1,6 +1,12 @@
+// Mengimpor fungsi
 import immutable from 'deep-freeze'
-// Mengimpor fungsi untuk menghasilkan hash blok
 import { TxBlock, TxInterface } from './TxBlock'
+
+interface walletData {
+  address: string
+  balance: number
+  signature: string
+}
 
 // models/Block.ts
 // Kelas ini merepresentasikan blok dalam blockchain
@@ -9,6 +15,8 @@ export class Block {
   public index: number
   // Timestamp blok
   public timestamp: string
+  // Data yang akan disimpan dalam blok
+  public walletData: walletData[]
   // Transaksi yang termasuk dalam blok
   public transactions: TxInterface[] | TxBlock[]
   // Hash dari blok sebelumnya dalam blockchain
@@ -19,6 +27,8 @@ export class Block {
   public signature: string
   // Nonce
   public nonce?: number
+  // reward
+  private reward: number
 
   // Konstruktor untuk kelas Block
   constructor(
@@ -36,10 +46,14 @@ export class Block {
     this.previousHash = previousHash
     // Menghasilkan hash blok
     this.hash = validHash
+
+    this.walletData = []
     // Menambahkan tanda tangan (signature)
     this.signature = signature
     // Menambahkan nonce (opsional)
     this.nonce = nonce
+    // reward
+    this.reward = 50
   }
 
   public getBlock() {
@@ -49,5 +63,25 @@ export class Block {
   // Mendapatkan transaksi yang termasuk dalam blok
   public getTransactions(): TxInterface[] {
     return immutable(this.transactions) as TxInterface[]
+  }
+  // Mendapatkan dataWallet
+  public getWalletData() {
+    const rawWallet = this.walletData
+    if (!rawWallet.length) {
+      return 'no wallet data'
+    }
+    return rawWallet.reduce(
+      (acc, wallet) => {
+        return {
+          ...acc,
+          [wallet.address]: {
+            // Menggunakan 'address' sebagai key
+            balance: wallet.balance,
+            signature: wallet.signature,
+          },
+        }
+      },
+      {} as Record<string, { balance: number; signature: string }>,
+    )
   }
 }
