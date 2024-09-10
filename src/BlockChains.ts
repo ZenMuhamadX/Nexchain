@@ -120,20 +120,3 @@ export class BlockChains {
     return this.verifyBlockHash(block) && this.verifyProofOfWork(block)
   }
 }
-
-const y = new BlockChains()
-const x = new TransactionPool()
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-x.addTransactionToPool({ amount: 0, recipient: '0x1', sender: '0x2' })
-// console.log(x.getPendingBlocks())
-// y.addBlockToChain(x)
-console.log(y.getChains())
