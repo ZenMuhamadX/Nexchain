@@ -1,17 +1,51 @@
 import { Block } from '../../model/Block'
 import fs from 'node:fs'
+import path from 'node:path'
 import { deserializeBlockFromBinary } from '../utils/deserialize'
+import { loggingErr } from '../../logging/errorLog'
+import { generateTimestampz } from '../timestamp/generateTimestampz'
 
-// Fungsi untuk memuat Block dari file
-export const loadBlock = (fileName: string): Block | null => {
+export const loadBlocks = (): Block[] | boolean => {
+  const dirPath = path.join(__dirname, '../../../blocks')
+
   try {
-    // Baca Buffer dari file
-    const buffer = fs.readFileSync(`${fileName}.dat`)
-    // Deserialize buffer ke dalam objek Block
-    return deserializeBlockFromBinary(buffer)
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath)
+    }
+
+    // Membaca semua file dalam direktori
+    const files = fs.readdirSync(dirPath)
+
+    if (files.length === 0) {
+      return false
+    }
+
+    // Filter file yang berawalan 'blk' dan berformat .bin
+    const blockFiles = files.filter(
+      (file) => file.startsWith('blk') && file.endsWith('.bin'),
+    )
+
+    // Array untuk menyimpan semua block
+    const blocks: Block[] = []
+
+    // Membaca dan mendeserialisasi setiap file
+    blockFiles.forEach((file) => {
+      const filePath = path.join(dirPath, file)
+      const blockBuffer = fs.readFileSync(filePath)
+      const block = deserializeBlockFromBinary(blockBuffer)
+      blocks.push(block)
+    })
+
+    // Mengurutkan blok berdasarkan index
+    blocks.sort((a, b) => a.index - b.index)
+
+    return blocks
   } catch (error) {
-    // Tangani error jika proses pemuatan gagal
-    console.error('Error loading block:', error)
-    return null
+    loggingErr({
+      error: error,
+      stack: new Error().stack,
+      time: generateTimestampz(),
+    })
+    return false
   }
 }
