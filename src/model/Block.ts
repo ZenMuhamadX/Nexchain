@@ -28,7 +28,7 @@ export class Block {
     previousHash: string,
     validHash: string,
     signature: string,
-    nonce?: number
+    nonce?: number,
   ) {
     this.index = index
     this.timestamp = timestamp

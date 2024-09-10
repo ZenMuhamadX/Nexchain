@@ -7,7 +7,7 @@ import { mineLog } from '../logging/mineLog'
 const chain = new BlockChains()
 const pool = new TransactionPool()
 
-export const miningBlock = () => {
+export const miningBlock = (addres: string) => {
   const pendingBlock = pool.getPendingBlocks()
   try {
     if (!pendingBlock.length) {
@@ -26,7 +26,7 @@ export const miningBlock = () => {
         hash: chain.getLatestBlock()?.hash,
         mined_at: generateTimestampz(),
         nonce: chain.getLatestBlock()?.nonce,
-        miner: '',
+        miner: addres,
       })
     }
   } catch (error) {

@@ -10,7 +10,7 @@ interface blockData {
 }
 
 export const proofOfWork = (
-  blockData: blockData
+  blockData: blockData,
 ): { nonce: number; hash: string } => {
   let nonce = 0
 

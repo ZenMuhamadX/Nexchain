@@ -32,7 +32,7 @@ export class TransactionPool {
         time: this.timestamp,
         warning: warning,
         hint: 'Invalid transaction data',
-        stack: new Error().stack
+        stack: new Error().stack,
       })
     }
     const transaction: TxInterface = this.convertToTxInterface(value)

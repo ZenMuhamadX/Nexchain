@@ -1,11 +1,7 @@
-import { getAllBlock, getLatestBlock } from './getBlock'
+import { createWalletAddress } from '../../lib/wallet/createWallet'
 
 export const processMessage = (message: string): any => {
-  if (message === 'allBlock') {
-    return getAllBlock()
-  } else if (message === 'lastBlock') {
-    return getLatestBlock()
-  } else {
-    return message
+  if (message === 'wallet') {
+    return createWalletAddress()
   }
 }

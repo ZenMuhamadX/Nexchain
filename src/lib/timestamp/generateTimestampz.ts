@@ -1,5 +1,5 @@
 // Create TimesTamp
-export const generateTimestampz = ()=>{
-    const timestamp = new Date().toISOString()
-    return timestamp
+export const generateTimestampz = () => {
+  const timestamp = Date.now().toString()
+  return timestamp
 }

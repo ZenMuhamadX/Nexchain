@@ -5,7 +5,7 @@ export const generateBlockHash = (
   index: number,
   timestamp: string,
   Tx: TxInterface[] | TxBlock[],
-  previousHash?: string
+  previousHash?: string,
 ) => {
   const hash = crypto.createHash('sha256')
   hash.update(`${index}-${timestamp}-${Tx}-${previousHash}-0`)

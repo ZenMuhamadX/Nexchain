@@ -15,7 +15,7 @@ const logDirPath = path.join(__dirname, '../../log')
 const logFilePath = path.join(logDirPath, 'mining_log.log')
 
 // Buat logger Pino dengan transportasi ke file
-const logger = pino({ level: 'info' },pino.destination(logFilePath))
+const logger = pino({ level: 'info' }, pino.destination(logFilePath))
 
 // Fungsi untuk menyimpan log mining menggunakan Pino
 export const mineLog = (status: Status) => {

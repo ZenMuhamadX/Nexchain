@@ -1,6 +1,6 @@
-import { Block } from "../../model/Block"
+import { Block } from '../../model/Block'
 import fs from 'node:fs'
-import { deserializeBlockFromBinary } from "../utils/deserialize"
+import { deserializeBlockFromBinary } from '../utils/deserialize'
 
 // Fungsi untuk memuat Block dari file
 export const loadBlock = (fileName: string): Block | null => {

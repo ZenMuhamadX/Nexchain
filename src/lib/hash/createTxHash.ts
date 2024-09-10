@@ -20,7 +20,7 @@ const createHash = (data: TxInterface, nonce: number): string => {
 // Menemukan nonce yang valid untuk transaksi sehingga hash dimulai dengan sejumlah '0'.
 export const createTxHash = (
   data: TxInterface,
-  difficulty: number = 1
+  difficulty: number = 1,
 ): { nonce: number; hash: string } => {
   let nonce = 0
   let hash = ''

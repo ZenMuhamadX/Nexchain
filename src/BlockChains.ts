@@ -79,7 +79,7 @@ export class BlockChains {
       latestBlock.hash,
       '',
       generateSignature(latestBlock.hash),
-      0
+      0,
     )
     newBlock.hash = proofOfWork({
       index: newBlock.index,

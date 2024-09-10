@@ -1,5 +1,4 @@
 import { loggingErr } from '../../logging/errorLog'
-import { proofOfWork } from '../../miner/POW'
 import { Block } from '../../model/Block'
 import { generateBlockHash } from '../hash/generateHash'
 import { generateSignature } from '../hash/generateSIgnature'
@@ -15,15 +14,15 @@ export const createGenesisBlock = () => {
       '0',
       `${generateBlockHash(0, '01/01/2023', [], '0')}`,
       `0`,
-      0
+      0,
     )
     genesisBlock.signature = generateSignature(genesisBlock.hash)
     return genesisBlock
   } catch (error) {
     loggingErr({
-      error: error as string,
+      error: 'unknown error',
+      stack: new Error().stack,
       time: generateTimestampz(),
-      hint: 'Error in createGenesisBlock',
     })
     throw error
   }
