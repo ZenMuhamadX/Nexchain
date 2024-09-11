@@ -122,5 +122,3 @@ export class BlockChains {
     return this.verifyBlockHash(block) && this.verifyProofOfWork(block)
   }
 }
-const y = new BlockChains()
-console.log(y.getChains()[0]);
