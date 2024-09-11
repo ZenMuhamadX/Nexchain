@@ -1,4 +1,4 @@
-import { getKeyPair} from '../hash/getKeyPair'
+import { getKeyPair } from '../hash/getKeyPair'
 import { processPubKey } from './processPubKey'
 import { addChecksum } from './addChecksum'
 import bs58 from 'bs58'

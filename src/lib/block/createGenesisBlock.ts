@@ -11,9 +11,12 @@ export const createGenesisBlock = (): Block => {
   try {
     const genesisBlock = new Block(0, generateTimestampz(), [], '', '', '', [
       {
-        address: '0',
-        balance: 0,
-        signature: generateSignature('0', getKeyPair().privateKey),
+        address: 'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
+        balance: 5000000,
+        signature: generateSignature(
+          'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
+          getKeyPair().privateKey,
+        ),
       },
     ])
     genesisBlock.hash = proofOfWork({

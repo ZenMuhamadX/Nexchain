@@ -12,13 +12,14 @@ import { generateSignature } from './lib/hash/generateSIgnature'
 import { proofOfWork } from './miner/POW'
 import { loadBlocks } from './lib/block/loadBlock'
 import { getKeyPair } from './lib/hash/getKeyPair'
+import { BSON } from 'bson'
 
 export class BlockChains {
   private _chains: Block[]
 
   constructor() {
-    const loadedBlocks = loadBlocks()
-    this._chains = loadedBlocks ? this.loadBlock() : this.init()
+    const loadedBlocks = this.loadBlock()
+    this._chains = loadedBlocks.length > 0 ? loadedBlocks : this.init()
   }
 
   private init(): Block[] {
@@ -26,8 +27,18 @@ export class BlockChains {
   }
 
   private loadBlock(): Block[] {
-    const loadedBlocks = loadBlocks()
-    return Array.isArray(loadedBlocks) ? loadedBlocks : []
+    try {
+      const loadedBlocks = loadBlocks()
+      return Array.isArray(loadedBlocks) ? loadedBlocks : []
+    } catch (error) {
+      loggingErr({
+        error: error as string,
+        time: generateTimestampz(),
+        hint: 'Error in loadBlock',
+        stack: new Error().stack,
+      })
+      return [] // Return an empty array in case of error
+    }
   }
 
   public addBlockToChain(transaction: TransactionPool): boolean {
@@ -104,7 +115,10 @@ export class BlockChains {
       previousHash: block.previousHash,
       signature: block.signature,
     }
-    const dataBuffer = Buffer.from(JSON.stringify(combinedData))
+
+    // Ubah objek menjadi BSON Buffer
+    const dataBuffer = BSON.serialize(combinedData)
+
     const calculatedHash = crypto
       .createHash('sha256')
       .update(dataBuffer)
