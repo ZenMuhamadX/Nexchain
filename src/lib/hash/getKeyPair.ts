@@ -1,9 +1,12 @@
 import * as fs from 'fs'
-import * as crypto from 'crypto'
 import * as path from 'path'
+import { ec as EC } from 'elliptic'
 
-// Fungsi untuk menghasilkan pasangan kunci atau membacanya dari file
-export const createKeyPair = () => {
+// Buat instance dari kurva ECC
+const ec = new EC('secp256k1') // Anda dapat memilih kurva lain jika diinginkan
+
+// Fungsi untuk menghasilkan pasangan kunci ECC atau membacanya dari file
+export const getKeyPair = () => {
   // Tentukan path file kunci
   const publicKeyPath = path.join(__dirname, '../../../key/public.pem')
   const privateKeyPath = path.join(__dirname, '../../../key/private.pem')
@@ -15,18 +18,10 @@ export const createKeyPair = () => {
     const privateKey = fs.readFileSync(privateKeyPath, 'utf8')
     return { publicKey, privateKey }
   } else {
-    // Menghasilkan pasangan kunci baru
-    const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-      modulusLength: 2048,
-      publicKeyEncoding: {
-        type: 'spki',
-        format: 'pem',
-      },
-      privateKeyEncoding: {
-        type: 'pkcs8',
-        format: 'pem',
-      },
-    })
+    // Menghasilkan pasangan kunci ECC baru
+    const keyPair = ec.genKeyPair()
+    const publicKey = keyPair.getPrivate("hex")
+    const privateKey = keyPair.getPrivate('hex')
 
     // Pastikan direktori target ada
     const keyDir = path.dirname(publicKeyPath)

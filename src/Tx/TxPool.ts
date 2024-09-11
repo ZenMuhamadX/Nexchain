@@ -1,14 +1,14 @@
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz' // Mengimpor fungsi untuk menghasilkan timestamp
-import { TxInterface } from '../model/TxBlock' // Mengimpor interface untuk objek transaksi
-import { TxBlock } from '../model/TxBlock' // Mengimpor class untuk blok yang tertunda
+import { TxInterface } from '../model/blocks/TxBlock' // Mengimpor interface untuk objek transaksi
+import { TxBlock } from '../model/blocks/TxBlock' // Mengimpor class untuk blok yang tertunda
 import { createTxHash } from '../lib/hash/createTxHash'
 import { validatorIntercafeTx } from '../txValidator/interfaceTxValidator'
 import { loggingErr } from '../logging/errorLog'
 
 interface RawTransaction {
+  from: string
+  to: string
   amount: number
-  sender: string
-  recipient: string
   message?: string
 }
 export class TransactionPool {

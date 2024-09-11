@@ -1,5 +1,5 @@
 import { BSON } from 'bson'
-import { Block } from '../../model/Block'
+import { Block } from '../../model/blocks/Block'
 
 // Fungsi untuk mendeserialize Buffer menjadi objek Block menggunakan BSON
 export const deserializeBlockFromBinary = (buffer: Buffer): Block => {

@@ -1,5 +1,3 @@
-// Mengimpor fungsi
-import immutable from 'deep-freeze'
 import { TxBlock, TxInterface } from './TxBlock'
 
 interface walletData {
@@ -12,15 +10,15 @@ interface walletData {
 // Kelas ini merepresentasikan blok dalam blockchain
 export class Block {
   // Indeks blok dalam blockchain
-  public index: number
+  public readonly index: number
   // Timestamp blok
-  public timestamp: string
+  public readonly timestamp: string
   // Data yang akan disimpan dalam blok
-  public walletData: walletData[]
+  public readonly walletData: walletData[]
   // Transaksi yang termasuk dalam blok
-  public transactions: TxInterface[] | TxBlock[]
+  public readonly transactions: TxInterface[] | TxBlock[]
   // Hash dari blok sebelumnya dalam blockchain
-  public previousHash: string
+  public readonly previousHash: string
   // Hash dari blok ini
   public hash: string
   // Signature
@@ -28,7 +26,9 @@ export class Block {
   // Nonce
   public nonce?: number
   // reward
-  private reward: number
+  private readonly reward: number
+  // version
+  public readonly version: string = '1.0.0'
 
   // Konstruktor untuk kelas Block
   constructor(
@@ -38,8 +38,10 @@ export class Block {
     previousHash: string,
     validHash: string,
     signature: string,
+    walletData: walletData[],
     nonce?: number,
   ) {
+    // Menginisialisasi properti dari konstruktor
     this.index = index
     this.timestamp = timestamp
     this.transactions = transactions
@@ -47,41 +49,12 @@ export class Block {
     // Menghasilkan hash blok
     this.hash = validHash
 
-    this.walletData = []
+    this.walletData = walletData!
     // Menambahkan tanda tangan (signature)
     this.signature = signature
     // Menambahkan nonce (opsional)
     this.nonce = nonce
     // reward
     this.reward = 50
-  }
-
-  public getBlock() {
-    return immutable(this) as Block
-  }
-
-  // Mendapatkan transaksi yang termasuk dalam blok
-  public getTransactions(): TxInterface[] {
-    return immutable(this.transactions) as TxInterface[]
-  }
-  // Mendapatkan dataWallet
-  public getWalletData() {
-    const rawWallet = this.walletData
-    if (!rawWallet.length) {
-      return 'no wallet data'
-    }
-    return rawWallet.reduce(
-      (acc, wallet) => {
-        return {
-          ...acc,
-          [wallet.address]: {
-            // Menggunakan 'address' sebagai key
-            balance: wallet.balance,
-            signature: wallet.signature,
-          },
-        }
-      },
-      {} as Record<string, { balance: number; signature: string }>,
-    )
   }
 }

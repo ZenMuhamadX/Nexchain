@@ -1,10 +1,10 @@
 import crypto from 'crypto'
-import { TxInterface } from '../../model/TxBlock'
+import { TxInterface } from '../../model/blocks/TxBlock'
 
 // Membuat hash dari data transaksi dengan nonce yang diberikan.
 const createHash = (data: TxInterface, nonce: number): string => {
-  const from = data.sender
-  const to = data.recipient
+  const from = data.from
+  const to = data.to
   const amount = data.amount
   const message = data.message || ''
 

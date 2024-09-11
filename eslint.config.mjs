@@ -6,11 +6,11 @@ export default [
     ignores: ['node_modules', 'dist', '*.d.ts'],
   },
   { files: ['**/*.{js,mjs,cjs,ts}'] },
-  { languageOptions: { globals: globals.browser } },
+  { languageOptions: { globals: globals.node } },
   ...tseslint.configs.recommended,
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 0,
     },
   },
 ]

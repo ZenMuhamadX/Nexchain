@@ -1,13 +1,13 @@
 // Mengimpor antarmuka transaksi
 // Mengimpor fungsi untuk membuat objek immutable
 import immutable from 'deep-freeze'
-import { generateBlockHash } from '../lib/hash/generateHash'
+import { generateBlockHash } from '../../lib/hash/generateHash'
 
 export interface TxInterface {
   txHash?: string
   amount: number
-  sender: string
-  recipient: string
+  from: string
+  to: string
   message?: string
   nonce?: number
 }

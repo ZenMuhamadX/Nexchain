@@ -4,13 +4,14 @@ import crypto from 'crypto'
 import { TransactionPool } from './Tx/TxPool'
 import { createGenesisBlock } from './lib/block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
-import { Block } from './model/Block'
+import { Block } from './model/blocks/Block'
 import { saveBlock } from './lib/block/saveBlock'
 import { loggingErr } from './logging/errorLog'
 import { successLog } from './logging/succesLog'
 import { generateSignature } from './lib/hash/generateSIgnature'
 import { proofOfWork } from './miner/POW'
 import { loadBlocks } from './lib/block/loadBlock'
+import { getKeyPair } from './lib/hash/getKeyPair'
 
 export class BlockChains {
   private _chains: Block[]
@@ -78,13 +79,14 @@ export class BlockChains {
       pendingBlock,
       latestBlock.hash,
       '',
-      generateSignature(latestBlock.hash),
+      generateSignature(latestBlock.hash, getKeyPair().privateKey),
+      [],
       0,
     )
     const proof = proofOfWork({
       index: newBlock.index,
       timestamp: newBlock.timestamp,
-      transactions: newBlock.getTransactions(),
+      transactions: newBlock.transactions,
       previousHash: newBlock.previousHash,
       signature: newBlock.signature,
     })
@@ -98,7 +100,7 @@ export class BlockChains {
       nonce: block.nonce,
       index: block.index,
       timestamp: block.timestamp,
-      transactions: block.getTransactions(),
+      transactions: block.transactions,
       previousHash: block.previousHash,
       signature: block.signature,
     }
@@ -120,3 +122,5 @@ export class BlockChains {
     return this.verifyBlockHash(block) && this.verifyProofOfWork(block)
   }
 }
+const y = new BlockChains()
+console.log(y.getChains()[0]);

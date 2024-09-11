@@ -1,11 +1,11 @@
-import { Block } from '../../model/Block'
+import { Block } from '../../model/blocks/Block'
 import fs from 'node:fs'
 import path from 'node:path'
 import { deserializeBlockFromBinary } from '../utils/deserialize'
 import { loggingErr } from '../../logging/errorLog'
 import { generateTimestampz } from '../timestamp/generateTimestampz'
 
-export const loadBlocks = (): Block[] | boolean => {
+export const loadBlocks = (): Block[] | false => {
   const dirPath = path.join(__dirname, '../../../blocks')
 
   try {
@@ -29,7 +29,7 @@ export const loadBlocks = (): Block[] | boolean => {
     const blocks: Block[] = []
 
     // Membaca dan mendeserialisasi setiap file
-    blockFiles.forEach((file) => {
+    blockFiles.map((file) => {
       const filePath = path.join(dirPath, file)
       const blockBuffer = fs.readFileSync(filePath)
       const block = deserializeBlockFromBinary(blockBuffer)
