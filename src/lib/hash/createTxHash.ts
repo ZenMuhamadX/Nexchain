@@ -1,10 +1,9 @@
 /** @format */
 
 import crypto from 'crypto'
-import { TxInterface } from '../../model/blocks/TxBlock'
-
+import { memPoolInterface } from '../../model/interface/memPool.inf'
 // Membuat hash dari data transaksi dengan nonce yang diberikan.
-const createHash = (data: TxInterface, nonce: number): string => {
+const createHash = (data: memPoolInterface, nonce: number): string => {
 	const from = data.from
 	const to = data.to
 	const amount = data.amount
@@ -21,7 +20,7 @@ const createHash = (data: TxInterface, nonce: number): string => {
 
 // Menemukan nonce yang valid untuk transaksi sehingga hash dimulai dengan sejumlah '0'.
 export const createTxHash = (
-	data: TxInterface,
+	data: memPoolInterface,
 	difficulty: number = 1,
 ): { nonce: number; hash: string } => {
 	let nonce = 0

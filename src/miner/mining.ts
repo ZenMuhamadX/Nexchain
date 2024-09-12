@@ -1,7 +1,7 @@
 /** @format */
 
-import { BlockChains } from '../BlockChains'
-import { TransactionPool } from '../Tx/TxPool'
+import { BlockChains } from '../blockChains'
+import { TransactionPool } from '../Tx/memPool'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../logging/errorLog'
 import { mineLog } from '../logging/mineLog'
@@ -25,9 +25,9 @@ export const miningBlock = (addres: string) => {
 		if (succesMine) {
 			mineLog({
 				difficulty: 4,
-				hash: chain.getLatestBlock()?.hash,
+				hash: chain.getLatestBlock()?.blk.header.hash,
 				mined_at: generateTimestampz(),
-				nonce: chain.getLatestBlock()?.nonce,
+				nonce: chain.getLatestBlock()?.blk.header.nonce,
 				miner: addres,
 			})
 		}

@@ -1,7 +1,7 @@
 /** @format */
 
 import { BSON } from 'bson'
-import { Block } from '../../model/blocks/Block'
+import { Block } from '../../model/blocks/block'
 
 // Fungsi untuk meng-serialize objek Block menjadi Buffer menggunakan BSON
 export const serializeBlockToBinary = (block: Block): Buffer => {

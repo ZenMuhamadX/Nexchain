@@ -8,7 +8,7 @@ interface BlockInfo {
 	timestamp?: string
 	hash?: string
 	previousHash?: string
-	index?: number
+	height?: number
 	signature?: string
 	message?: string
 	nonce?: number
@@ -26,7 +26,7 @@ export const successLog = (blockInfo: BlockInfo) => {
 	// Format log message
 	const logMessage = {
 		timestamp: blockInfo.timestamp || 'N/A',
-		index: blockInfo.index,
+		height: blockInfo.height,
 		message: blockInfo.message || 'N/A',
 		hash: blockInfo.hash || 'N/A',
 		previousHash: blockInfo.previousHash || 'N/A',

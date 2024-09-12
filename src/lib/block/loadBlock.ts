@@ -1,6 +1,6 @@
 /** @format */
 
-import { Block } from '../../model/blocks/Block'
+import { Block } from '../../model/blocks/block'
 import fs from 'node:fs'
 import path from 'node:path'
 import { deserializeBlockFromBinary } from '../utils/deserialize'
@@ -39,7 +39,7 @@ export const loadBlocks = (): Block[] | false => {
 		})
 
 		// Mengurutkan blok berdasarkan index
-		blocks.sort((a, b) => a.index - b.index)
+		blocks.sort((a, b) => a.blk.height - b.blk.height)
 
 		return blocks
 	} catch (error) {

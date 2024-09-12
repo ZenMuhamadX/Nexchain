@@ -1,12 +1,13 @@
 /** @format */
 
 import crypto from 'node:crypto'
-import { TxBlock, TxInterface } from '../../model/blocks/TxBlock'
+import { memPoolBlock } from '../../model/blocks/memPoolBlock'
+import { memPoolInterface } from '../../model/interface/memPool.inf'
 
 export const generateBlockHash = (
 	index: number,
 	timestamp: string,
-	Tx: TxInterface[] | TxBlock[],
+	Tx: memPoolInterface[] | memPoolBlock[],
 	previousHash?: string,
 ) => {
 	const hash = crypto.createHash('sha256')

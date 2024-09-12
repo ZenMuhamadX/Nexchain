@@ -3,10 +3,10 @@
 // BlockChains.ts
 import immutable from 'deep-freeze'
 import crypto from 'crypto'
-import { TransactionPool } from './Tx/TxPool'
+import { TransactionPool } from './Tx/memPool'
 import { createGenesisBlock } from './lib/block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
-import { Block } from './model/blocks/Block'
+import { Block } from './model/blocks/block'
 import { saveBlock } from './lib/block/saveBlock'
 import { loggingErr } from './logging/errorLog'
 import { successLog } from './logging/succesLog'
@@ -15,6 +15,7 @@ import { proofOfWork } from './miner/POW'
 import { loadBlocks } from './lib/block/loadBlock'
 import { getKeyPair } from './lib/hash/getKeyPair'
 import { BSON } from 'bson'
+import { calculateSize } from './lib/utils/calculateSize'
 
 export class BlockChains {
 	private _chains: Block[]
@@ -49,13 +50,13 @@ export class BlockChains {
 			saveBlock(newBlock)
 			this._chains.push(newBlock)
 			successLog({
-				hash: newBlock.hash,
-				index: newBlock.index,
-				previousHash: newBlock.previousHash,
-				signature: newBlock.signature,
+				hash: newBlock.blk.header.hash,
+				height: newBlock.blk.height,
+				previousHash: newBlock.blk.header.previousHash,
+				signature: newBlock.blk.signature,
 				message: 'Block added to the chain',
 				timestamp: generateTimestampz(),
-				nonce: newBlock.nonce,
+				nonce: newBlock.blk.header.nonce,
 			})
 			return true
 		} catch (error) {
@@ -90,32 +91,34 @@ export class BlockChains {
 			this._chains.length,
 			generateTimestampz(),
 			pendingBlock,
-			latestBlock.hash,
+			latestBlock.blk.header.hash,
 			'',
-			generateSignature(latestBlock.hash, getKeyPair().privateKey),
+			generateSignature(latestBlock.blk.header.hash, getKeyPair().privateKey),
 			[],
+			'',
 			0,
 		)
 		const proof = proofOfWork({
-			index: newBlock.index,
-			timestamp: newBlock.timestamp,
-			transactions: newBlock.transactions,
-			previousHash: newBlock.previousHash,
-			signature: newBlock.signature,
+			height: newBlock.blk.height,
+			timestamp: newBlock.blk.header.timestamp,
+			transactions: newBlock.blk.transactions,
+			previousHash: newBlock.blk.header.previousHash,
+			signature: newBlock.blk.signature,
 		})
-		newBlock.hash = proof.hash
-		newBlock.nonce = proof.nonce
+		newBlock.blk.header.hash = proof.hash
+		newBlock.blk.header.nonce = proof.nonce
+		newBlock.blk.size = calculateSize(newBlock.blk).KB
 		return newBlock
 	}
 
 	private verifyBlockHash(block: Block): boolean {
 		const combinedData = {
-			nonce: block.nonce,
-			index: block.index,
-			timestamp: block.timestamp,
-			transactions: block.transactions,
-			previousHash: block.previousHash,
-			signature: block.signature,
+			nonce: block.blk.header.nonce,
+			height: block.blk.height,
+			timestamp: block.blk.header.timestamp,
+			transactions: block.blk.transactions,
+			previousHash: block.blk.header.previousHash,
+			signature: block.blk.signature,
 		}
 
 		// Ubah objek menjadi BSON Buffer
@@ -125,13 +128,13 @@ export class BlockChains {
 			.createHash('sha256')
 			.update(dataBuffer)
 			.digest('hex')
-		return block.hash === calculatedHash
+		return block.blk.header.hash === calculatedHash
 	}
 
 	private verifyProofOfWork(block: Block): boolean {
 		const difficulty = 4
 		const target = '0'.repeat(difficulty)
-		return block.hash.startsWith(target)
+		return block.blk.header.hash.startsWith(target)
 	}
 
 	public verifyBlock(block: Block): boolean {

@@ -1,7 +1,7 @@
 /** @format */
 
 import fs from 'fs'
-import { Block } from '../../model/blocks/Block'
+import { Block } from '../../model/blocks/block'
 import path from 'path'
 import { serializeBlockToBinary } from '../utils/serialize'
 import { createBlockName } from '../utils/createBlockName'

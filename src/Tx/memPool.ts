@@ -1,8 +1,8 @@
 /** @format */
 
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz' // Mengimpor fungsi untuk menghasilkan timestamp
-import { TxInterface } from '../model/blocks/TxBlock' // Mengimpor interface untuk objek transaksi
-import { TxBlock } from '../model/blocks/TxBlock' // Mengimpor class untuk blok yang tertunda
+import { memPoolInterface } from '../model/interface/memPool.inf' // Mengimpor interface untuk objek transaksi
+import { memPoolBlock } from '../model/blocks/memPoolBlock' // Mengimpor class untuk blok yang tertunda
 import { createTxHash } from '../lib/hash/createTxHash'
 import { validatorIntercafeTx } from '../txValidator/interfaceTxValidator'
 import { loggingErr } from '../logging/errorLog'
@@ -14,7 +14,7 @@ interface RawTransaction {
 	message?: string
 }
 export class TransactionPool {
-	private pendingTransactions: TxInterface[] // Array untuk menyimpan transaksi yang tertunda
+	private pendingTransactions: memPoolInterface[] // Array untuk menyimpan transaksi yang tertunda
 	private pendingBlocks: any // Array untuk menyimpan blok yang tertunda
 	private timestamp: string
 
@@ -37,7 +37,7 @@ export class TransactionPool {
 				stack: new Error().stack,
 			})
 		}
-		const transaction: TxInterface = this.convertToTxInterface(value)
+		const transaction: memPoolInterface = this.convertToTxInterface(value)
 		transaction.txHash = createTxHash(transaction, 1).hash
 		this.pendingTransactions.push(transaction)
 		if (this.pendingTransactions.length > 10) {
@@ -46,7 +46,9 @@ export class TransactionPool {
 		}
 	}
 
-	private convertToTxInterface(rawTransaction: RawTransaction): TxInterface {
+	private convertToTxInterface(
+		rawTransaction: RawTransaction,
+	): memPoolInterface {
 		// Fungsi untuk mengonversi RawTransaction ke TxInterface
 		return {
 			...rawTransaction,
@@ -62,7 +64,7 @@ export class TransactionPool {
 		// Fungsi untuk membuat blok baru dari transaksi yang tertunda
 		const transactionsForBlock = this.pendingTransactions.splice(0, 10) // Mengambil dan menghapus 10 transaksi pertama
 		const timestamp = generateTimestampz() // Menghasilkan timestamp
-		const newBlock = new TxBlock(indexBlock, transactionsForBlock, timestamp) // Membuat blok baru dengan 10 transaksi dan timestamp
+		const newBlock = new memPoolBlock(indexBlock, transactionsForBlock, timestamp) // Membuat blok baru dengan 10 transaksi dan timestamp
 		this.pendingBlocks.push(newBlock) // Menambahkan blok baru ke array blok yang tertunda
 	}
 

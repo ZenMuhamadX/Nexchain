@@ -4,7 +4,7 @@ import * as crypto from 'crypto'
 import { BSON } from 'bson'
 
 interface blockData {
-	index: number
+	height: number
 	timestamp: string
 	transactions: any[]
 	previousHash: string
@@ -20,7 +20,7 @@ export const proofOfWork = (
 		// Gabungkan prefix dan nonce ke dalam objek
 		const combinedData = {
 			nonce,
-			index: blockData.index,
+			height: blockData.height,
 			timestamp: blockData.timestamp,
 			transactions: blockData.transactions,
 			previousHash: blockData.previousHash,
