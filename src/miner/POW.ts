@@ -1,3 +1,5 @@
+/** @format */
+
 import * as crypto from 'crypto'
 import { BSON } from 'bson'
 

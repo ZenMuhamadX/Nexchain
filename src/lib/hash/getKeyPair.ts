@@ -1,3 +1,5 @@
+/** @format */
+
 import * as fs from 'fs'
 import * as path from 'path'
 import { ec as EC } from 'elliptic'

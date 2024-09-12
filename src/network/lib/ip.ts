@@ -1,3 +1,5 @@
+/** @format */
+
 import os from 'os'
 
 export const getIpv4 = () => {

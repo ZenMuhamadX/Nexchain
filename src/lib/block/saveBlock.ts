@@ -1,3 +1,5 @@
+/** @format */
+
 import fs from 'fs'
 import { Block } from '../../model/blocks/Block'
 import path from 'path'

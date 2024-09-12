@@ -1,3 +1,5 @@
+/** @format */
+
 import { getKeyPair } from '../hash/getKeyPair'
 import { processPubKey } from './processPubKey'
 import { addChecksum } from './addChecksum'

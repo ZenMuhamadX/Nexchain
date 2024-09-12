@@ -1,3 +1,5 @@
+/** @format */
+
 import { createHmac } from 'crypto'
 
 // Fungsi untuk menandatangani data

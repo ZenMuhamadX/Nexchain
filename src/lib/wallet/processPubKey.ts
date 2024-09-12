@@ -1,3 +1,5 @@
+/** @format */
+
 import crypto from 'crypto'
 
 // Membuat alamat dompet dari kunci publik

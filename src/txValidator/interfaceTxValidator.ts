@@ -1,3 +1,5 @@
+/** @format */
+
 import Joi from 'joi'
 
 export const validatorIntercafeTx = Joi.object({

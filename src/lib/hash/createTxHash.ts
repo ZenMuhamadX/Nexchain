@@ -1,3 +1,5 @@
+/** @format */
+
 import crypto from 'crypto'
 import { TxInterface } from '../../model/blocks/TxBlock'
 

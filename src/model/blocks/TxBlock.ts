@@ -1,3 +1,5 @@
+/** @format */
+
 // Mengimpor antarmuka transaksi
 // Mengimpor fungsi untuk membuat objek immutable
 import immutable from 'deep-freeze'

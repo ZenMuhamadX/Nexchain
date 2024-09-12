@@ -1,3 +1,5 @@
+/** @format */
+
 import crypto from 'node:crypto'
 
 // Menambahkan checksum ke alamat

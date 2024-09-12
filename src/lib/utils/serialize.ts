@@ -1,3 +1,5 @@
+/** @format */
+
 import { BSON } from 'bson'
 import { Block } from '../../model/blocks/Block'
 

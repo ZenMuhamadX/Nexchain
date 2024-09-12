@@ -1,3 +1,5 @@
+/** @format */
+
 import { tcpNet } from './L1Net/tcp'
 import { getIpv4 } from './lib/ip'
 import 'dotenv/config'

@@ -1,3 +1,5 @@
+/** @format */
+
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz' // Mengimpor fungsi untuk menghasilkan timestamp
 import { TxInterface } from '../model/blocks/TxBlock' // Mengimpor interface untuk objek transaksi
 import { TxBlock } from '../model/blocks/TxBlock' // Mengimpor class untuk blok yang tertunda

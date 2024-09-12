@@ -1,3 +1,5 @@
+/** @format */
+
 import pino from 'pino'
 import * as path from 'path'
 

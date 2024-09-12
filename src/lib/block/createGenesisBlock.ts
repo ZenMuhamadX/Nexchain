@@ -1,3 +1,5 @@
+/** @format */
+
 import { loggingErr } from '../../logging/errorLog'
 import { proofOfWork } from '../../miner/POW'
 import { Block } from '../../model/blocks/Block'

@@ -1,3 +1,5 @@
+/** @format */
+
 import crypto from 'node:crypto'
 import { TxBlock, TxInterface } from '../../model/blocks/TxBlock'
 

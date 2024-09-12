@@ -1,3 +1,5 @@
+/** @format */
+
 import { TransactionPool } from '../Tx/TxPool'
 const block = new TransactionPool()
 

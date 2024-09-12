@@ -1,3 +1,5 @@
+/** @format */
+
 // BlockChains.ts
 import immutable from 'deep-freeze'
 import crypto from 'crypto'

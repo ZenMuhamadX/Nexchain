@@ -1,3 +1,5 @@
+/** @format */
+
 import * as net from 'net'
 import { processMessage } from '../lib/handleComTcp'
 
