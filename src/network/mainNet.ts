@@ -7,6 +7,6 @@ const ipAddress = getIpv4()
 
 // Mulai server dan mendengarkan pada port
 tcpNet.listen(PORT, () => {
-  console.log(`network TCP running: ${ipAddress}:${PORT}`)
-  console.log(`network TCP running: localhost:${PORT}`)
+	console.log(`network TCP running: ${ipAddress}:${PORT}`)
+	console.log(`network TCP running: localhost:${PORT}`)
 })

@@ -6,46 +6,46 @@ import { loggingErr } from '../../logging/errorLog'
 import { generateTimestampz } from '../timestamp/generateTimestampz'
 
 export const loadBlocks = (): Block[] | false => {
-  const dirPath = path.join(__dirname, '../../../blocks')
+	const dirPath = path.join(__dirname, '../../../blocks')
 
-  try {
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath)
-    }
+	try {
+		if (!fs.existsSync(dirPath)) {
+			fs.mkdirSync(dirPath)
+		}
 
-    // Membaca semua file dalam direktori
-    const files = fs.readdirSync(dirPath)
+		// Membaca semua file dalam direktori
+		const files = fs.readdirSync(dirPath)
 
-    if (files.length === 0) {
-      return false
-    }
+		if (files.length === 0) {
+			return false
+		}
 
-    // Filter file yang berawalan 'blk' dan berformat .bin
-    const blockFiles = files.filter(
-      (file) => file.startsWith('blk') && file.endsWith('.bin'),
-    )
+		// Filter file yang berawalan 'blk' dan berformat .bin
+		const blockFiles = files.filter(
+			(file) => file.startsWith('blk') && file.endsWith('.bin'),
+		)
 
-    // Array untuk menyimpan semua block
-    const blocks: Block[] = []
+		// Array untuk menyimpan semua block
+		const blocks: Block[] = []
 
-    // Membaca dan mendeserialisasi setiap file
-    blockFiles.map((file) => {
-      const filePath = path.join(dirPath, file)
-      const blockBuffer = fs.readFileSync(filePath)
-      const block = deserializeBlockFromBinary(blockBuffer)
-      blocks.push(block)
-    })
+		// Membaca dan mendeserialisasi setiap file
+		blockFiles.map((file) => {
+			const filePath = path.join(dirPath, file)
+			const blockBuffer = fs.readFileSync(filePath)
+			const block = deserializeBlockFromBinary(blockBuffer)
+			blocks.push(block)
+		})
 
-    // Mengurutkan blok berdasarkan index
-    blocks.sort((a, b) => a.index - b.index)
+		// Mengurutkan blok berdasarkan index
+		blocks.sort((a, b) => a.index - b.index)
 
-    return blocks
-  } catch (error) {
-    loggingErr({
-      error: error,
-      stack: new Error().stack,
-      time: generateTimestampz(),
-    })
-    return false
-  }
+		return blocks
+	} catch (error) {
+		loggingErr({
+			error: error,
+			stack: new Error().stack,
+			time: generateTimestampz(),
+		})
+		return false
+	}
 }

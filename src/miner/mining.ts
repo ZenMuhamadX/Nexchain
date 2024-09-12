@@ -8,32 +8,32 @@ const chain = new BlockChains()
 const pool = new TransactionPool()
 
 export const miningBlock = (addres: string) => {
-  const pendingBlock = pool.getPendingBlocks()
-  try {
-    if (!pendingBlock.length) {
-      loggingErr({
-        error: 'No pending block to mine',
-        time: generateTimestampz(),
-        warning: null,
-        stack: new Error().stack,
-      })
-      return
-    }
-    const succesMine = chain.addBlockToChain(pool.getPendingBlocks())
-    if (succesMine) {
-      mineLog({
-        difficulty: 4,
-        hash: chain.getLatestBlock()?.hash,
-        mined_at: generateTimestampz(),
-        nonce: chain.getLatestBlock()?.nonce,
-        miner: addres,
-      })
-    }
-  } catch (error) {
-    loggingErr({
-      error: error,
-      time: generateTimestampz(),
-      stack: new Error().stack,
-    })
-  }
+	const pendingBlock = pool.getPendingBlocks()
+	try {
+		if (!pendingBlock.length) {
+			loggingErr({
+				error: 'No pending block to mine',
+				time: generateTimestampz(),
+				warning: null,
+				stack: new Error().stack,
+			})
+			return
+		}
+		const succesMine = chain.addBlockToChain(pool.getPendingBlocks())
+		if (succesMine) {
+			mineLog({
+				difficulty: 4,
+				hash: chain.getLatestBlock()?.hash,
+				mined_at: generateTimestampz(),
+				nonce: chain.getLatestBlock()?.nonce,
+				miner: addres,
+			})
+		}
+	} catch (error) {
+		loggingErr({
+			error: error,
+			time: generateTimestampz(),
+			stack: new Error().stack,
+		})
+	}
 }
