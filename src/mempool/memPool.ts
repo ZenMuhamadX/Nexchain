@@ -4,7 +4,7 @@ import { generateTimestampz } from '../lib/timestamp/generateTimestampz' // Meng
 import { memPoolInterface } from '../model/interface/memPool.inf' // Mengimpor interface untuk objek transaksi
 import { memPoolBlock } from '../model/blocks/memPoolBlock' // Mengimpor class untuk blok yang tertunda
 import { createTxHash } from '../lib/hash/createTxHash'
-import { validatorIntercafeTx } from '../txValidator/interfaceTxValidator'
+import { validatorIntercafeTx } from '../mempoolValidator/mempoolValidate'
 import { loggingErr } from '../logging/errorLog'
 
 interface RawTransaction {
@@ -13,7 +13,7 @@ interface RawTransaction {
 	amount: number
 	message?: string
 }
-export class TransactionPool {
+export class transaction {
 	private pendingTransactions: memPoolInterface[] // Array untuk menyimpan transaksi yang tertunda
 	private pendingBlocks: any // Array untuk menyimpan blok yang tertunda
 	private timestamp: string

@@ -11,7 +11,7 @@ interface BlockInfo {
 	height?: number
 	signature?: string
 	message?: string
-	nonce?: number
+	nonce?: string
 }
 
 // Tentukan path direktori dan file log

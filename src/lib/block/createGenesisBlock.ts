@@ -31,20 +31,14 @@ export const createGenesisBlock = (): Block => {
 			],
 			'',
 		)
-		const validHash = proofOfWork({
-			height: genesisBlock.blk.height,
-			timestamp: genesisBlock.blk.header.timestamp,
-			transactions: genesisBlock.blk.transactions,
-			previousHash: genesisBlock.blk.header.previousHash,
-			signature: genesisBlock.blk.signature,
-		})
-		genesisBlock.blk.header.hash = validHash.hash
 		genesisBlock.blk.size = calculateSize(genesisBlock.blk).KB
-		genesisBlock.blk.header.nonce = validHash.nonce
 		genesisBlock.blk.signature = generateSignature(
 			genesisBlock.blk.header.hash,
 			getKeyPair().privateKey,
 		)
+		const validHash = proofOfWork(genesisBlock)
+		genesisBlock.blk.header.hash = validHash.hash
+		genesisBlock.blk.header.nonce = validHash.nonce
 		saveBlock(genesisBlock)
 		return genesisBlock
 	} catch (error) {

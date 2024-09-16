@@ -17,16 +17,17 @@ export class Block {
 		hash: string,
 		signature: string,
 		walletData: walletData[],
-		blockSize:string,
-		nonce?: number,
+		blockSize: string,
+		nonce?: string,
 	) {
 		this.blk = {
 			header: {
 				previousHash: previousHash,
 				timestamp: timestamp,
 				hash: hash,
-				nonce: nonce as number,
+				nonce: nonce as string,
 				version: '1.0.0',
+				difficulty: 5,
 			},
 			height: height,
 			signature: signature,

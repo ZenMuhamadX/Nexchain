@@ -7,8 +7,9 @@ export interface blockStruct {
 		previousHash: string
 		timestamp: string
 		hash: string
-		nonce: number
+		nonce: string
 		version: string
+		difficulty: number
 	}
 	height: number
 	signature: string

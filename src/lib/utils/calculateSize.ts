@@ -18,7 +18,7 @@ export const calculateSize = (
 
 	return {
 		byte,
-		KB: KB.toFixed(2),
-		MB: MB.toFixed(2),
+		KB: KB.toFixed(2) + 'KB',
+		MB: MB.toFixed(2) + 'MB',
 	}
 }

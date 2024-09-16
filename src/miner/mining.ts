@@ -1,13 +1,13 @@
 /** @format */
 
 import { BlockChains } from '../blockChains'
-import { TransactionPool } from '../Tx/memPool'
+import { transaction } from '../mempool/memPool'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../logging/errorLog'
 import { mineLog } from '../logging/mineLog'
 
 const chain = new BlockChains()
-const pool = new TransactionPool()
+const pool = new transaction()
 
 export const miningBlock = (addres: string) => {
 	const pendingBlock = pool.getPendingBlocks()
