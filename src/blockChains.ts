@@ -2,14 +2,14 @@
 
 // BlockChains.ts
 import immutable from 'deep-freeze'
-import { transaction } from './mempool/memPool'
+import { memPool } from './model/memPool/memPool'
 import { createGenesisBlock } from './lib/block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/blocks/block'
 import { saveBlock } from './lib/block/saveBlock'
 import { loggingErr } from './logging/errorLog'
 import { successLog } from './logging/succesLog'
-import { generateSignature } from './lib/hash/generateSIgnature'
+import { sign } from './lib/hash/sign'
 import { proofOfWork } from './miner/POW'
 import { loadBlocks } from './lib/block/loadBlock'
 import { getKeyPair } from './lib/hash/getKeyPair'
@@ -17,6 +17,8 @@ import { calculateSize } from './lib/utils/calculateSize'
 import { verifyBlock } from './miner/verify/module/verifyBlock'
 import { verifyPow } from './miner/verify/module/verifyPow'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
+import { createWalletAddress } from './lib/wallet/createWallet'
+import { memPoolInterface } from './model/interface/memPool.inf'
 
 export class BlockChains {
 	private _chains: Block[]
@@ -45,9 +47,12 @@ export class BlockChains {
 		}
 	}
 
-	public addBlockToChain(transaction: transaction): boolean {
+	public addBlockToChain(transaction: memPool, walletMiner: string): boolean {
 		try {
-			const newBlock = this.createBlock(transaction.getPendingBlocks())
+			const newBlock = this.createBlock(
+				transaction.getTransaction(),
+				walletMiner,
+			)
 			saveBlock(newBlock)
 			this._chains.push(newBlock)
 			successLog({
@@ -79,22 +84,34 @@ export class BlockChains {
 		return this._chains[this._chains.length - 1]
 	}
 
-	private createBlock(pendingBlock: any): Block {
+	private createBlock(
+		transaction: memPoolInterface[],
+		walletMiner: string,
+	): Block {
 		const latestBlock = this.getLatestBlock()
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')
 		}
-		if (!pendingBlock) {
+		if (!transaction) {
 			throw new Error('Pending Block Not Found')
 		}
 
 		const newBlock = new Block(
 			this._chains.length,
 			generateTimestampz(),
-			pendingBlock,
+			[
+				{
+					amount: this.getLatestBlock().blk.reward,
+					from: 'NexChain',
+					to: walletMiner,
+					signature: sign(createWalletAddress(), getKeyPair().privateKey),
+					timestamp: generateTimestampz(),
+				},
+				...transaction,
+			],
 			latestBlock.blk.header.hash,
 			'',
-			generateSignature(latestBlock.blk.header.hash, getKeyPair().privateKey),
+			sign(latestBlock.blk.header.hash, getKeyPair().privateKey),
 			[],
 			'',
 			'',

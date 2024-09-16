@@ -9,7 +9,8 @@
 		"start": "bun run lint && bun run format && tsc && node ./dist/src/network/mainNet.js",
 		"dev": "bun run --watch ./src/network/mainNet.ts",
 		"lint": "eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"check": "bunx tsc && rm -r dist"
 	},
 	"repository": {
 		"type": "git",

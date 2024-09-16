@@ -1,4 +1,3 @@
-import { memPoolBlock } from '../blocks/memPoolBlock'
 import { memPoolInterface } from './memPool.inf'
 import { walletData } from './walletData.inf'
 
@@ -15,6 +14,6 @@ export interface blockStruct {
 	signature: string
 	size: string
 	walletData: walletData[]
-	transactions: memPoolInterface[] | memPoolBlock[]
+	transactions: memPoolInterface[] | memPoolInterface[]
 	reward: number
 }

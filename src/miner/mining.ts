@@ -1,18 +1,19 @@
 /** @format */
 
 import { BlockChains } from '../blockChains'
-import { transaction } from '../mempool/memPool'
+import { memPool } from '../model/memPool/memPool'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../logging/errorLog'
 import { mineLog } from '../logging/mineLog'
+import { createWalletAddress } from '../lib/wallet/createWallet'
 
 const chain = new BlockChains()
-const pool = new transaction()
+const pool = new memPool()
 
 export const miningBlock = (addres: string) => {
-	const pendingBlock = pool.getPendingBlocks()
+	const transaction = pool.getTransaction()
 	try {
-		if (!pendingBlock.length) {
+		if (!transaction.length) {
 			loggingErr({
 				error: 'No pending block to mine',
 				time: generateTimestampz(),
@@ -21,10 +22,10 @@ export const miningBlock = (addres: string) => {
 			})
 			return
 		}
-		const succesMine = chain.addBlockToChain(pool.getPendingBlocks())
+		const succesMine = chain.addBlockToChain(pool, createWalletAddress())
 		if (succesMine) {
 			mineLog({
-				difficulty: 4,
+				difficulty: 5,
 				hash: chain.getLatestBlock()?.blk.header.hash,
 				mined_at: generateTimestampz(),
 				nonce: chain.getLatestBlock()?.blk.header.nonce,

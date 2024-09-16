@@ -1,9 +1,8 @@
 /** @format */
 
-import { transaction } from '../mempool/memPool'
-const block = new transaction
+import { memPool } from '../model/memPool/memPool'
+const transaction = new memPool()
 
-export const getPendingBlock = () => {
-	const pendingBlock = block.getPendingBlocks()
-	return pendingBlock
+export const getTransaction = () => {
+	return transaction.getTransaction()
 }

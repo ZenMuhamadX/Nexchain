@@ -1,8 +1,9 @@
 export interface memPoolInterface {
-	txHash?: string
-	amount: number
-	from: string
 	to: string
+	from: string
+	amount: number
+	txHash?: string
+	timestamp:number | string
+	signature:string
 	message?: string
-	nonce?: number
 }

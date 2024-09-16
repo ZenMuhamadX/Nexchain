@@ -31,5 +31,3 @@ export const verifyChainIntegrity = (): boolean => {
 	}, 500)
 	return true // Chain integrity verified
 }
-
-verifyChainIntegrity()

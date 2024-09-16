@@ -4,6 +4,7 @@ import { getKeyPair } from '../hash/getKeyPair'
 import { processPubKey } from './processPubKey'
 import { addChecksum } from './addChecksum'
 import bs58 from 'bs58'
+import { saveWallet } from './saveWallet'
 // Memformat alamat dompet
 export const createWalletAddress = () => {
 	const publicKey = getKeyPair().publicKey
@@ -22,6 +23,10 @@ export const createWalletAddress = () => {
 
 	const addressBase58 = bs58.encode(addressWithCheckSum)
 
+	const walletAddres = `NxC${addressBase58}`
+
+	saveWallet(walletAddres)
+
 	// Mengembalikan alamat dengan checksum sebagai string hex
-	return `NxC${addressBase58}`
+	return walletAddres
 }
