@@ -3,7 +3,7 @@
 import pino from 'pino'
 import * as path from 'path'
 
-// Definisi interface BlockInfo
+// Define interface for block information
 interface BlockInfo {
 	timestamp?: string
 	hash?: string
@@ -14,15 +14,15 @@ interface BlockInfo {
 	nonce?: string
 }
 
-// Tentukan path direktori dan file log
+// Define log directory and file paths
 const logDirPath = path.join(__dirname, '../../log')
 const logFilePath = path.join(logDirPath, 'blockfile.log')
 
-// Buat logger Pino dengan transportasi ke file
+// Create Pino logger with file transport
 const logger = pino({ level: 'info' }, pino.destination(logFilePath))
 
-// Fungsi untuk menyimpan log menggunakan Pino
-export const successLog = (blockInfo: BlockInfo) => {
+// Function to log block information using Pino
+export const successLog = (blockInfo: BlockInfo): void => {
 	// Format log message
 	const logMessage = {
 		timestamp: blockInfo.timestamp || 'N/A',
@@ -35,13 +35,13 @@ export const successLog = (blockInfo: BlockInfo) => {
 	}
 
 	try {
-		// Menulis log ke dalam file
+		// Write log message to file
 		logger.info(logMessage)
 
-		// Juga mencetak log ke konsol untuk konfirmasi (opsional)
+		// Optionally print log message to console for confirmation
 		console.info('Log saved:', logMessage)
 	} catch (error) {
-		// Menangani kesalahan jika proses penyimpanan gagal
+		// Handle errors occurring during log saving
 		console.error('Error saving log:', error)
 	}
 }

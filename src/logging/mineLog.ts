@@ -3,7 +3,7 @@
 import pino from 'pino'
 import * as path from 'path'
 
-// Definisi interface Status
+// Define interface for mining status
 interface Status {
 	mined_at: string
 	hash: string | any
@@ -12,15 +12,15 @@ interface Status {
 	nonce: number | any
 }
 
-// Tentukan path direktori dan file log
+// Define log directory and file paths
 const logDirPath = path.join(__dirname, '../../log')
 const logFilePath = path.join(logDirPath, 'mining_log.log')
 
-// Buat logger Pino dengan transportasi ke file
+// Create Pino logger with file transport
 const logger = pino({ level: 'info' }, pino.destination(logFilePath))
 
-// Fungsi untuk menyimpan log mining menggunakan Pino
-export const mineLog = (status: Status) => {
+// Function to log mining status using Pino
+export const mineLog = (status: Status): void => {
 	// Format log message
 	const logMessage = {
 		mined_at: status.mined_at,
@@ -31,13 +31,13 @@ export const mineLog = (status: Status) => {
 	}
 
 	try {
-		// Menulis log ke dalam file
+		// Write log message to file
 		logger.info(logMessage)
 
-		// Juga mencetak log ke konsol untuk konfirmasi (opsional)
+		// Optionally print log message to console for confirmation
 		console.info('Mining log saved:', logMessage)
 	} catch (error) {
-		// Menangani kesalahan jika proses penyimpanan gagal
+		// Handle errors occurring during log saving
 		console.error('Error saving mining log:', error)
 	}
 }

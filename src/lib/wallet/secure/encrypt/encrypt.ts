@@ -1,24 +1,34 @@
-import * as crypto from 'crypto'
+import crypto from 'crypto'
 
-// Fungsi untuk mengenkripsi private key
-export const encryptPrivateKey = (
-	privateKey: string,
+const ALGORITHM = 'aes-256-cbc'
+
+// Fungsi untuk menghasilkan kunci dan IV dari password
+export const deriveKeyAndIv = (
 	password: string,
-): { iv: string; encryptedData: string; authTag: string } =>{
-	const iv = crypto.randomBytes(16) // Initialization Vector (IV)
-	const salt = crypto.randomBytes(16) // Salt untuk PBKDF2
-	const key = crypto.pbkdf2Sync(password, salt, 100000, 32, 'sha512') // Derive key dari password menggunakan PBKDF2
+	salt: Buffer,
+): { key: Buffer; iv: Buffer } => {
+	try {
+		const key = crypto.pbkdf2Sync(password, salt, 10000, 32, 'sha256')
+		const iv = crypto.pbkdf2Sync(password, salt, 10000, 16, 'sha256')
+		return { key, iv }
+	} catch (error) {
+		throw new Error('Error deriving key and IV: ' + error)
+	}
+}
 
-	const cipher = crypto.createCipheriv('aes-256-gcm', key, iv)
+export const encrypt = (data: string, password: string): string => {
+	try {
+		if (!data || !password) throw new Error('Text and password are required.')
 
-	let encryptedData = cipher.update(privateKey, 'utf8', 'hex')
-	encryptedData += cipher.final('hex')
+		const salt = crypto.randomBytes(16) // Salt untuk keamanan ekstra
+		const { key, iv } = deriveKeyAndIv(password, salt)
 
-	const authTag = cipher.getAuthTag().toString('hex') // Dapatkan authentication tag
+		const cipher = crypto.createCipheriv(ALGORITHM, key, iv)
+		let encrypted = cipher.update(data, 'utf8', 'hex')
+		encrypted += cipher.final('hex')
 
-	return {
-		iv: iv.toString('hex'), // Simpan IV
-		encryptedData: encryptedData, // Data terenkripsi
-		authTag: authTag, // Tag autentikasi
+		return `${salt.toString('hex')}:${encrypted}`
+	} catch (error) {
+		throw new Error('Encryption failed: ' + error)
 	}
 }

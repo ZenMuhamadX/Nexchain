@@ -3,8 +3,10 @@ import { loggingErr } from '../../../logging/errorLog'
 import { Block } from '../../../model/blocks/block'
 import Joi from 'joi'
 
-export const verifyStruct = (block:Block) => {
-	const structBlock = Joi.object({
+// Function to verify the structure of a block using Joi schema validation
+export const verifyStruct = (block: Block): boolean => {
+	// Define the schema for validating the block structure
+	const blockSchema = Joi.object({
 		blk: Joi.object({
 			header: Joi.object({
 				previousHash: Joi.string().required(),
@@ -30,14 +32,19 @@ export const verifyStruct = (block:Block) => {
 			reward: Joi.number().required(),
 		}),
 	})
-	if (structBlock.validate(block).error) {
+
+	// Validate the block structure against the schema
+	const { error, warning } = blockSchema.validate(block)
+
+	if (error) {
 		loggingErr({
-			error: structBlock.validate(block).error,
-			stack: structBlock.validate(block).error?.stack,
+			error,
+			stack: error.stack,
 			time: generateTimestampz(),
-			warning: structBlock.validate(block).warning?.message,
+			warning: warning?.message,
 		})
-		return false
+		return false // Structure is invalid
 	}
-	return true
+
+	return true // Structure is valid
 }

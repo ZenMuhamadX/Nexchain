@@ -4,11 +4,22 @@ import { memPoolInterface } from '../interface/memPool.inf'
 import { walletData } from '../interface/walletData.inf'
 
 // models/Block.ts
-// Kelas ini merepresentasikan blok dalam blockchain
+// This class represents a block in the blockchain
 export class Block {
 	public blk: blockStruct
 
-	// Konstruktor untuk kelas Block
+	/**
+	 * Constructor for the Block class
+	 * @param height - The height of the block in the blockchain
+	 * @param timestamp - The timestamp when the block was created
+	 * @param transactions - List of transactions included in the block
+	 * @param previousHash - The hash of the previous block in the blockchain
+	 * @param hash - The hash of the current block
+	 * @param signature - The digital signature for the block
+	 * @param walletData - List of wallet data associated with the block
+	 * @param blockSize - The size of the block
+	 * @param nonce - A nonce value used in the mining process (optional)
+	 */
 	constructor(
 		height: number,
 		timestamp: string,
@@ -25,7 +36,7 @@ export class Block {
 				previousHash: previousHash,
 				timestamp: timestamp,
 				hash: hash,
-				nonce: nonce as string,
+				nonce: nonce ?? '', // Use empty string if nonce is undefined
 				version: '1.0.0',
 				difficulty: 5,
 			},

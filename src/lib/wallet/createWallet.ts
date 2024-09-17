@@ -4,29 +4,39 @@ import { getKeyPair } from '../hash/getKeyPair'
 import { processPubKey } from './processPubKey'
 import { addChecksum } from './addChecksum'
 import bs58 from 'bs58'
-import { saveWallet } from './saveWallet'
-// Memformat alamat dompet
+import { saveMainWallet } from './saveWallet'
+
+// Creates a new wallet address and saves it
 export const createWalletAddress = () => {
-	const publicKey = getKeyPair().publicKey
+	try {
+		// Retrieve the public key
+		const publicKey = getKeyPair().publicKey
 
-	// Mengatur byte versi ke 0x00
-	const version = 0x00
+		// Set version byte to 0x00
+		const version = 0x00
 
-	// Membuat alamat dompet dari kunci publik
-	const address = processPubKey(publicKey)
+		// Generate the wallet address from the public key
+		const address = processPubKey(publicKey)
 
-	// Menggabungkan byte versi dan alamat
-	const versionAddress = Buffer.concat([Buffer.from([version]), address])
+		// Combine version byte and address
+		const versionAddress = Buffer.concat([Buffer.from([version]), address as Buffer])
 
-	// Menambahkan checksum ke alamat yang telah diberi versi
-	const addressWithCheckSum = addChecksum(versionAddress)
+		// Add checksum to the versioned address
+		const addressWithCheckSum = addChecksum(versionAddress)
 
-	const addressBase58 = bs58.encode(addressWithCheckSum)
+		// Encode address to Base58
+		const addressBase58 = bs58.encode(addressWithCheckSum)
 
-	const walletAddres = `NxC${addressBase58}`
+		// Format the final wallet address
+		const walletAddress = `NxC${addressBase58}`
 
-	saveWallet(walletAddres)
+		// Save the wallet address
+		saveMainWallet(walletAddress)
 
-	// Mengembalikan alamat dengan checksum sebagai string hex
-	return walletAddres
+		// Return the formatted wallet address
+		return walletAddress
+	} catch (error) {
+		console.error('Error creating wallet address:', error)
+		throw error // Re-throw to handle errors upstream if needed
+	}
 }

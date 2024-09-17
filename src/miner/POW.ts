@@ -2,35 +2,30 @@ import crypto from 'crypto'
 import { Block } from '../model/blocks/block'
 import { blockReadyToHash } from '../lib/block/blkReadyToHash'
 
-const DIFFICULTY_PREFIX = '00000' // Ubah sesuai dengan kriteria kesulitan yang diinginkan
+const DIFFICULTY_PREFIX = '00000' // Adjust according to desired difficulty criteria
 
 interface VerifiedResult {
 	nonce: string
 	hash: string
 }
 
+// Perform Proof of Work algorithm to find a valid nonce
 export const proofOfWork = (block: Block): VerifiedResult => {
-	let nonce: number = 0
+	let nonce = 0
 	const readyBlock = blockReadyToHash(block)
+
 	while (true) {
 		const nonceBuffer = Buffer.from(nonce.toString())
 		const combineBlock = Buffer.concat([readyBlock, nonceBuffer])
-		// Hitung hash SHA-256
-		const hash = crypto
-			.createHash('sha256')
-			.update(combineBlock)
-			.digest('hex')
 
-		// Periksa apakah hash memenuhi kriteria kesulitan yang diinginkan
-		const validateHash = (hash: string) => {
-			// Memeriksa awalan yang sesuai dengan kriteria kesulitan
-			return hash.startsWith(DIFFICULTY_PREFIX)
-		}
+		// Compute SHA-256 hash
+		const hash = crypto.createHash('sha256').update(combineBlock).digest('hex')
 
-		if (validateHash(hash)) {
+		// Check if hash meets the difficulty criteria
+		if (hash.startsWith(DIFFICULTY_PREFIX)) {
 			return { nonce: nonce.toString(), hash }
 		}
 
-		nonce++ // Tambah nonce dan coba lagi
+		nonce++ // Increment nonce and try again
 	}
 }

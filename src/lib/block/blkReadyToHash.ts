@@ -13,5 +13,4 @@ export const blockReadyToHash = (block: Block): Buffer => {
 	}
 	const stringBlock = JSON.stringify(newBlockStruct)
 	return Buffer.from(stringBlock)
-
 }

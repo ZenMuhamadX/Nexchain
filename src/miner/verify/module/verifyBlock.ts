@@ -4,23 +4,32 @@ import { Block } from '../../../model/blocks/block'
 import { loggingErr } from '../../../logging/errorLog'
 import { generateTimestampz } from '../../../lib/timestamp/generateTimestampz'
 
+// Function to verify the block's hash and nonce
 export const verifyBlock = (
 	block: Block,
 	nonce: string,
-	givenHash: string,
+	expectedHash: string,
 ): boolean => {
-	const blockReadyToVerify = blockReadyToHash(block)
-	const nonceBuffer = Buffer.from(nonce.toString())
-	const combineBlock = Buffer.concat([blockReadyToVerify, nonceBuffer])
-	const hash = crypto.createHash('sha256').update(combineBlock).digest('hex')
-	if (hash !== givenHash) {
+	// Prepare block data for hashing
+	const blockData = blockReadyToHash(block)
+	const nonceBuffer = Buffer.from(nonce)
+	const combinedData = Buffer.concat([blockData, nonceBuffer])
+
+	// Compute the hash of the combined data
+	const computedHash = crypto
+		.createHash('sha256')
+		.update(combinedData)
+		.digest('hex')
+
+	// Check if the computed hash matches the expected hash
+	if (computedHash !== expectedHash) {
 		loggingErr({
-			error: new Error('Hash Not Match'),
+			error: new Error('Hash does not match'),
 			stack: new Error().stack,
 			time: generateTimestampz(),
 		})
 		return false
 	}
-	// Periksa apakah hash yang dihasilkan sama dengan hash yang diberikan
-	return hash === givenHash
+
+	return true
 }

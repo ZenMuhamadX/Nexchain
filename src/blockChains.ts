@@ -2,7 +2,7 @@
 
 // BlockChains.ts
 import immutable from 'deep-freeze'
-import { memPool } from './model/memPool/memPool'
+import { MemPool } from './model/memPool/memPool'
 import { createGenesisBlock } from './lib/block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/blocks/block'
@@ -20,39 +20,51 @@ import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { createWalletAddress } from './lib/wallet/createWallet'
 import { memPoolInterface } from './model/interface/memPool.inf'
 
+// Manages the blockchain and its operations
 export class BlockChains {
 	private _chains: Block[]
 
 	constructor() {
-		const loadedBlocks = this.loadBlock()
-		this._chains = loadedBlocks.length > 0 ? loadedBlocks : this.init()
+		const loadedBlocks = this.loadBlocksFromStorage()
+		this._chains = loadedBlocks.length > 0 ? loadedBlocks : this.initializeChain()
 	}
 
-	private init(): Block[] {
+	/**
+	 * Initializes the blockchain with the genesis block.
+	 * @returns An array containing the genesis block.
+	 */
+	private initializeChain(): Block[] {
 		return [createGenesisBlock()]
 	}
 
-	private loadBlock(): Block[] {
+	/**
+	 * Loads blocks from storage.
+	 * @returns An array of blocks.
+	 */
+	private loadBlocksFromStorage(): Block[] {
 		try {
 			const loadedBlocks = loadBlocks()
 			return Array.isArray(loadedBlocks) ? loadedBlocks : []
 		} catch (error) {
 			loggingErr({
-				error: error as string,
+				error: error instanceof Error ? error.message : 'Unknown error',
 				time: generateTimestampz(),
-				hint: 'Error in loadBlock',
+				hint: 'Error loading blocks from storage',
 				stack: new Error().stack,
 			})
-			return [] // Return an empty array in case of error
+			return [] // Return an empty array in case of an error
 		}
 	}
 
-	public addBlockToChain(transaction: memPool, walletMiner: string): boolean {
+	/**
+	 * Adds a new block to the blockchain.
+	 * @param memPool - The memory pool containing transactions to include in the new block.
+	 * @param walletMiner - The address of the miner's wallet.
+	 * @returns True if the block was added successfully, otherwise false.
+	 */
+	public addBlockToChain(memPool: MemPool, walletMiner: string): boolean {
 		try {
-			const newBlock = this.createBlock(
-				transaction.getTransaction(),
-				walletMiner,
-			)
+			const newBlock = this.createBlock(memPool.getTransactions(), walletMiner)
 			saveBlock(newBlock)
 			this._chains.push(newBlock)
 			successLog({
@@ -67,33 +79,47 @@ export class BlockChains {
 			return true
 		} catch (error) {
 			loggingErr({
-				error: error as string,
+				error: error instanceof Error ? error.message : 'Unknown error',
 				time: generateTimestampz(),
-				hint: 'Error in addBlockToChain',
+				hint: 'Error adding block to chain',
 				stack: new Error().stack,
 			})
-			throw error
+			return false
 		}
 	}
 
+	/**
+	 * Retrieves all blocks in the blockchain.
+	 * @returns A read-only array of blocks.
+	 */
 	public getChains(): ReadonlyArray<Block> {
-		return immutable(this._chains) as ReadonlyArray<Block>
+		return this._chains as ReadonlyArray<Block>
 	}
 
+	/**
+	 * Retrieves the most recent block in the blockchain.
+	 * @returns The latest block.
+	 */
 	public getLatestBlock(): Block {
 		return this._chains[this._chains.length - 1]
 	}
 
+	/**
+	 * Creates a new block using the provided transactions and miner's wallet address.
+	 * @param transactions - The list of transactions to include in the new block.
+	 * @param walletMiner - The address of the miner's wallet.
+	 * @returns The newly created block.
+	 */
 	private createBlock(
-		transaction: memPoolInterface[],
+		transactions: memPoolInterface[],
 		walletMiner: string,
 	): Block {
 		const latestBlock = this.getLatestBlock()
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')
 		}
-		if (!transaction) {
-			throw new Error('Pending Block Not Found')
+		if (!transactions || transactions.length === 0) {
+			throw new Error('No transactions provided for the new block.')
 		}
 
 		const newBlock = new Block(
@@ -101,13 +127,13 @@ export class BlockChains {
 			generateTimestampz(),
 			[
 				{
-					amount: this.getLatestBlock().blk.reward,
+					amount: latestBlock.blk.reward,
 					from: 'NexChain',
 					to: walletMiner,
 					signature: sign(createWalletAddress(), getKeyPair().privateKey),
 					timestamp: generateTimestampz(),
 				},
-				...transaction,
+				...transactions,
 			],
 			latestBlock.blk.header.hash,
 			'',
@@ -123,7 +149,12 @@ export class BlockChains {
 		return newBlock
 	}
 
-	public verify(block: Block) {
+	/**
+	 * Verifies the validity of a given block and the integrity of the blockchain.
+	 * @param block - The block to be verified.
+	 * @returns True if the block and chain are valid, otherwise false.
+	 */
+	public verify(block: Block): boolean {
 		return (
 			verifyChainIntegrity() &&
 			verifyBlock(block, block.blk.header.nonce, block.blk.header.hash) &&

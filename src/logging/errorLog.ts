@@ -3,7 +3,7 @@
 import pino from 'pino'
 import * as path from 'path'
 
-// Definisi interface ErrorInfo
+// Define interface for error information
 interface ErrorInfo {
 	error: string | any
 	time: string
@@ -12,14 +12,14 @@ interface ErrorInfo {
 	stack: any
 }
 
-// Tentukan path direktori dan file log
+// Define log directory and file paths
 const logDirPath = path.join(__dirname, '../../log')
 const logFilePath = path.join(logDirPath, 'error_log.log')
 
-// Buat logger Pino dengan transportasi ke file
+// Create Pino logger with file transport
 const logger = pino({ level: 'error' }, pino.destination(logFilePath))
 
-// Fungsi untuk menyimpan log kesalahan menggunakan Pino
+// Function to log error information using Pino
 export const loggingErr = (err: ErrorInfo): void => {
 	if (err) {
 		// Format log message
@@ -32,14 +32,14 @@ export const loggingErr = (err: ErrorInfo): void => {
 		}
 
 		try {
-			// Menulis log kesalahan ke dalam file
+			// Write error log to file
 			logger.error(logMessage)
 
-			// Mencetak log kesalahan ke konsol
+			// Print error log to console
 			console.error('Error details saved to log file.')
 			console.error(logMessage)
 		} catch (error) {
-			// Menangani kesalahan jika proses penyimpanan gagal
+			// Handle errors occurring during log saving
 			console.error('Error saving error log:', error)
 		}
 	}

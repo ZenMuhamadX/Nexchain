@@ -1,24 +1,24 @@
-import crypto from 'crypto'
+import { deriveKeyAndIv } from "../encrypt/encrypt"
+import crypto from 'node:crypto'
 
-// Fungsi untuk mendekripsi private key
-export const decryptPrivateKey = (
-	encryptedData: string,
-	iv: string,
-	authTag: string,
-	password: string,
-): string => {
-	const salt = crypto.randomBytes(16) // Salt yang sama digunakan dalam enkripsi
-	const key = crypto.pbkdf2Sync(password, salt, 100000, 32, 'sha512') // Derive key dari password
+export const decrypt = (encryptedText: string, password: string): string => {
+	try {
+		if (!encryptedText || !password)
+			throw new Error('Encrypted text and password are required.')
 
-	const decipher = crypto.createDecipheriv(
-		'aes-256-gcm',
-		key,
-		Buffer.from(iv, 'hex'),
-	)
-	decipher.setAuthTag(Buffer.from(authTag, 'hex')) // Set authentication tag
+		const [saltHex, encrypted] = encryptedText.split(':')
+		if (!saltHex || !encrypted)
+			throw new Error('Invalid encrypted text format.')
 
-	let decryptedData = decipher.update(encryptedData, 'hex', 'utf8')
-	decryptedData += decipher.final('utf8')
+		const salt = Buffer.from(saltHex, 'hex')
+		const { key, iv } = deriveKeyAndIv(password, salt)
 
-	return decryptedData // Private key yang didekripsi
+		const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv)
+		let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+		decrypted += decipher.final('utf8')
+
+		return decrypted
+	} catch (error) {
+		throw new Error(' Decryption failed: Wrong password or corrupted data. ' + error)
+	}
 }

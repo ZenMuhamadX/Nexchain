@@ -4,30 +4,44 @@ import { verifyStruct } from './module/verifyStruct'
 import { verifyPow } from './module/verifyPow'
 import { verifyHashLength } from './module/verifyHashLength'
 
+// Function to verify the integrity of the blockchain
 export const verifyChainIntegrity = (): boolean => {
-	console.info('checking chain integrity...')
-	// Check the integrity of the chain
+	console.info('Checking chain integrity...')
+
+	// Initialize blockchain and get the list of chains
 	const blockChains = new BlockChains()
 	const chains = blockChains.getChains()
 
+	// Loop through the chains to verify their integrity
 	for (let i = chains.length - 1; i > 0; i--) {
 		const currentBlock = chains[i]
 		const prevBlock = chains[i - 1]
+
+		// Check if the current block's previousHash matches the previous block's hash
 		if (currentBlock.blk.header.previousHash !== prevBlock.blk.header.hash) {
 			return false // Chain integrity compromised
 		}
-		// You can add other verification checks here, such as:
-		verifyHashLength(currentBlock.blk.header.hash)
-		verifyBlock(
-			currentBlock,
-			currentBlock.blk.header.nonce,
-			currentBlock.blk.header.hash,
-		)
-		verifyPow(currentBlock)
-		verifyStruct(currentBlock)
+
+		// Perform additional verification checks
+		try {
+			verifyHashLength(currentBlock.blk.header.hash)
+			verifyBlock(
+				currentBlock,
+				currentBlock.blk.header.nonce,
+				currentBlock.blk.header.hash,
+			)
+			verifyPow(currentBlock)
+			verifyStruct(currentBlock)
+		} catch (error) {
+			console.error('Error during verification:', error)
+			return false // Verification failed
+		}
 	}
+
+	// Log verification success after a delay
 	setTimeout(() => {
 		console.info('Chain integrity verified')
 	}, 500)
+
 	return true // Chain integrity verified
 }
