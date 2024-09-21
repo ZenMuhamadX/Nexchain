@@ -7,3 +7,5 @@ dist
 *.bin
 .idx
 .vscode
+mempool_versions
+config

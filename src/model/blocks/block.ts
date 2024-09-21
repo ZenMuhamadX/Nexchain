@@ -1,6 +1,6 @@
 /** @format */
 import { blockStruct } from '../interface/blockStruct.inf'
-import { memPoolInterface } from '../interface/memPool.inf'
+import { MemPoolInterface } from '../interface/memPool.inf'
 import { walletData } from '../interface/walletData.inf'
 
 // models/Block.ts
@@ -23,7 +23,7 @@ export class Block {
 	constructor(
 		height: number,
 		timestamp: string,
-		transactions: memPoolInterface[],
+		transactions: MemPoolInterface[],
 		previousHash: string,
 		hash: string,
 		signature: string,

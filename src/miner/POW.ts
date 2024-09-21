@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import { Block } from '../model/blocks/block'
-import { blockReadyToHash } from '../lib/block/blkReadyToHash'
+import { structBlockReadyToHash } from '../lib/block/blkReadyToHash'
 
 const DIFFICULTY_PREFIX = '00000' // Adjust according to desired difficulty criteria
 
@@ -12,7 +12,7 @@ interface VerifiedResult {
 // Perform Proof of Work algorithm to find a valid nonce
 export const proofOfWork = (block: Block): VerifiedResult => {
 	let nonce = 0
-	const readyBlock = blockReadyToHash(block)
+	const readyBlock = structBlockReadyToHash(block)
 
 	while (true) {
 		const nonceBuffer = Buffer.from(nonce.toString())

@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer'
 import { Block } from '../../model/blocks/block'
 
-export const blockReadyToHash = (block: Block): Buffer => {
+export const structBlockReadyToHash = (block: Block): Buffer => {
 	const newBlockStruct = {
 		header: {
 			previousHash: block.blk.header.previousHash,

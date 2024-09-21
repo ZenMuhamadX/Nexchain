@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { blockReadyToHash } from '../../../lib/block/blkReadyToHash'
+import { structBlockReadyToHash } from '../../../lib/block/blkReadyToHash'
 import { Block } from '../../../model/blocks/block'
 import { loggingErr } from '../../../logging/errorLog'
 import { generateTimestampz } from '../../../lib/timestamp/generateTimestampz'
@@ -11,7 +11,7 @@ export const verifyBlock = (
 	expectedHash: string,
 ): boolean => {
 	// Prepare block data for hashing
-	const blockData = blockReadyToHash(block)
+	const blockData = structBlockReadyToHash(block)
 	const nonceBuffer = Buffer.from(nonce)
 	const combinedData = Buffer.concat([blockData, nonceBuffer])
 

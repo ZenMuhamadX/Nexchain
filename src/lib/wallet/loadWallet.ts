@@ -4,10 +4,11 @@ import { BSON } from 'bson'
 import { createWalletAddress } from './createWallet'
 import { decrypt } from './secure/decrypt/decrypt'
 import { structWalletToSave } from '../../model/interface/walletStructinf'
+import { loadConfig } from '../utils/loadConfig'
 
 export const loadWallet = (): structWalletToSave | undefined | string => {
 	const dirPath = path.join(__dirname, '../../../wallet')
-	const filePath = path.join(dirPath, 'MainWallet.bin')
+	const filePath = loadConfig()?.wallet.path as string
 
 	try {
 		// Check if the directory exists

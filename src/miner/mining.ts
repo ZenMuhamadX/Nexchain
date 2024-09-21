@@ -5,15 +5,14 @@ import { MemPool } from '../model/memPool/memPool'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../logging/errorLog'
 import { mineLog } from '../logging/mineLog'
-import { createWalletAddress } from '../lib/wallet/createWallet'
-
-// Initialize blockchain and memory pool instances
-const chain = new BlockChains()
-const pool = new MemPool()
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = (address: string): void => {
+	// Initialize blockchain and memory pool instances
+	const chain = new BlockChains()
+	const pool = new MemPool()
 	const transactions = pool.getValidTransactions()
+	console.log(transactions)
 
 	try {
 		// Check if there are pending transactions to mine
@@ -28,7 +27,7 @@ export const miningBlock = (address: string): void => {
 		}
 
 		// Attempt to add a new block to the blockchain
-		const successMine = chain.addBlockToChain(pool, createWalletAddress())
+		const successMine = chain.addBlockToChain(transactions, address)
 
 		if (successMine) {
 			// Log mining details if successful

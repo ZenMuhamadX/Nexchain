@@ -2,7 +2,6 @@
 
 // BlockChains.ts
 import immutable from 'deep-freeze'
-import { MemPool } from './model/memPool/memPool'
 import { createGenesisBlock } from './lib/block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/blocks/block'
@@ -12,19 +11,20 @@ import { successLog } from './logging/succesLog'
 import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/POW'
 import { loadBlocks } from './lib/block/loadBlock'
-import { getKeyPair } from './lib/hash/getKeyPair'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyBlock } from './miner/verify/module/verifyBlock'
 import { verifyPow } from './miner/verify/module/verifyPow'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { createWalletAddress } from './lib/wallet/createWallet'
-import { memPoolInterface } from './model/interface/memPool.inf'
+import { MemPoolInterface } from './model/interface/memPool.inf'
+import { saveConfigFile } from './lib/utils/saveConfig'
 
 // Manages the blockchain and its operations
 export class BlockChains {
-	private _chains: Block[]
+	private readonly _chains: Block[]
 
 	constructor() {
+		saveConfigFile()
 		const loadedBlocks = this.loadBlocksFromStorage()
 		this._chains =
 			loadedBlocks.length > 0 ? loadedBlocks : this.initializeChain()
@@ -63,12 +63,12 @@ export class BlockChains {
 	 * @param walletMiner - The address of the miner's wallet.
 	 * @returns True if the block was added successfully, otherwise false.
 	 */
-	public addBlockToChain(memPool: MemPool, walletMiner: string): boolean {
+	public addBlockToChain(
+		validTransaction: MemPoolInterface[],
+		walletMiner: string,
+	): boolean {
 		try {
-			const newBlock = this.createBlock(
-				memPool.getValidTransactions(),
-				walletMiner,
-			)
+			const newBlock = this.createBlock(validTransaction, walletMiner)
 			saveBlock(newBlock)
 			this._chains.push(newBlock)
 			successLog({
@@ -109,13 +109,21 @@ export class BlockChains {
 	}
 
 	/**
+	 * Retrieves the most recent block in the blockchain.
+	 * @returns The latest block.
+	 */
+	public getLatestBlockJSON(): string {
+		return immutable(JSON.stringify(this._chains[this._chains.length - 1]))
+	}
+
+	/**
 	 * Creates a new block using the provided transactions and miner's wallet address.
 	 * @param transactions - The list of transactions to include in the new block.
 	 * @param walletMiner - The address of the miner's wallet.
 	 * @returns The newly created block.
 	 */
 	private createBlock(
-		transactions: memPoolInterface[],
+		transactions: MemPoolInterface[],
 		walletMiner: string,
 	): Block {
 		const latestBlock = this.getLatestBlock()
@@ -169,3 +177,5 @@ export class BlockChains {
 		)
 	}
 }
+const x = new BlockChains()
+console.log(x.getLatestBlockJSON())

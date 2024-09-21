@@ -1,6 +1,6 @@
 import { ec as EC } from 'elliptic'
 import { createHash } from 'crypto'
-import { memPoolInterface } from '../../model/interface/memPool.inf'
+import { MemPoolInterface } from '../../model/interface/memPool.inf'
 import { Block } from '../../model/blocks/block'
 import { getKeyPair } from '../hash/getKeyPair'
 
@@ -8,7 +8,7 @@ const ec = new EC('secp256k1')
 
 // Fungsi untuk memverifikasi signature
 export const verifySignature = (
-	datas: string | Block | memPoolInterface,
+	datas: string | Block | MemPoolInterface,
 	signature: string,
 ): { status: boolean; message: string } => {
 	const pubKey = getKeyPair().publicKey
@@ -25,7 +25,7 @@ export const verifySignature = (
 		createHash('sha256').update(data).digest('hex'),
 		signature,
 	)
-	if(!verified){
+	if (!verified) {
 		return {
 			status: false,
 			message: 'Invalid signature',

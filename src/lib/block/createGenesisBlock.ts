@@ -3,7 +3,7 @@
 import { loggingErr } from '../../logging/errorLog'
 import { proofOfWork } from '../../miner/POW'
 import { Block } from '../../model/blocks/block'
-import { memPoolInterface } from '../../model/interface/memPool.inf'
+import { MemPoolInterface } from '../../model/interface/memPool.inf'
 import { createTxHash } from '../hash/createTxHash'
 import { createSignature } from './createSignature'
 import { generateTimestampz } from '../timestamp/generateTimestampz'
@@ -12,11 +12,12 @@ import { saveBlock } from './saveBlock'
 
 export const createGenesisBlock = (): Block => {
 	try {
-		const transactGenesis: memPoolInterface = {
+		const transactGenesis: MemPoolInterface = {
 			amount: 5000000,
 			from: 'NexChain',
 			to: 'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
-			signature: createSignature('NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U').signature,
+			signature: createSignature('NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U')
+				.signature,
 			timestamp: generateTimestampz(),
 			message: 'Reward Genesis Block',
 			status: 'confirmed',
@@ -34,13 +35,16 @@ export const createGenesisBlock = (): Block => {
 				{
 					address: 'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
 					balance: 5000000,
-					signature: createSignature('NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U').signature,
+					signature: createSignature('NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U')
+						.signature,
 				},
 			],
 			'',
 		)
 		genesisBlock.blk.size = calculateSize(genesisBlock.blk).KB
-		genesisBlock.blk.signature = createSignature(genesisBlock.blk.header.hash).signature
+		genesisBlock.blk.signature = createSignature(
+			genesisBlock.blk.header.hash,
+		).signature
 		const validHash = proofOfWork(genesisBlock)
 		genesisBlock.blk.header.hash = validHash.hash
 		genesisBlock.blk.header.nonce = validHash.nonce

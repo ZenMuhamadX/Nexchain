@@ -5,6 +5,7 @@ import { processPubKey } from './processPubKey'
 import { addChecksum } from './addChecksum'
 import bs58 from 'bs58'
 import { saveMainWallet } from './saveWallet'
+import { loadConfig } from '../utils/loadConfig'
 
 // Creates a new wallet address and saves it
 export const createWalletAddress = () => {
@@ -12,14 +13,17 @@ export const createWalletAddress = () => {
 		// Retrieve the public key
 		const publicKey = getKeyPair().publicKey
 
-		// Set version byte to 0x00
-		const version = 0x00
+		// Set version byte
+		const version = loadConfig()?.wallet.version as number
 
 		// Generate the wallet address from the public key
 		const address = processPubKey(publicKey)
 
 		// Combine version byte and address
-		const versionAddress = Buffer.concat([Buffer.from([version]), address as Buffer])
+		const versionAddress = Buffer.concat([
+			Buffer.from([version]),
+			address as Buffer,
+		])
 
 		// Add checksum to the versioned address
 		const addressWithCheckSum = addChecksum(versionAddress)

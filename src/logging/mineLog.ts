@@ -4,7 +4,6 @@ import pino from 'pino'
 import * as path from 'path'
 import fs from 'node:fs'
 
-
 // Define interface for mining status
 interface Status {
 	mined_at: string

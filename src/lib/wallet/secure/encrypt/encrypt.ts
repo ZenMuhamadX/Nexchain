@@ -1,6 +1,5 @@
 import crypto from 'crypto'
-
-const ALGORITHM = 'aes-256-cbc'
+import { loadConfig } from '../../../utils/loadConfig'
 
 // Fungsi untuk menghasilkan kunci dan IV dari password
 export const deriveKeyAndIv = (
@@ -17,13 +16,14 @@ export const deriveKeyAndIv = (
 }
 
 export const encrypt = (data: string, password: string): string => {
+	const ALGORITHM = loadConfig()?.wallet.privateKeyEncrypt.algorithm
 	try {
 		if (!data || !password) throw new Error('Text and password are required.')
 
 		const salt = crypto.randomBytes(16) // Salt untuk keamanan ekstra
 		const { key, iv } = deriveKeyAndIv(password, salt)
 
-		const cipher = crypto.createCipheriv(ALGORITHM, key, iv)
+		const cipher = crypto.createCipheriv(ALGORITHM!, key, iv)
 		let encrypted = cipher.update(data, 'utf8', 'hex')
 		encrypted += cipher.final('hex')
 

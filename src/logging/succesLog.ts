@@ -19,7 +19,7 @@ interface BlockInfo {
 const logDirPath = path.join(__dirname, '../../log')
 const logFilePath = path.join(logDirPath, 'blockfile.log')
 
-if(!fs.existsSync(logDirPath)){
+if (!fs.existsSync(logDirPath)) {
 	fs.mkdirSync(logDirPath)
 }
 

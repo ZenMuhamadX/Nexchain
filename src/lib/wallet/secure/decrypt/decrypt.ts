@@ -1,4 +1,4 @@
-import { deriveKeyAndIv } from "../encrypt/encrypt"
+import { deriveKeyAndIv } from '../encrypt/encrypt'
 import crypto from 'node:crypto'
 
 export const decrypt = (encryptedText: string, password: string): string => {
@@ -19,6 +19,8 @@ export const decrypt = (encryptedText: string, password: string): string => {
 
 		return decrypted
 	} catch (error) {
-		throw new Error(' Decryption failed: Wrong password or corrupted data. ' + error)
+		throw new Error(
+			' Decryption failed: Wrong password or corrupted data. ' + error,
+		)
 	}
 }

@@ -1,4 +1,4 @@
-import { memPoolInterface } from './memPool.inf'
+import { MemPoolInterface } from './memPool.inf'
 import { walletData } from './walletData.inf'
 
 /**
@@ -17,6 +17,6 @@ export interface blockStruct {
 	signature: string // The digital signature for the block
 	size: string // The size of the block
 	walletData: walletData[] // List of wallet data associated with the block
-	transactions: memPoolInterface[] // List of transactions included in the block
+	transactions: MemPoolInterface[] // List of transactions included in the block
 	reward: number // The reward for mining the block
 }

@@ -1,10 +1,10 @@
 /** @format */
 
 import crypto from 'crypto'
-import { memPoolInterface } from '../../model/interface/memPool.inf'
+import { MemPoolInterface } from '../../model/interface/memPool.inf'
 
 // Membuat hash dari data transaksi dengan nonce yang diberikan.
-export const createTxHash = (data: memPoolInterface): string => {
+export const createTxHash = (data: MemPoolInterface): string => {
 	const txObj = {
 		from: data.from,
 		to: data.to,

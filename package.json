@@ -1,7 +1,7 @@
 {
-	"name": "blockchains",
+	"name": "NexChain",
 	"version": "0.1.0",
-	"description": "blockChains experiment ",
+	"description": "NexChain a Next Generation blockChains.",
 	"main": "main.js",
 	"scripts": {
 		"test": "jest",
