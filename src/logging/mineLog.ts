@@ -2,6 +2,8 @@
 
 import pino from 'pino'
 import * as path from 'path'
+import fs from 'node:fs'
+
 
 // Define interface for mining status
 interface Status {
@@ -15,6 +17,10 @@ interface Status {
 // Define log directory and file paths
 const logDirPath = path.join(__dirname, '../../log')
 const logFilePath = path.join(logDirPath, 'mining_log.log')
+
+if (!fs.existsSync(logDirPath)) {
+	fs.mkdirSync(logDirPath)
+}
 
 // Create Pino logger with file transport
 const logger = pino({ level: 'info' }, pino.destination(logFilePath))

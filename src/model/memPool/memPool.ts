@@ -1,7 +1,13 @@
+import { BlockChains } from '../../blockChains'
+import { createSignature } from '../../lib/block/createSignature'
+import { verifySignature } from '../../lib/block/verifySIgnature'
 import { createTxHash } from '../../lib/hash/createTxHash'
+import { getKeyPair } from '../../lib/hash/getKeyPair'
 import { generateTimestampz } from '../../lib/timestamp/generateTimestampz'
+import { createWalletAddress } from '../../lib/wallet/createWallet'
+import { loadWallet } from '../../lib/wallet/loadWallet'
 import { loggingErr } from '../../logging/errorLog'
-import { memPoolInterfaceValidator } from '../../validator/mempool.v'
+import { memPoolInterfaceValidator } from '../../validator/infValidator/mempool.v'
 import { memPoolInterface } from '../interface/memPool.inf'
 
 export class MemPool {
@@ -16,26 +22,81 @@ export class MemPool {
 	 * @param transaction - The transaction to be added.
 	 * @returns True if the transaction was added successfully, otherwise false.
 	 */
+
 	public addTransaction(transaction: memPoolInterface): boolean {
-		transaction.txHash = createTxHash(transaction)
-		const isValidTx = memPoolInterfaceValidator.validate(transaction)
-		if (isValidTx) {
-			this.transactions.push(transaction)
-			return true
+		if (this.isFull()) {
+			loggingErr({
+				error: new Error('Memory pool is full'),
+				stack: new Error().stack,
+				time: generateTimestampz(),
+			})
+			return false
 		}
-		loggingErr({
-			error: new Error('Invalid transaction data'),
-			stack: new Error().stack,
-			time: generateTimestampz(),
-		})
-		return false
+		transaction.txHash = createTxHash(transaction)
+		transaction.timestamp = generateTimestampz()
+		transaction.status = 'pending'
+		const isValidTx = this.validateTransaction(transaction)
+		console.log(JSON.stringify(transaction))
+		if (!isValidTx) {
+			loggingErr({
+				error: new Error('Invalid transaction data'),
+				stack: new Error().stack,
+				time: generateTimestampz(),
+			})
+			return false
+		}
+		this.transactions.push(transaction)
+		return true
+	}
+
+	private validateTransaction(transaction: memPoolInterface): boolean {
+		const validateInf = memPoolInterfaceValidator.validate(transaction)
+		if (validateInf.error) {
+			loggingErr({
+				error: validateInf.error.message,
+				stack: new Error().stack,
+				time: generateTimestampz(),
+			})
+			return false
+		} else if (transaction.amount <= 0) {
+			loggingErr({
+				error: 'Invalid transaction amount',
+				stack: new Error().stack,
+				time: generateTimestampz(),
+			})
+			return false
+		} else if (!verifySignature(transaction, transaction.signature)) {
+			loggingErr({
+				error: 'Invalid signature',
+				stack: new Error().stack,
+				time: generateTimestampz(),
+			})
+			return false
+		} else if (transaction.from === transaction.to) {
+			loggingErr({
+				error: 'Invalid transaction sender and receiver',
+				stack: new Error().stack,
+				time: generateTimestampz(),
+			})
+			return false
+		} else if (transaction.from === getKeyPair().publicKey) {
+			loggingErr({
+				error: 'Invalid transaction sender',
+				stack: new Error().stack,
+				time: generateTimestampz(),
+			})
+			return false
+		}
+		transaction.status = 'confirmed'
+		return true
 	}
 
 	/**
-	 * Gets all transactions in the memory pool.
+	 * Gets all valid transactions in the memory pool.
 	 * @returns An array of transactions.
 	 */
-	public getTransactions(): memPoolInterface[] {
+
+	public getValidTransactions(): memPoolInterface[] {
 		return this.transactions
 	}
 
@@ -72,10 +133,33 @@ export class MemPool {
 
 	/**
 	 * Checks if the memory pool has reached its limit.
-	 * @param limit - Optional parameter specifying the maximum number of transactions.
-	 * @returns True if the memory pool has reached the limit, otherwise false.
+	 * @returns True if the memory pool has reached the 100, otherwise false.
 	 */
-	public isFull(limit: number = Infinity): boolean {
-		return this.transactions.length >= limit
+	public isFull(): boolean {
+		return this.transactions.length >= 100
 	}
 }
+
+const y = new BlockChains()
+const x = new MemPool()
+const transact: memPoolInterface = {
+	amount: 100,
+	from: '0x1',
+	to: '0x2',
+	signature: '',
+	status: 'pending',
+}
+const transact1: memPoolInterface = {
+	amount: 100,
+	from: createWalletAddress(),
+	to: '0x4',
+	signature: '',
+	status: 'pending',
+}
+
+transact.signature = createSignature(transact).signature
+transact1.signature = createSignature(transact1).signature
+x.addTransaction(transact)
+x.addTransaction(transact1)
+// y.addBlockToChain(x, '0x1')
+console.log(y.getLatestBlock().blk.transactions)

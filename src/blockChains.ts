@@ -9,7 +9,7 @@ import { Block } from './model/blocks/block'
 import { saveBlock } from './lib/block/saveBlock'
 import { loggingErr } from './logging/errorLog'
 import { successLog } from './logging/succesLog'
-import { sign } from './lib/hash/sign'
+import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/POW'
 import { loadBlocks } from './lib/block/loadBlock'
 import { getKeyPair } from './lib/hash/getKeyPair'
@@ -26,7 +26,8 @@ export class BlockChains {
 
 	constructor() {
 		const loadedBlocks = this.loadBlocksFromStorage()
-		this._chains = loadedBlocks.length > 0 ? loadedBlocks : this.initializeChain()
+		this._chains =
+			loadedBlocks.length > 0 ? loadedBlocks : this.initializeChain()
 	}
 
 	/**
@@ -64,7 +65,10 @@ export class BlockChains {
 	 */
 	public addBlockToChain(memPool: MemPool, walletMiner: string): boolean {
 		try {
-			const newBlock = this.createBlock(memPool.getTransactions(), walletMiner)
+			const newBlock = this.createBlock(
+				memPool.getValidTransactions(),
+				walletMiner,
+			)
 			saveBlock(newBlock)
 			this._chains.push(newBlock)
 			successLog({
@@ -130,14 +134,17 @@ export class BlockChains {
 					amount: latestBlock.blk.reward,
 					from: 'NexChain',
 					to: walletMiner,
-					signature: sign(createWalletAddress(), getKeyPair().privateKey),
+					signature: createSignature(createWalletAddress()).signature,
 					timestamp: generateTimestampz(),
+					fee: 0,
+					message: 'Reward Miner',
+					status: 'confirmed',
 				},
 				...transactions,
 			],
 			latestBlock.blk.header.hash,
 			'',
-			sign(latestBlock.blk.header.hash, getKeyPair().privateKey),
+			createSignature(latestBlock.blk.header.hash).signature,
 			[],
 			'',
 			'',

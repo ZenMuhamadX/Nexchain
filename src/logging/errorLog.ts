@@ -2,7 +2,7 @@
 
 import pino from 'pino'
 import * as path from 'path'
-
+import fs from 'node:fs'
 // Define interface for error information
 interface ErrorInfo {
 	error: string | any
@@ -15,6 +15,10 @@ interface ErrorInfo {
 // Define log directory and file paths
 const logDirPath = path.join(__dirname, '../../log')
 const logFilePath = path.join(logDirPath, 'error_log.log')
+
+if (!fs.existsSync(logDirPath)) {
+	fs.mkdirSync(logDirPath)
+}
 
 // Create Pino logger with file transport
 const logger = pino({ level: 'error' }, pino.destination(logFilePath))

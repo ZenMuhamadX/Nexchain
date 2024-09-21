@@ -5,8 +5,7 @@ import { proofOfWork } from '../../miner/POW'
 import { Block } from '../../model/blocks/block'
 import { memPoolInterface } from '../../model/interface/memPool.inf'
 import { createTxHash } from '../hash/createTxHash'
-import { sign } from '../hash/sign'
-import { getKeyPair } from '../hash/getKeyPair'
+import { createSignature } from './createSignature'
 import { generateTimestampz } from '../timestamp/generateTimestampz'
 import { calculateSize } from '../utils/calculateSize'
 import { saveBlock } from './saveBlock'
@@ -17,12 +16,11 @@ export const createGenesisBlock = (): Block => {
 			amount: 5000000,
 			from: 'NexChain',
 			to: 'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
-			signature: sign(
-				'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
-				getKeyPair().privateKey,
-			),
+			signature: createSignature('NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U').signature,
 			timestamp: generateTimestampz(),
 			message: 'Reward Genesis Block',
+			status: 'confirmed',
+			fee: 0,
 		}
 		transactGenesis.txHash = createTxHash(transactGenesis)
 		const genesisBlock = new Block(
@@ -36,19 +34,13 @@ export const createGenesisBlock = (): Block => {
 				{
 					address: 'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
 					balance: 5000000,
-					signature: sign(
-						'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
-						getKeyPair().privateKey,
-					),
+					signature: createSignature('NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U').signature,
 				},
 			],
 			'',
 		)
 		genesisBlock.blk.size = calculateSize(genesisBlock.blk).KB
-		genesisBlock.blk.signature = sign(
-			genesisBlock.blk.header.hash,
-			getKeyPair().privateKey,
-		)
+		genesisBlock.blk.signature = createSignature(genesisBlock.blk.header.hash).signature
 		const validHash = proofOfWork(genesisBlock)
 		genesisBlock.blk.header.hash = validHash.hash
 		genesisBlock.blk.header.nonce = validHash.nonce

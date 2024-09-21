@@ -16,5 +16,5 @@ export const createTxHash = (data: memPoolInterface): string => {
 		.createHash('sha256')
 		.update(Buffer.from(stringData))
 		.digest('hex')
-	return `NxC${hash}`
+	return `TxN${hash}`
 }

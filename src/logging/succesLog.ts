@@ -2,6 +2,7 @@
 
 import pino from 'pino'
 import * as path from 'path'
+import fs from 'node:fs'
 
 // Define interface for block information
 interface BlockInfo {
@@ -17,6 +18,10 @@ interface BlockInfo {
 // Define log directory and file paths
 const logDirPath = path.join(__dirname, '../../log')
 const logFilePath = path.join(logDirPath, 'blockfile.log')
+
+if(!fs.existsSync(logDirPath)){
+	fs.mkdirSync(logDirPath)
+}
 
 // Create Pino logger with file transport
 const logger = pino({ level: 'info' }, pino.destination(logFilePath))

@@ -9,4 +9,8 @@ export const memPoolInterfaceValidator = Joi.object({
 	timestamp: Joi.string().required(), // The timestamp when the transaction was created
 	txHash: Joi.string().required(), // The hash of the transaction
 	message: Joi.string().optional(), // An optional message included with the transaction
+	fee: Joi.number().optional(), // The fee associated with the transaction (optional)
+	nonce: Joi.number().optional(), // A nonce value (optional)`
+	status: Joi.string().optional(), // The status of the transaction (optional)
+	pub: Joi.string().optional(), // The public key of the sender
 })
