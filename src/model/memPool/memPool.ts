@@ -127,9 +127,9 @@ export class MemPool {
 	/**
 	 * Clears all transactions from the memory pool.
 	 */
-	private clear(): void {
-		this.transactions = []
-	}
+	// private clear(): void {
+	// 	this.transactions = []
+	// }
 
 	/**
 	 * Checks if the memory pool has reached its limit. if transaction limit will be clear and

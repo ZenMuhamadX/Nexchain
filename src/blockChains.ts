@@ -105,7 +105,7 @@ export class BlockChains {
 	 * @returns The latest block.
 	 */
 	public getLatestBlock(): Block {
-		return this._chains[this._chains.length - 1]
+		return this._chains[this._chains.length - 1] as Block
 	}
 
 	/**

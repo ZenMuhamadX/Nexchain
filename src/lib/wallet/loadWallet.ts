@@ -6,7 +6,7 @@ import { decrypt } from './secure/decrypt/decrypt'
 import { structWalletToSave } from '../../model/interface/walletStructinf'
 import { loadConfig } from '../utils/loadConfig'
 
-export const loadWallet = (): structWalletToSave | undefined | string => {
+export const loadWallet = (): structWalletToSave | undefined  => {
 	const dirPath = path.join(__dirname, '../../../wallet')
 	const filePath = loadConfig()?.wallet.path as string
 
@@ -17,7 +17,7 @@ export const loadWallet = (): structWalletToSave | undefined | string => {
 				'Wallet directory not found, creating wallet address from public key...',
 			)
 			createWalletAddress()
-			return 'Successfully created wallet'
+			return undefined
 		}
 
 		// Check if the file exists
@@ -25,7 +25,7 @@ export const loadWallet = (): structWalletToSave | undefined | string => {
 			console.error('File MainWallet.bin not found.')
 			console.info('Creating new wallet from public key...')
 			createWalletAddress()
-			return 'Successfully created wallet'
+			return undefined
 		}
 
 		// Read file if it exists
@@ -35,7 +35,7 @@ export const loadWallet = (): structWalletToSave | undefined | string => {
 		// Check if wallet data is valid
 		if (!walletData || !walletData.data || !walletData.data.encryptPrivateKey) {
 			console.error('Invalid wallet data.')
-			return
+			return undefined
 		}
 
 		const rawPrivateKey = walletData.data.encryptPrivateKey
@@ -43,7 +43,7 @@ export const loadWallet = (): structWalletToSave | undefined | string => {
 
 		if (!walletPassword) {
 			console.error('Environment variable WALLET_PASSWORD is not available.')
-			return
+			return undefined
 		}
 
 		// Decrypt the private key
@@ -53,5 +53,6 @@ export const loadWallet = (): structWalletToSave | undefined | string => {
 		return walletData as structWalletToSave
 	} catch (error) {
 		console.error('Error loading wallet:', error)
+		return undefined
 	}
 }
