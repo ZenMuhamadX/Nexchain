@@ -18,7 +18,7 @@ export const deriveKeyAndIv = (
 export const encrypt = (data: string, password: string): string => {
 	const ALGORITHM = loadConfig()?.wallet.privateKeyEncrypt.algorithm
 	try {
-		if (!data || !password) throw new Error('Text and password are required.')
+		if (!data || !password) throw new Error('data or password are required.')
 
 		const salt = crypto.randomBytes(16) // Salt untuk keamanan ekstra
 		const { key, iv } = deriveKeyAndIv(password, salt)
