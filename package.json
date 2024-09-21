@@ -7,7 +7,7 @@
     "test": "jest",
     "build": "bun run initial && tsc",
     "start": "bun run lint && bun run format && tsc && node ./dist/src/network/mainNet.js",
-    "dev": "bun init && bun run --watch ./src/network/mainNet.ts",
+    "dev": "bun initial && bun run --watch ./src/network/mainNet.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "check": "bun run initial && bunx tsc && rm -r dist",
