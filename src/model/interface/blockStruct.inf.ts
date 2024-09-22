@@ -1,5 +1,4 @@
 import { MemPoolInterface } from './memPool.inf'
-import { walletData } from './walletData.inf'
 
 /**
  * Represents the structure of a block in the blockchain.
@@ -16,7 +15,6 @@ export interface blockStruct {
 	height: number // The height of the block in the blockchain
 	signature: string // The digital signature for the block
 	size: string // The size of the block
-	walletData: walletData[] // List of wallet data associated with the block
 	transactions: MemPoolInterface[] // List of transactions included in the block
 	reward: number // The reward for mining the block
 }

@@ -1,11 +1,11 @@
 /** @format */
 
-import { getKeyPair } from '../hash/getKeyPair'
 import { processPubKey } from './processPubKey'
 import { addChecksum } from './addChecksum'
 import bs58 from 'bs58'
 import { saveMainWallet } from './saveWallet'
-import { loadConfig } from '../utils/loadConfig'
+import { getKeyPair } from 'src/lib/hash/getKeyPair'
+import { loadConfig } from 'src/lib/utils/loadConfig'
 
 // Creates a new wallet address and saves it
 export const createWalletAddress = () => {

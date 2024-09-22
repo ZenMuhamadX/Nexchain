@@ -8,7 +8,8 @@ export const structBlockReadyToHash = (block: Block): Buffer => {
 			timestamp: block.blk.header.timestamp,
 			version: block.blk.header.version,
 		},
-		walletData: block.blk.walletData,
+		height: block.blk.height,
+		signature: block.blk.signature,
 		transactions: block.blk.transactions,
 	}
 	const stringBlock = JSON.stringify(newBlockStruct)

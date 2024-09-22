@@ -19,15 +19,6 @@ export const verifyStruct = (block: Block): boolean => {
 			height: Joi.number().required(),
 			signature: Joi.string().required(),
 			size: Joi.string().required(),
-			walletData: Joi.array()
-				.items(
-					Joi.object({
-						address: Joi.string().required(),
-						balance: Joi.number().required(),
-						signature: Joi.string().required(),
-					}),
-				)
-				.required(),
 			transactions: Joi.array().optional(),
 			reward: Joi.number().required(),
 		}),
@@ -42,6 +33,8 @@ export const verifyStruct = (block: Block): boolean => {
 			stack: error.stack,
 			time: generateTimestampz(),
 			warning: warning?.message,
+			context: 'Block verifyStruct',
+			hint: 'Invalid block structure',
 		})
 		return false // Structure is invalid
 	}

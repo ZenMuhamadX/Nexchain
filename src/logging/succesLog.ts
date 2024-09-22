@@ -16,7 +16,7 @@ interface BlockInfo {
 }
 
 // Define log directory and file paths
-const logDirPath = path.join(__dirname, '../../log')
+const logDirPath = path.join(__dirname, '../../logs')
 const logFilePath = path.join(logDirPath, 'blockfile.log')
 
 if (!fs.existsSync(logDirPath)) {

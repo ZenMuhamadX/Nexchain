@@ -38,6 +38,9 @@ export const removeOldVersions = () => {
 		}
 	} catch (error) {
 		loggingErr({
+			context: 'removeOldVersions',
+			hint: 'Error removing old versions',
+			warning: null,
 			error: error instanceof Error ? error.message : 'Unknown error',
 			stack: error instanceof Error ? error.stack : new Error().stack,
 			time: generateTimestampz(),

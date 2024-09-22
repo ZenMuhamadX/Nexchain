@@ -31,14 +31,6 @@ export const createGenesisBlock = (): Block => {
 			'0000000000000000000000000000000000000000000000000000000000000000',
 			'',
 			'',
-			[
-				{
-					address: 'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
-					balance: 5000000,
-					signature: createSignature('NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U')
-						.signature,
-				},
-			],
 			'',
 		)
 		genesisBlock.blk.size = calculateSize(genesisBlock.blk).KB
@@ -53,6 +45,9 @@ export const createGenesisBlock = (): Block => {
 	} catch (error) {
 		loggingErr({
 			error: error,
+			context: 'createGenesisBlock',
+			hint: 'Error creating genesis block',
+			warning: null,
 			stack: new Error().stack,
 			time: generateTimestampz(),
 		})

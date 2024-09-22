@@ -1,4 +1,4 @@
-import { BSON } from 'bson'
+import msgpack from 'msgpack-lite'
 import fs from 'node:fs'
 import path from 'node:path'
 import { loggingErr } from '../../logging/errorLog'
@@ -9,6 +9,9 @@ export const loadMempool = () => {
 		// Determine the directory path for mempool versions
 		const dirPath = path.join(__dirname, '../../../mempool_versions')
 
+		if (!fs.existsSync(dirPath)) {
+			fs.mkdirSync(dirPath, { recursive: true })
+		}
 		// Read all files in the directory
 		const files = fs.readdirSync(dirPath)
 
@@ -28,7 +31,7 @@ export const loadMempool = () => {
 
 		// If no mempool versions are found, return null
 		if (version.length === 0) {
-			console.log('No mempool found')
+			console.info('No mempool found')
 			return null
 		}
 
@@ -43,13 +46,15 @@ export const loadMempool = () => {
 		// Read the file data
 		const fileData = fs.readFileSync(latestFilePath)
 
-		// Deserialize the data using BSON
-		const mempoolData = BSON.deserialize(fileData)
-		return mempoolData
+		// Deserialize the data using msgpack
+		return msgpack.decode(fileData)
 	} catch (error) {
 		// Log any errors during deserialization or file operations
 		loggingErr({
 			error: error instanceof Error ? error.message : 'Unknown error',
+			context: 'loadMempool',
+			warning: null,
+			hint: 'Error loading mempool from storage',
 			stack: error instanceof Error ? error.stack : new Error().stack,
 			time: generateTimestampz(),
 		})

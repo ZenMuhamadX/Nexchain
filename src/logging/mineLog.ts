@@ -14,7 +14,7 @@ interface Status {
 }
 
 // Define log directory and file paths
-const logDirPath = path.join(__dirname, '../../log')
+const logDirPath = path.join(__dirname, '../../logs')
 const logFilePath = path.join(logDirPath, 'mining_log.log')
 
 if (!fs.existsSync(logDirPath)) {

@@ -1,21 +1,19 @@
-import { BlockChains } from '../../blockChains'
-import { createSignature } from '../../lib/block/createSignature'
-import { verifySignature } from '../../lib/block/verifySIgnature'
+import { createSignature } from 'src/lib/block/createSignature'
 import { createTxHash } from '../../lib/hash/createTxHash'
-import { getKeyPair } from '../../lib/hash/getKeyPair'
 import { generateTimestampz } from '../../lib/timestamp/generateTimestampz'
 import { loadConfig } from '../../lib/utils/loadConfig'
-import { createWalletAddress } from '../../lib/wallet/createWallet'
-import { loggingErr } from '../../logging/errorLog'
-import { miningBlock } from '../../miner/mining'
-import { memPoolInterfaceValidator } from '../../validator/infValidator/mempool.v'
 import { MemPoolInterface } from '../interface/memPool.inf'
+import { loadMempool } from './loadMempool'
+import { saveMempool } from './saveMempool'
+import { transactionValidator } from 'src/validator/transactValidator/txValidator.v'
+import { loggingInfo } from 'src/logging/infoLog'
+import { loggingErr } from 'src/logging/errorLog'
 
 export class MemPool {
-	private transactions: MemPoolInterface[]
+	private MemPool: MemPoolInterface[]
 
 	constructor() {
-		this.transactions = []
+		this.MemPool = this.loadStorage()
 	}
 
 	/**
@@ -26,69 +24,63 @@ export class MemPool {
 
 	public addTransaction(transaction: MemPoolInterface): boolean {
 		if (this.isFull()) {
-			loggingErr({
-				error: new Error('Memory pool is full'),
-				stack: new Error().stack,
+			loggingInfo({
+				message: 'Mempool is full',
 				time: generateTimestampz(),
+				context: 'MemPool',
 			})
 			return false
 		}
+		transaction.signature = createSignature(transaction).signature
 		transaction.txHash = createTxHash(transaction)
 		transaction.timestamp = generateTimestampz()
 		transaction.status = 'pending'
-		const isValidTx = this.validateTransaction(transaction)
-		if (!isValidTx) {
-			loggingErr({
-				error: new Error('Invalid transaction data'),
-				stack: new Error().stack,
-				time: generateTimestampz(),
-			})
-			return false
-		}
-		this.transactions.push(transaction)
+		const isValidTx = transactionValidator(transaction)
+		if (!isValidTx) return false
+		this.MemPool.push(transaction)
+		this.autoSave()
 		return true
 	}
 
-	private validateTransaction(transaction: MemPoolInterface): boolean {
-		const validateInf = memPoolInterfaceValidator.validate(transaction)
-		if (validateInf.error) {
-			loggingErr({
-				error: validateInf.error.message,
-				stack: new Error().stack,
+	private autoSave() {
+		if (this.isFull()) {
+			saveMempool(this.MemPool)
+			loggingInfo({
+				message: 'Mempool saved to storage',
 				time: generateTimestampz(),
+				context: 'MemPool',
 			})
-			return false
-		} else if (transaction.amount <= 0) {
-			loggingErr({
-				error: 'Invalid transaction amount',
-				stack: new Error().stack,
-				time: generateTimestampz(),
-			})
-			return false
-		} else if (!verifySignature(transaction, transaction.signature)) {
-			loggingErr({
-				error: 'Invalid signature',
-				stack: new Error().stack,
-				time: generateTimestampz(),
-			})
-			return false
-		} else if (transaction.from === transaction.to) {
-			loggingErr({
-				error: 'Invalid transaction sender and receiver',
-				stack: new Error().stack,
-				time: generateTimestampz(),
-			})
-			return false
-		} else if (transaction.from === getKeyPair().publicKey) {
-			loggingErr({
-				error: 'Invalid transaction sender',
-				stack: new Error().stack,
-				time: generateTimestampz(),
-			})
-			return false
 		}
-		transaction.status = 'confirmed'
-		return true
+	}
+
+	private loadStorage(): MemPoolInterface[] {
+		try {
+			const savedMempool = loadMempool()
+			if (savedMempool) {
+				loggingInfo({
+					message: 'Mempool loaded from storage',
+					time: generateTimestampz(),
+					context: 'MemPool',
+				})
+				return savedMempool
+			} else {
+				loggingInfo({
+					message: 'No mempool found in storage',
+					time: generateTimestampz(),
+					context: 'MemPool',
+				})
+				return []
+			}
+		} catch (error) {
+			loggingErr({
+				error: error,
+				stack: new Error().stack,
+				hint: 'Error loading mempool from storage',
+				time: generateTimestampz(),
+				context: 'MemPool',
+			})
+			return []
+		}
 	}
 
 	/**
@@ -97,7 +89,7 @@ export class MemPool {
 	 */
 
 	public getValidTransactions(): MemPoolInterface[] {
-		return this.transactions
+		return loadMempool()
 	}
 
 	/**
@@ -105,23 +97,16 @@ export class MemPool {
 	 * @param txHash - The hash of the transaction to be removed.
 	 * @returns True if the transaction was removed, otherwise false.
 	 */
-	public removeTransaction(txHash: string): boolean {
-		const index = this.transactions.findIndex(
-			(transaction) => transaction.txHash === txHash,
-		)
-		if (index !== -1) {
-			this.transactions.splice(index, 1)
-			return true
-		}
-		return false
-	}
+	// public removeProcessedTransaction(transaction: MemPoolInterface[]): boolean {
+	// 	this.
+	// }
 
 	/**
 	 * Returns the number of transactions in the memory pool.
 	 * @returns The number of transactions.
 	 */
 	public size(): number {
-		return this.transactions.length
+		return this.MemPool.length
 	}
 
 	/**
@@ -133,34 +118,10 @@ export class MemPool {
 
 	/**
 	 * Checks if the memory pool has reached its limit. if transaction limit will be clear and
-	 * @returns True if the memory pool has reached the 100, otherwise false.
+	 * @returns True if the memory pool has reached limit, otherwise false.
 	 */
 	public isFull(): boolean {
 		const maxTransactions = loadConfig()?.memPool.maxMempoolSize as number
-		return this.transactions.length >= maxTransactions
+		return this.MemPool.length >= maxTransactions
 	}
 }
-
-const y = new BlockChains()
-const x = new MemPool()
-const transact: MemPoolInterface = {
-	amount: 100,
-	from: '0x1',
-	to: '0x2',
-	signature: '',
-	status: 'pending',
-}
-const transact1: MemPoolInterface = {
-	amount: 100,
-	from: createWalletAddress(),
-	to: '0x4',
-	signature: '',
-	status: 'pending',
-}
-
-transact.signature = createSignature(transact).signature
-transact1.signature = createSignature(transact1).signature
-x.addTransaction(transact)
-x.addTransaction(transact1)
-miningBlock(createWalletAddress())
-console.log(y.getLatestBlock().blk.transactions)

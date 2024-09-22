@@ -24,7 +24,10 @@ export const verifyBlock = (
 	// Check if the computed hash matches the expected hash
 	if (computedHash !== expectedHash) {
 		loggingErr({
-			error: new Error('Hash does not match'),
+			error: 'Hash does not match',
+			context: 'verifyBlock',
+			hint: 'Hash does not match',
+			warning: null,
 			stack: new Error().stack,
 			time: generateTimestampz(),
 		})

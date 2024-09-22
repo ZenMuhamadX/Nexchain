@@ -1,13 +1,14 @@
 /** @format */
 
-import { BSON } from 'bson'
 import { Block } from '../../model/blocks/block'
+import msgpack from 'msgpack-lite'
 
 // Fungsi untuk mendeserialize Buffer menjadi objek Block menggunakan BSON
 export const deserializeBlockFromBinary = (buffer: Buffer): Block => {
 	try {
 		// Deserialize buffer kembali ke objek Block
-		const deserializedBlock = BSON.deserialize(buffer)
+		const deserializedBlock = msgpack.decode(buffer)
+		
 		// Cast deserializedBlock ke tipe Block yang tepat
 		return deserializedBlock as Block
 	} catch (error) {

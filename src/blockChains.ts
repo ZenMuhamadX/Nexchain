@@ -12,12 +12,10 @@ import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/POW'
 import { loadBlocks } from './lib/block/loadBlock'
 import { calculateSize } from './lib/utils/calculateSize'
-import { verifyBlock } from './miner/verify/module/verifyBlock'
-import { verifyPow } from './miner/verify/module/verifyPow'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
-import { createWalletAddress } from './lib/wallet/createWallet'
 import { MemPoolInterface } from './model/interface/memPool.inf'
 import { saveConfigFile } from './lib/utils/saveConfig'
+import { myWallet } from './wallet/myWallet'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -49,6 +47,8 @@ export class BlockChains {
 		} catch (error) {
 			loggingErr({
 				error: error instanceof Error ? error.message : 'Unknown error',
+				context: 'BlockChains',
+				warning: null,
 				time: generateTimestampz(),
 				hint: 'Error loading blocks from storage',
 				stack: new Error().stack,
@@ -84,6 +84,8 @@ export class BlockChains {
 		} catch (error) {
 			loggingErr({
 				error: error instanceof Error ? error.message : 'Unknown error',
+				context: 'BlockChains',
+				warning: null,
 				time: generateTimestampz(),
 				hint: 'Error adding block to chain',
 				stack: new Error().stack,
@@ -142,7 +144,7 @@ export class BlockChains {
 					amount: latestBlock.blk.reward,
 					from: 'NexChain',
 					to: walletMiner,
-					signature: createSignature(createWalletAddress()).signature,
+					signature: createSignature(myWallet()).signature,
 					timestamp: generateTimestampz(),
 					fee: 0,
 					message: 'Reward Miner',
@@ -153,7 +155,6 @@ export class BlockChains {
 			latestBlock.blk.header.hash,
 			'',
 			createSignature(latestBlock.blk.header.hash).signature,
-			[],
 			'',
 			'',
 		)
@@ -169,13 +170,7 @@ export class BlockChains {
 	 * @param block - The block to be verified.
 	 * @returns True if the block and chain are valid, otherwise false.
 	 */
-	public verify(block: Block): boolean {
-		return (
-			verifyChainIntegrity() &&
-			verifyBlock(block, block.blk.header.nonce, block.blk.header.hash) &&
-			verifyPow(block)
-		)
+	public verify(): boolean {
+		return verifyChainIntegrity()
 	}
 }
-const x = new BlockChains()
-console.log(x.getLatestBlockJSON())

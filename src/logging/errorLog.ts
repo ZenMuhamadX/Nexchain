@@ -10,10 +10,11 @@ interface ErrorInfo {
 	hint?: string
 	warning?: any
 	stack: any
+	context: string
 }
 
 // Define log directory and file paths
-const logDirPath = path.join(__dirname, '../../log')
+const logDirPath = path.join(__dirname, '../../logs')
 const logFilePath = path.join(logDirPath, 'error_log.log')
 
 if (!fs.existsSync(logDirPath)) {

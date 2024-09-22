@@ -1,7 +1,6 @@
 /** @format */
 import { blockStruct } from '../interface/blockStruct.inf'
 import { MemPoolInterface } from '../interface/memPool.inf'
-import { walletData } from '../interface/walletData.inf'
 
 // models/Block.ts
 // This class represents a block in the blockchain
@@ -27,7 +26,6 @@ export class Block {
 		previousHash: string,
 		hash: string,
 		signature: string,
-		walletData: walletData[],
 		blockSize: string,
 		nonce?: string,
 	) {
@@ -43,7 +41,6 @@ export class Block {
 			height: height,
 			signature: signature,
 			size: blockSize,
-			walletData: walletData,
 			transactions,
 			reward: 50,
 		}

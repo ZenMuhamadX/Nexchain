@@ -2,12 +2,12 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { getNextMempoolVersion } from './utils/getNextVer'
 import { MemPoolInterface } from '../interface/memPool.inf'
-import { BSON } from 'bson'
 import { loggingErr } from '../../logging/errorLog'
 import { generateTimestampz } from '../../lib/timestamp/generateTimestampz'
 import { removeOldVersions } from './utils/removeOldVer'
+import msgpack from 'msgpack-lite'
 
-export const saveMempool = (mempool: MemPoolInterface) => {
+export const saveMempool = (mempool: MemPoolInterface | MemPoolInterface[]) => {
 	try {
 		// Get the next version number
 		const version = getNextMempoolVersion()
@@ -22,7 +22,7 @@ export const saveMempool = (mempool: MemPoolInterface) => {
 		}
 
 		// Try to create a BSON buffer from the mempool
-		const buffer = BSON.serialize(mempool)
+		const buffer = msgpack.encode(mempool)
 
 		// Try to write the buffer to the file
 		fs.writeFileSync(filePath, buffer)
@@ -30,16 +30,11 @@ export const saveMempool = (mempool: MemPoolInterface) => {
 	} catch (error: any) {
 		loggingErr({
 			error: error.message || error,
+			context: 'Save MemPool',
+			hint: 'Error saving mempool to file',
+			warning:null,
 			stack: new Error().stack,
 			time: generateTimestampz(),
 		})
 	}
 }
-
-saveMempool({
-	amount: 100,
-	from: '0x1',
-	to: '0x2',
-	signature: '',
-	status: 'pending',
-})

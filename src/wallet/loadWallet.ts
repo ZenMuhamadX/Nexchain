@@ -3,8 +3,8 @@ import fs from 'node:fs'
 import { BSON } from 'bson'
 import { createWalletAddress } from './createWallet'
 import { decrypt } from './secure/decrypt/decrypt'
-import { structWalletToSave } from '../../model/interface/walletStructinf'
-import { loadConfig } from '../utils/loadConfig'
+import { structWalletToSave } from 'src/model/interface/walletStructinf'
+import { loadConfig } from 'src/lib/utils/loadConfig'
 
 export const loadWallet = (): structWalletToSave | undefined  => {
 	const dirPath = path.join(__dirname, '../../../wallet')

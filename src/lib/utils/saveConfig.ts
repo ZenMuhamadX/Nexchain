@@ -10,6 +10,8 @@ export const saveConfigFile = () => {
 		fs.mkdirSync(dirPath)
 	}
 
+	if (fs.existsSync(filePath)) return
+
 	const defaultConfig: defaultConfig = {
 		network: {
 			port: 4040,
@@ -21,7 +23,7 @@ export const saveConfigFile = () => {
 			nodeVer: '1.0.0',
 		},
 		memPool: {
-			maxMempoolSize: 1000,
+			maxMempoolSize: 5,
 			maxVer: 5,
 		},
 		logging: {

@@ -25,6 +25,9 @@ export const getNextMempoolVersion = () => {
 		// Handle any errors that occurred during the process
 		loggingErr({
 			error: error,
+			context: 'getNextMempoolVersion',
+			hint: 'Error getting next version number',
+			warning: null,
 			stack: new Error().stack,
 			time: generateTimestampz(),
 		})

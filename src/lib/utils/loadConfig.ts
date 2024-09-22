@@ -25,6 +25,9 @@ export const loadConfig = (): defaultConfig | null => {
 		// Handle potential errors during file reading or parsing
 		loggingErr({
 			error: error,
+			context: 'loadConfig',
+			hint: 'Error loading configuration file',
+			warning: null,
 			stack: new Error().stack,
 			time: generateTimestampz(),
 		})

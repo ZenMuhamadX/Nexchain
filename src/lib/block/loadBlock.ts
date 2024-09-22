@@ -46,6 +46,9 @@ export const loadBlocks = (): Block[] | false => {
 		loggingErr({
 			error: error,
 			stack: new Error().stack,
+			context: 'loadBlocks',
+			hint: 'Error loading blocks from storage',
+			warning: null,
 			time: generateTimestampz(),
 		})
 		return false

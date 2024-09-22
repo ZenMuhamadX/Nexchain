@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { loadConfig } from '../../../utils/loadConfig'
+import { loadConfig } from 'src/lib/utils/loadConfig';
 
 // Fungsi untuk menghasilkan kunci dan IV dari password
 export const deriveKeyAndIv = (

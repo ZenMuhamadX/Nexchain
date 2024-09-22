@@ -12,13 +12,14 @@ export const miningBlock = (address: string): void => {
 	const chain = new BlockChains()
 	const pool = new MemPool()
 	const transactions = pool.getValidTransactions()
-	console.log(transactions)
 
 	try {
 		// Check if there are pending transactions to mine
-		if (!transactions.length) {
+		if (!transactions) {
 			loggingErr({
 				error: 'No pending transactions to mine',
+				context: 'miningBlock',
+				hint: 'No transactions to mine',
 				time: generateTimestampz(),
 				warning: null,
 				stack: new Error().stack,
@@ -43,6 +44,9 @@ export const miningBlock = (address: string): void => {
 		// Log error details if an exception is thrown
 		loggingErr({
 			error: error || 'Unknown error',
+			context: 'miningBlock',
+			hint: 'Error mining block',
+			warning: null,
 			time: generateTimestampz(),
 			stack: new Error().stack,
 		})

@@ -1,13 +1,13 @@
 import 'dotenv/config'
-import { getKeyPair } from '../hash/getKeyPair'
-import { generateTimestampz } from '../timestamp/generateTimestampz'
 import crypto from 'crypto'
 import { BSON } from 'bson'
 import path from 'path'
 import fs from 'fs'
 import { encrypt } from './secure/encrypt/encrypt'
-import { structWalletToSave } from '../../model/interface/walletStructinf'
-import { loadConfig } from '../utils/loadConfig'
+import { getKeyPair } from 'src/lib/hash/getKeyPair'
+import { loadConfig } from 'src/lib/utils/loadConfig'
+import { structWalletToSave } from 'src/model/interface/walletStructinf'
+import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 
 // Formats the input string to show only the first and last three characters
 const formatString = (input: string): string => {
