@@ -1,4 +1,5 @@
 import { leveldb } from "../init"
+import { readData } from "./readData"
 
 export const insertData = async(key: string, value: string) => {
     try {
@@ -7,3 +8,5 @@ export const insertData = async(key: string, value: string) => {
         console.log(error)
     }
 }
+insertData('1','1')
+readData('1')
