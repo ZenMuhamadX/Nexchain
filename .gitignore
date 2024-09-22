@@ -9,3 +9,4 @@ dist
 .vscode
 mempool_versions
 config
+leveldb_base
