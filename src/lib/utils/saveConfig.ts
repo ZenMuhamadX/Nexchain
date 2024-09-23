@@ -31,8 +31,7 @@ export const saveConfigFile = () => {
 			path: path.join(__dirname, '../../../log'),
 		},
 		wallet: {
-			path: path.join(__dirname, '../../../wallet/MainWallet.bin'),
-			version: 0x00,
+			path: path.join(__dirname, '../../../myWallet/MainWallet.bin'),
 			privateKeyEncrypt: {
 				algorithm: 'aes-256-cbc',
 				keySize: 256,

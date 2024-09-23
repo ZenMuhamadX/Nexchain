@@ -15,7 +15,7 @@ import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { MemPoolInterface } from './model/interface/memPool.inf'
 import { saveConfigFile } from './lib/utils/saveConfig'
-import { myWallet } from './wallet/myWallet'
+import { myWalletAddress } from './wallet/myWalletAddress'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -144,7 +144,7 @@ export class BlockChains {
 					amount: latestBlock.blk.reward,
 					from: 'NexChain',
 					to: walletMiner,
-					signature: createSignature(myWallet()).signature,
+					signature: createSignature(myWalletAddress()).signature,
 					timestamp: generateTimestampz(),
 					fee: 0,
 					message: 'Reward Miner',

@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { loadConfig } from 'src/lib/utils/loadConfig';
+import { loadConfig } from 'src/lib/utils/loadConfig'
 
 // Fungsi untuk menghasilkan kunci dan IV dari password
 export const deriveKeyAndIv = (
@@ -15,7 +15,7 @@ export const deriveKeyAndIv = (
 	}
 }
 
-export const encrypt = (data: string, password: string): string => {
+export const encrypt = (data: string, password: string): string | undefined => {
 	const ALGORITHM = loadConfig()?.wallet.privateKeyEncrypt.algorithm
 	try {
 		if (!data || !password) throw new Error('data or password are required.')
@@ -29,6 +29,7 @@ export const encrypt = (data: string, password: string): string => {
 
 		return `${salt.toString('hex')}:${encrypted}`
 	} catch (error) {
-		throw new Error('Encryption failed: ' + error)
+		console.error(error)
+		return 
 	}
 }

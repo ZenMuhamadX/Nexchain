@@ -1,30 +1,18 @@
 import path from 'path'
 import fs from 'node:fs'
 import { BSON } from 'bson'
-import { createWalletAddress } from './createWallet'
-import { decrypt } from './secure/decrypt/decrypt'
+import { decrypt } from '../secure/decrypt/decrypt'
 import { structWalletToSave } from 'src/model/interface/walletStructinf'
 import { loadConfig } from 'src/lib/utils/loadConfig'
 
-export const loadWallet = (): structWalletToSave | undefined  => {
-	const dirPath = path.join(__dirname, '../../../wallet')
+export const loadWallet = (): structWalletToSave | undefined => {
+	const dirPath = path.join(__dirname, '../../../myWallet')
 	const filePath = loadConfig()?.wallet.path as string
 
 	try {
-		// Check if the directory exists
-		if (!fs.existsSync(dirPath)) {
-			console.log(
-				'Wallet directory not found, creating wallet address from public key...',
-			)
-			createWalletAddress()
-			return undefined
-		}
-
 		// Check if the file exists
-		if (!fs.existsSync(filePath)) {
+		if (!fs.existsSync(filePath) || !fs.existsSync(dirPath)) {
 			console.error('File MainWallet.bin not found.')
-			console.info('Creating new wallet from public key...')
-			createWalletAddress()
 			return undefined
 		}
 

@@ -57,7 +57,7 @@ export const transactionValidator = (transaction: MemPoolInterface) => {
 			time: generateTimestampz(),
 		})
 		return false
-	}
+	} 
 	transaction.status = 'confirmed'
 	return true
 }

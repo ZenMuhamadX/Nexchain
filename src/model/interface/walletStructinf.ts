@@ -3,7 +3,7 @@
  */
 export interface structWalletToSave {
 	data: {
-		wallet: string // The wallet address
+		address: string // The wallet address
 		publicKey: string // The public key associated with the wallet
 		encryptPrivateKey: string // The encrypted private key for the wallet
 		decryptPrivateKey?: string // The decrypted private key (optional)

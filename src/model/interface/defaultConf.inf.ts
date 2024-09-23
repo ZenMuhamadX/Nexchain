@@ -18,7 +18,6 @@ export interface defaultConfig {
 	}
 	wallet: {
 		path: string
-		version: number
 		privateKeyEncrypt: {
 			algorithm: string
 			keySize: number

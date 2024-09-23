@@ -3,7 +3,7 @@ import crypto from 'crypto'
 import { BSON } from 'bson'
 import path from 'path'
 import fs from 'fs'
-import { encrypt } from './secure/encrypt/encrypt'
+import { encrypt } from '../secure/encrypt/encrypt'
 import { getKeyPair } from 'src/lib/hash/getKeyPair'
 import { loadConfig } from 'src/lib/utils/loadConfig'
 import { structWalletToSave } from 'src/model/interface/walletStructinf'
@@ -34,7 +34,7 @@ export const saveMainWallet = (wallet: string): boolean => {
 		)
 
 		// Determine the file name and path
-		const dirPath = path.join(__dirname, '../../../wallet')
+		const dirPath = path.join(__dirname, '../../../myWallet')
 		const filePath = loadConfig()?.wallet.path as string
 
 		// Create directory if it does not exist
@@ -45,9 +45,9 @@ export const saveMainWallet = (wallet: string): boolean => {
 		// Prepare the data to be saved
 		const structToSave: structWalletToSave = {
 			data: {
-				wallet: wallet,
+				address: wallet,
 				publicKey: getKeyPair().publicKey,
-				encryptPrivateKey: encryptedPrivateKey,
+				encryptPrivateKey: encryptedPrivateKey as string,
 				decryptPrivateKey: formatString(privateKey),
 			},
 			metadata: {
@@ -59,6 +59,7 @@ export const saveMainWallet = (wallet: string): boolean => {
 
 		// Serialize the data and write to file
 		const serializedData = BSON.serialize(structToSave)
+
 		fs.writeFileSync(filePath, serializedData, 'binary')
 
 		return true

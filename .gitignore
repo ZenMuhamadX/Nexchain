@@ -9,4 +9,8 @@ dist
 .vscode
 mempool_versions
 config
-leveldb_base
+base
+logs
+key
+blocks
+myWallet

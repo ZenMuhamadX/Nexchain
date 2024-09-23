@@ -8,6 +8,7 @@ import { saveMempool } from './saveMempool'
 import { transactionValidator } from 'src/validator/transactValidator/txValidator.v'
 import { loggingInfo } from 'src/logging/infoLog'
 import { loggingErr } from 'src/logging/errorLog'
+import { hasSufficientBalance } from 'src/wallet/balance/utils/hasSufficientBalance'
 
 export class MemPool {
 	private MemPool: MemPoolInterface[]
@@ -37,9 +38,12 @@ export class MemPool {
 		transaction.status = 'pending'
 		const isValidTx = transactionValidator(transaction)
 		if (!isValidTx) return false
-		this.MemPool.push(transaction)
-		this.autoSave()
-		return true
+		hasSufficientBalance(transaction.from, transaction.amount, transaction.fee).then(() => {
+			this.autoSave()
+			this.MemPool.push(transaction)
+			return true
+		})
+		return false
 	}
 
 	private autoSave() {

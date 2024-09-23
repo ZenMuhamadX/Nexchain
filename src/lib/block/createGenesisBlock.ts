@@ -9,14 +9,15 @@ import { createSignature } from './createSignature'
 import { generateTimestampz } from '../timestamp/generateTimestampz'
 import { calculateSize } from '../utils/calculateSize'
 import { saveBlock } from './saveBlock'
+import { putBalance } from 'src/wallet/balance/putBalance'
 
 export const createGenesisBlock = (): Block => {
 	try {
 		const transactGenesis: MemPoolInterface = {
 			amount: 5000000,
 			from: 'NexChain',
-			to: 'NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U',
-			signature: createSignature('NxC1Aom5fbbxQ9AMoXwxUwSirZCAXVYqm5y3U')
+			to: 'NxC157CtSagAk29KtGcvzUfF4v5XwqwGdc4jQ',
+			signature: createSignature('NxC157CtSagAk29KtGcvzUfF4v5XwqwGdc4jQ')
 				.signature,
 			timestamp: generateTimestampz(),
 			message: 'Reward Genesis Block',
@@ -41,6 +42,11 @@ export const createGenesisBlock = (): Block => {
 		genesisBlock.blk.header.hash = validHash.hash
 		genesisBlock.blk.header.nonce = validHash.nonce
 		saveBlock(genesisBlock)
+		putBalance('NxC157CtSagAk29KtGcvzUfF4v5XwqwGdc4jQ', {
+			address: 'NxC157CtSagAk29KtGcvzUfF4v5XwqwGdc4jQ',
+			balance: 100000000,
+			timesTransaction: 0,
+		})
 		return genesisBlock
 	} catch (error) {
 		loggingErr({

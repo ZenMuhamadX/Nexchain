@@ -31,7 +31,6 @@ export const loadMempool = () => {
 
 		// If no mempool versions are found, return null
 		if (version.length === 0) {
-			console.info('No mempool found')
 			return null
 		}
 

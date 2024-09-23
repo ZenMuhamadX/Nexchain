@@ -1,23 +1,28 @@
 /** @format */
 
-import { processPubKey } from './processPubKey'
-import { addChecksum } from './addChecksum'
+import { processPubKey } from './utils/processPubKey'
+import { addChecksum } from './utils/addChecksum'
 import bs58 from 'bs58'
-import { saveMainWallet } from './saveWallet'
+import { saveMainWallet } from './utils/saveWallet'
 import { getKeyPair } from 'src/lib/hash/getKeyPair'
-import { loadConfig } from 'src/lib/utils/loadConfig'
+import { putBalance } from './balance/putBalance'
+import { loggingErr } from 'src/logging/errorLog'
+import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 
 // Creates a new wallet address and saves it
 export const createWalletAddress = () => {
 	try {
+		const initialBalance = 0
+
+		const initialTimesTransaction = 0
+
 		// Retrieve the public key
 		const publicKey = getKeyPair().publicKey
 
-		// Set version byte
-		const version = loadConfig()?.wallet.version as number
-
 		// Generate the wallet address from the public key
 		const address = processPubKey(publicKey)
+
+		const version = 0x00
 
 		// Combine version byte and address
 		const versionAddress = Buffer.concat([
@@ -37,10 +42,23 @@ export const createWalletAddress = () => {
 		// Save the wallet address
 		saveMainWallet(walletAddress)
 
+		putBalance(walletAddress, {
+			balance: initialBalance,
+			timesTransaction: initialTimesTransaction,
+			address: walletAddress,
+		})
+
 		// Return the formatted wallet address
 		return walletAddress
 	} catch (error) {
-		console.error('Error creating wallet address:', error)
-		throw error // Re-throw to handle errors upstream if needed
+		loggingErr({
+			context: 'createWalletAddress',
+			error,
+			stack: new Error().stack,
+			time: generateTimestampz(),
+			hint: '',
+			warning: null,
+		})
+		return
 	}
 }
