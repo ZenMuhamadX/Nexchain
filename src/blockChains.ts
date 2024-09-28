@@ -5,17 +5,21 @@ import immutable from 'deep-freeze'
 import { createGenesisBlock } from './lib/block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/blocks/block'
-import { saveBlock } from './lib/block/saveBlock'
+import { saveBlock } from './storage/saveBlock'
 import { loggingErr } from './logging/errorLog'
 import { successLog } from './logging/succesLog'
 import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/POW'
-import { loadBlocks } from './lib/block/loadBlock'
+import { loadBlocks } from './storage/loadBlock'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { MemPoolInterface } from './model/interface/memPool.inf'
-import { saveConfigFile } from './lib/utils/saveConfig'
+import { saveConfigFile } from './storage/saveConfig'
 import { myWalletAddress } from './wallet/myWalletAddress'
+import { putBalance } from './wallet/balance/putBalance'
+import { getBalance } from './wallet/balance/getBalance'
+import { structBalance } from './leveldb/struct/structBalance'
+import { processTransact } from './transaction/processTransact'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -70,6 +74,7 @@ export class BlockChains {
 		try {
 			const newBlock = this.createBlock(validTransaction, walletMiner)
 			saveBlock(newBlock)
+			processTransact(validTransaction)
 			this._chains.push(newBlock)
 			successLog({
 				hash: newBlock.blk.header.hash,
@@ -135,7 +140,6 @@ export class BlockChains {
 		if (!transactions || transactions.length === 0) {
 			throw new Error('No transactions provided for the new block.')
 		}
-
 		const newBlock = new Block(
 			this._chains.length,
 			generateTimestampz(),
@@ -162,7 +166,20 @@ export class BlockChains {
 		newBlock.blk.header.hash = proof.hash
 		newBlock.blk.header.nonce = proof.nonce
 		newBlock.blk.size = calculateSize(newBlock.blk).KB
+		this.giveReward(walletMiner, latestBlock.blk.reward)
 		return newBlock
+	}
+
+	private async giveReward(address: string, reward: number) {
+		const oldBalance: structBalance = (await getBalance(
+			address,
+		)) as structBalance
+		const newBalance = oldBalance.balance + reward
+		putBalance(address, {
+			address,
+			balance: newBalance,
+			timesTransaction: oldBalance.timesTransaction + 1,
+		})
 	}
 
 	/**

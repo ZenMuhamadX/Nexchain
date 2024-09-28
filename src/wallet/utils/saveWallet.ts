@@ -5,7 +5,7 @@ import path from 'path'
 import fs from 'fs'
 import { encrypt } from '../secure/encrypt/encrypt'
 import { getKeyPair } from 'src/lib/hash/getKeyPair'
-import { loadConfig } from 'src/lib/utils/loadConfig'
+import { loadConfig } from 'src/storage/loadConfig'
 import { structWalletToSave } from 'src/model/interface/walletStructinf'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 

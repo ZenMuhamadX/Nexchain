@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { loadConfig } from 'src/lib/utils/loadConfig'
+import { loadConfig } from 'src/storage/loadConfig'
 
 // Fungsi untuk menghasilkan kunci dan IV dari password
 export const deriveKeyAndIv = (
@@ -30,6 +30,6 @@ export const encrypt = (data: string, password: string): string | undefined => {
 		return `${salt.toString('hex')}:${encrypted}`
 	} catch (error) {
 		console.error(error)
-		return 
+		return
 	}
 }

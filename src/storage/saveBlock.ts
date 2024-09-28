@@ -1,10 +1,10 @@
 /** @format */
 
 import fs from 'fs'
-import { Block } from '../../model/blocks/block'
+import { Block } from '../model/blocks/block'
 import path from 'path'
-import { serializeBlockToBinary } from '../utils/serialize'
-import { createBlockName } from '../utils/createBlockName'
+import { serializeBlockToBinary } from '../lib/utils/serialize'
+import { createBlockName } from '../lib/utils/createBlockName'
 
 // Fungsi untuk menyimpan Block ke dalam file
 export const saveBlock = (blockData: Block): boolean => {

@@ -29,6 +29,7 @@ export const loggingErr = (err: ErrorInfo): void => {
 	if (err) {
 		// Format log message
 		const logMessage = {
+			context: err.context,
 			error: err.error,
 			time: err.time,
 			hint: err.hint || 'N/A',

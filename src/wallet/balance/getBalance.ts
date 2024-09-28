@@ -11,7 +11,7 @@ export const getBalance = async (
 			console.info('address not provided')
 			return
 		}
-		const balance = await leveldb.get(address)
+		const balance = await leveldb.get(address, { valueEncoding: 'json' })
 		if (!balance) {
 			loggingErr({
 				error: 'data not found',
@@ -23,7 +23,7 @@ export const getBalance = async (
 			})
 			return
 		}
-		return JSON.parse(balance) as structBalance
+		return balance
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error('Error getting data:', error.message)

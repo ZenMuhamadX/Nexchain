@@ -1,11 +1,11 @@
 /** @format */
 
-import { Block } from '../../model/blocks/block'
+import { Block } from '../model/blocks/block'
 import fs from 'node:fs'
 import path from 'node:path'
-import { deserializeBlockFromBinary } from '../utils/deserialize'
-import { loggingErr } from '../../logging/errorLog'
-import { generateTimestampz } from '../timestamp/generateTimestampz'
+import { deserializeBlockFromBinary } from '../lib/utils/deserialize'
+import { loggingErr } from '../logging/errorLog'
+import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 
 export const loadBlocks = (): Block[] | false => {
 	const dirPath = path.join(__dirname, '../../../blocks')

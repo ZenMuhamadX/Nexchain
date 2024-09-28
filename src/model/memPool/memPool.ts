@@ -1,20 +1,18 @@
 import { createSignature } from 'src/lib/block/createSignature'
 import { createTxHash } from '../../lib/hash/createTxHash'
 import { generateTimestampz } from '../../lib/timestamp/generateTimestampz'
-import { loadConfig } from '../../lib/utils/loadConfig'
+import { loadConfig } from '../../storage/loadConfig'
 import { MemPoolInterface } from '../interface/memPool.inf'
-import { loadMempool } from './loadMempool'
-import { saveMempool } from './saveMempool'
 import { transactionValidator } from 'src/validator/transactValidator/txValidator.v'
 import { loggingInfo } from 'src/logging/infoLog'
-import { loggingErr } from 'src/logging/errorLog'
 import { hasSufficientBalance } from 'src/wallet/balance/utils/hasSufficientBalance'
+import { handleDoubleSpend } from 'src/wallet/balance/utils/doubleSpend'
 
 export class MemPool {
 	private MemPool: MemPoolInterface[]
 
 	constructor() {
-		this.MemPool = this.loadStorage()
+		this.MemPool = []
 	}
 
 	/**
@@ -23,7 +21,7 @@ export class MemPool {
 	 * @returns True if the transaction was added successfully, otherwise false.
 	 */
 
-	public addTransaction(transaction: MemPoolInterface): boolean {
+	public addTransaction(transaction: MemPoolInterface): boolean | undefined {
 		if (this.isFull()) {
 			loggingInfo({
 				message: 'Mempool is full',
@@ -32,59 +30,38 @@ export class MemPool {
 			})
 			return false
 		}
-		transaction.signature = createSignature(transaction).signature
 		transaction.txHash = createTxHash(transaction)
 		transaction.timestamp = generateTimestampz()
 		transaction.status = 'pending'
+		transaction.signature = createSignature(transaction).signature
+		transaction.fee = transaction.amount * 0.0001
 		const isValidTx = transactionValidator(transaction)
 		if (!isValidTx) return false
-		hasSufficientBalance(transaction.from, transaction.amount, transaction.fee).then(() => {
-			this.autoSave()
-			this.MemPool.push(transaction)
-			return true
-		})
-		return false
-	}
-
-	private autoSave() {
-		if (this.isFull()) {
-			saveMempool(this.MemPool)
-			loggingInfo({
-				message: 'Mempool saved to storage',
-				time: generateTimestampz(),
-				context: 'MemPool',
-			})
-		}
-	}
-
-	private loadStorage(): MemPoolInterface[] {
-		try {
-			const savedMempool = loadMempool()
-			if (savedMempool) {
+		handleDoubleSpend(transaction.txHash).then((status) => {
+			if (status.doubleSpend === true) {
 				loggingInfo({
-					message: 'Mempool loaded from storage',
+					message: 'Double spend',
+					metadata: {
+						txHash: status.txHash,
+					},
 					time: generateTimestampz(),
 					context: 'MemPool',
 				})
-				return savedMempool
-			} else {
-				loggingInfo({
-					message: 'No mempool found in storage',
-					time: generateTimestampz(),
-					context: 'MemPool',
-				})
-				return []
+				return false // Kembalikan false jika ada double spend
 			}
-		} catch (error) {
-			loggingErr({
-				error: error,
-				stack: new Error().stack,
-				hint: 'Error loading mempool from storage',
-				time: generateTimestampz(),
-				context: 'MemPool',
+			return hasSufficientBalance(
+				transaction.from,
+				transaction.amount,
+				transaction.fee!,
+			).then((balanceStatus) => {
+				if (balanceStatus) {
+					this.MemPool.push(transaction) // Hanya tambahkan jika saldo cukup
+					return true // Kembalikan true jika transaksi valid
+				}
+				return false // Kembalikan false jika saldo tidak cukup
 			})
-			return []
-		}
+		})
+		return
 	}
 
 	/**
@@ -93,7 +70,7 @@ export class MemPool {
 	 */
 
 	public getValidTransactions(): MemPoolInterface[] {
-		return loadMempool()
+		return this.MemPool
 	}
 
 	/**

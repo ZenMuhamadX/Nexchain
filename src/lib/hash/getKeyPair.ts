@@ -22,7 +22,7 @@ export const getKeyPair = () => {
 	} else {
 		// Menghasilkan pasangan kunci ECC baru
 		const keyPair = ec.genKeyPair()
-		const publicKey = keyPair.getPrivate('hex')
+		const publicKey = keyPair.getPublic('hex')
 		const privateKey = keyPair.getPrivate('hex')
 
 		// Pastikan direktori target ada

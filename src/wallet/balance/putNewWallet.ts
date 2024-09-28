@@ -2,11 +2,11 @@ import { leveldb } from '../../leveldb/init'
 import { loggingErr } from 'src/logging/errorLog'
 import { structBalance } from 'src/leveldb/struct/structBalance'
 
-export const putBalance = (address: string, balance: structBalance): void => {
+export const putNewWallet = (address: string): void => {
 	try {
-		if (!address || !balance) {
+		if (!address) {
 			loggingErr({
-				error: 'data not found',
+				error: 'data address not found',
 				stack: new Error().stack,
 				hint: 'data not found',
 				time: new Date().toISOString(),
@@ -15,10 +15,12 @@ export const putBalance = (address: string, balance: structBalance): void => {
 			})
 			return
 		}
-		if(balance.timesTransaction === undefined){
-			balance.timesTransaction = 0
+		const initBalance: structBalance = {
+			address: address,
+			balance: 0,
+			timesTransaction: 0,
 		}
-		leveldb.put(address, JSON.stringify(balance), {
+		leveldb.put(address, JSON.stringify(initBalance), {
 			sync: true,
 			valueEncoding: 'buffer',
 		})

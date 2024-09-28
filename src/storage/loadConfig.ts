@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
-import { defaultConfig } from '../../model/interface/defaultConf.inf'
-import { loggingErr } from '../../logging/errorLog'
-import { generateTimestampz } from '../timestamp/generateTimestampz'
+import { defaultConfig } from '../model/interface/defaultConf.inf'
+import { loggingErr } from '../logging/errorLog'
+import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { saveConfigFile } from './saveConfig'
 
 export const loadConfig = (): defaultConfig | null => {

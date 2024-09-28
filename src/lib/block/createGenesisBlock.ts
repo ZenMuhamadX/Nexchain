@@ -8,7 +8,7 @@ import { createTxHash } from '../hash/createTxHash'
 import { createSignature } from './createSignature'
 import { generateTimestampz } from '../timestamp/generateTimestampz'
 import { calculateSize } from '../utils/calculateSize'
-import { saveBlock } from './saveBlock'
+import { saveBlock } from '../../storage/saveBlock'
 import { putBalance } from 'src/wallet/balance/putBalance'
 
 export const createGenesisBlock = (): Block => {
