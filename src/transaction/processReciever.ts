@@ -1,8 +1,11 @@
-import { structBalance } from "src/leveldb/struct/structBalance"
-import { getBalance } from "src/wallet/balance/getBalance"
-import { putBalance } from "src/wallet/balance/putBalance"
+import { structBalance } from 'src/leveldb/struct/structBalance'
+import { getBalance } from 'src/wallet/balance/getBalance'
+import { putBalance } from 'src/wallet/balance/putBalance'
 
-export const processReciever = async (recieverAddress: string, amount: number) => {
+export const processReciever = async (
+	recieverAddress: string,
+	amount: number,
+) => {
 	const transferAmount = amount
 	const oldData = await getBalance(recieverAddress)
 	const oldBalance = oldData?.balance as number

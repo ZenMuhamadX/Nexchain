@@ -1,14 +1,16 @@
 /** @format */
 
-import { loggingErr } from '../../logging/errorLog'
-import { proofOfWork } from '../../miner/POW'
-import { Block } from '../../model/blocks/block'
-import { createSignature } from './createSignature'
-import { generateTimestampz } from '../timestamp/generateTimestampz'
-import { calculateSize } from '../utils/calculateSize'
-import { saveBlock } from '../../storage/saveBlock'
+import { loggingErr } from '../logging/errorLog'
+import { proofOfWork } from '../miner/POW'
+import { Block } from '../model/blocks/block'
+import { createSignature } from '../lib/block/createSignature'
+import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
+import { calculateSize } from '../lib/utils/calculateSize'
+import { saveBlock } from '../storage/saveBlock'
 import { putBalance } from 'src/wallet/balance/putBalance'
 import { myWalletAddress } from 'src/wallet/myWalletAddress'
+import { calculateTotalFees } from 'src/transaction/totalFees'
+import { getNetworkId } from 'src/network/lib/getNetId'
 
 export const createGenesisBlock = (): Block => {
 	try {
@@ -22,19 +24,20 @@ export const createGenesisBlock = (): Block => {
 					'0000000000000000000000000000000000000000000000000000000000000000',
 				timestamp: generateTimestampz(),
 				version: '1.0.0',
+				hashingAlgorithm: 'SHA256',
 			},
-			gasUsed: 0,
+			blockReward: 5000000,
 			totalTransactionFees: 0,
 			height: 0,
 			merkleRoot: '',
-			networkId: '',
+			networkId: getNetworkId(),
 			signature: '',
 			size: 0,
 			status: 'confirmed',
 			coinbaseTransaction: {
 				amount: 5000000,
 				reward: 5000000,
-				to: 'NxC157CtSagAk29KtGcvzUfF4v5XwqwGdc4jQ',
+				to: 'NxC13i2dWE3fH2UdRFVAC7mpwvhw5tFwUeD6M',
 			},
 			validator: {
 				rewardAddress: myWalletAddress(),
@@ -45,10 +48,14 @@ export const createGenesisBlock = (): Block => {
 				gasPrice: 0,
 				created_at: generateTimestampz(),
 				txCount: 0,
-				notes: 'NexChains Genesis Block',
+				notes:
+					'Hassan Nasrallah Killed by Israel,Hezbollah Promises to Continue the War 29/9/2024',
 			},
 			transactions: [],
 		})
+		genesisBlock.block.totalTransactionFees = calculateTotalFees(
+			genesisBlock.block.transactions,
+		)
 		genesisBlock.block.signature = createSignature(
 			genesisBlock.block.header.hash,
 		).signature
@@ -57,8 +64,8 @@ export const createGenesisBlock = (): Block => {
 		genesisBlock.block.header.nonce = validHash.nonce
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
 		saveBlock(genesisBlock)
-		putBalance('NxC157CtSagAk29KtGcvzUfF4v5XwqwGdc4jQ', {
-			address: 'NxC157CtSagAk29KtGcvzUfF4v5XwqwGdc4jQ',
+		putBalance('NxC13i2dWE3fH2UdRFVAC7mpwvhw5tFwUeD6M', {
+			address: 'NxC13i2dWE3fH2UdRFVAC7mpwvhw5tFwUeD6M',
 			balance: genesisBlock.block.coinbaseTransaction.reward,
 			timesTransaction: 0,
 		})

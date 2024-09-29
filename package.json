@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "check": "bun run initial && bunx tsc && rm -r dist",
-    "initial": "bun run ./src/init/init.ts "
+    "initial": "bun run ./src/init/init.ts ",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -47,8 +48,10 @@
     "deep-freeze": "^0.0.1",
     "dotenv": "^16.4.5",
     "elliptic": "^6.5.7",
+    "husky": "^9.1.6",
     "joi": "^17.13.3",
     "level": "^8.0.1",
+    "lint-staged": "^15.2.10",
     "msgpack-lite": "^0.1.26",
     "msgpack5": "^6.0.2",
     "navigator": "^1.0.1",

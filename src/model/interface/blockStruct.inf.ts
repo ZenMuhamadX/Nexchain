@@ -8,17 +8,16 @@ export interface blockStruct {
 		nonce: string
 		version: string
 		difficulty: number
-		hashingAlgorithm?: string // Optional, in case you want flexibility in hashing algorithms
+		hashingAlgorithm: string // Optional, in case you want flexibility in hashing algorithms
 	}
 	height: number
 	signature: string
 	size: number
-	totalTransactionFees?: number // Optional field to store the total transaction fees in the block
+	totalTransactionFees: number // Optional field to store the total transaction fees in the block
 	merkleRoot: string
-	networkId: string
+	networkId: number
 	status: 'confirmed' | 'pending'
 	blockReward: number
-	gasUsed: number
 	coinbaseTransaction: {
 		to: string
 		amount: number
@@ -26,14 +25,14 @@ export interface blockStruct {
 	}
 	validator: {
 		rewardAddress: string
-		stakeAmount?: number // Optional, if you're planning to implement a proof-of-stake system
-		validationTime?: number // Optional, for storing the time taken to validate the block
+		stakeAmount: number // Optional, if you're planning to implement a proof-of-stake system
+		validationTime: number // Optional, for storing the time taken to validate the block
 	}
 	metadata?: {
 		txCount: number
 		gasPrice: number
-		created_at?: number // Changed to number (UNIX timestamp) for consistency
-		notes?: string
+		created_at: number // Changed to number (UNIX timestamp) for consistency
+		notes: any
 	}
 	transactions: MemPoolInterface[]
 }

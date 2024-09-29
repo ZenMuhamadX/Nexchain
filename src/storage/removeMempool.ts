@@ -1,11 +1,11 @@
-import { leveldb } from "src/leveldb/init"
+import { leveldb } from 'src/leveldb/init'
 import fs from 'fs'
 import path from 'path'
 
 const dirPath = path.join(__dirname, '../../state')
 const statePoolFile = path.join(dirPath, 'statePool.json')
 
-export const removeMemPool = async (txHash: string)=> {
+export const removeMemPool = async (txHash: string) => {
 	try {
 		// 1. Hapus transaksi dari LevelDB
 		await leveldb.del(txHash)

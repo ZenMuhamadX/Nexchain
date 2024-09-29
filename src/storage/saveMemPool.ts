@@ -20,6 +20,10 @@ export const saveMempool = async (transactionData: MemPoolInterface) => {
 		// 2. Simpan txHash ke statePool.json
 		let statePool: string[] = []
 
+		if (!fs.existsSync(dirPath)) {
+			fs.mkdirSync(dirPath)
+		}
+
 		// Cek apakah file statePool.json ada
 		if (fs.existsSync(statePoolFile)) {
 			const data = fs.readFileSync(statePoolFile, 'utf-8')

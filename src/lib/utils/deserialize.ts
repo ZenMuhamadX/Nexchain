@@ -8,7 +8,7 @@ export const deserializeBlockFromBinary = (buffer: Buffer): Block => {
 	try {
 		// Deserialize buffer kembali ke objek Block
 		const deserializedBlock = msgpack.decode(buffer)
-		
+
 		// Cast deserializedBlock ke tipe Block yang tepat
 		return deserializedBlock as Block
 	} catch (error) {

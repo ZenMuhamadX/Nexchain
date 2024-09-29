@@ -1,9 +1,9 @@
-import { structBalance } from "src/leveldb/struct/structBalance"
-import { generateTimestampz } from "src/lib/timestamp/generateTimestampz"
-import { loggingErr } from "src/logging/errorLog"
-import { getBalance } from "src/wallet/balance/getBalance"
-import { putBalance } from "src/wallet/balance/putBalance"
-import { hasSufficientBalance } from "src/wallet/balance/utils/hasSufficientBalance"
+import { structBalance } from 'src/leveldb/struct/structBalance'
+import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
+import { loggingErr } from 'src/logging/errorLog'
+import { getBalance } from 'src/wallet/balance/getBalance'
+import { putBalance } from 'src/wallet/balance/putBalance'
+import { hasSufficientBalance } from 'src/wallet/balance/utils/hasSufficientBalance'
 
 export const processSender = async (
 	senderAddress: string,

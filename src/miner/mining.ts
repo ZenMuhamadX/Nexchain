@@ -5,6 +5,7 @@ import { MemPool } from '../model/memPool/memPool'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../logging/errorLog'
 import { mineLog } from '../logging/mineLog'
+import { chains } from 'src/block/initBlock'
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {
@@ -26,9 +27,20 @@ export const miningBlock = async (address: string): Promise<void> => {
 			})
 			return
 		}
-
+		const isBlockValid = chains.verify()
+		if (!isBlockValid) {
+			loggingErr({
+				error: 'Block is not valid',
+				context: 'miningBlock',
+				hint: 'Prev Block is not valid',
+				time: generateTimestampz(),
+				warning: null,
+				stack: new Error().stack,
+			})
+			return
+		}
 		// Attempt to add a new block to the blockchain
-		const successMine = chain.addBlockToChain(transactions, address)
+		const successMine = await chain.addBlockToChain(transactions, address)
 
 		if (successMine) {
 			// Log mining details if successful

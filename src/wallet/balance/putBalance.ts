@@ -16,7 +16,7 @@ export const putBalance = (address: string, balance: structBalance): void => {
 			})
 			return
 		}
-		if(balance.timesTransaction === undefined){
+		if (balance.timesTransaction === undefined) {
 			balance.timesTransaction = 0
 		}
 		leveldb.put(address, JSON.stringify(balance), {

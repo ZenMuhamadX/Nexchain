@@ -24,10 +24,7 @@ export const verifySignature = (
 	}
 
 	// Verify the signature
-	const verified = key.verify(
-		dataBuffer,
-		signature,
-	)
+	const verified = key.verify(dataBuffer, signature)
 	if (!verified) {
 		return {
 			status: false,

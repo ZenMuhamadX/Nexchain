@@ -1,7 +1,7 @@
 /** @format */
 
 // BlockChains.ts
-import { createGenesisBlock } from './lib/block/createGenesisBlock'
+import { createGenesisBlock } from './block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/blocks/block'
 import { saveBlock } from './storage/saveBlock'
@@ -18,12 +18,17 @@ import { putBalance } from './wallet/balance/putBalance'
 import { getBalance } from './wallet/balance/getBalance'
 import { structBalance } from './leveldb/struct/structBalance'
 import { processTransact } from './transaction/processTransact'
+import { calculateTotalFees } from './transaction/totalFees'
+import { calculateTotalBlockReward } from './miner/calculateReward'
+import { calculateMerkleRoot } from './transaction/merkleRoot'
+import { getNetworkId} from './network/lib/getNetId'
 
 // Manages the blockchain and its operations
 export class BlockChains {
 	private readonly _chains: Block[]
 
 	constructor() {
+		// Initialize the configuration file and load existing blocks.
 		saveConfigFile()
 		const loadedBlocks = this.loadBlocksFromStorage()
 		this._chains =
@@ -47,6 +52,7 @@ export class BlockChains {
 			const loadedBlocks = loadBlocks()
 			return Array.isArray(loadedBlocks) ? loadedBlocks : []
 		} catch (error) {
+			// Log the error if loading fails and return an empty array.
 			loggingErr({
 				error: error instanceof Error ? error.message : 'Unknown error',
 				context: 'BlockChains',
@@ -61,19 +67,23 @@ export class BlockChains {
 
 	/**
 	 * Adds a new block to the blockchain.
-	 * @param memPool - The memory pool containing transactions to include in the new block.
+	 * @param validTransaction - The memory pool containing transactions to include in the new block.
 	 * @param walletMiner - The address of the miner's wallet.
 	 * @returns True if the block was added successfully, otherwise false.
 	 */
-	public addBlockToChain(
+	public async addBlockToChain(
 		validTransaction: MemPoolInterface[],
 		walletMiner: string,
-	): boolean {
+	): Promise<boolean> {
 		try {
+			// Create a new block and process the transactions.
 			const newBlock = this.createBlock(validTransaction, walletMiner)
+			await this.giveReward(walletMiner, newBlock.block.blockReward)
 			saveBlock(newBlock)
 			processTransact(validTransaction)
 			this._chains.push(newBlock)
+
+			// Log the success of adding the block.
 			successLog({
 				hash: newBlock.block.header.hash,
 				height: newBlock.block.height,
@@ -83,8 +93,10 @@ export class BlockChains {
 				timestamp: generateTimestampz().toString(),
 				nonce: newBlock.block.header.nonce,
 			})
+
 			return true
 		} catch (error) {
+			// Log the error if adding the block fails.
 			loggingErr({
 				error: error instanceof Error ? error.message : 'Unknown error',
 				context: 'BlockChains',
@@ -123,13 +135,18 @@ export class BlockChains {
 		transactions: MemPoolInterface[],
 		walletMiner: string,
 	): Block {
+		const currentBlockHeight = this._chains.length
 		const latestBlock = this.getLatestBlock()
+
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')
 		}
+
 		if (!transactions || transactions.length === 0) {
 			throw new Error('No transactions provided for the new block.')
 		}
+
+		// Create a new block with specified parameters.
 		const newBlock = new Block({
 			header: {
 				difficulty: 5,
@@ -140,11 +157,10 @@ export class BlockChains {
 				version: '1.0.0',
 				hashingAlgorithm: 'SHA256',
 			},
-			gasUsed: 0.001,
 			totalTransactionFees: 0,
-			height: latestBlock.block.height + 1,
-			merkleRoot: '',
-			networkId: '',
+			height: currentBlockHeight + 1,
+			merkleRoot: calculateMerkleRoot(transactions),
+			networkId: getNetworkId(),
 			signature: '',
 			size: 0,
 			status: 'confirmed',
@@ -160,37 +176,52 @@ export class BlockChains {
 				rewardAddress: walletMiner,
 			},
 			metadata: {
+				notes: `BlockChains by NexChain`,
 				gasPrice: 0,
 				txCount: transactions.length,
 				created_at: generateTimestampz(),
 			},
 			transactions: transactions,
 		})
-		newBlock.block.blockReward =
-			newBlock.block.coinbaseTransaction.reward +
-			newBlock.block.gasUsed +
-			newBlock.block.totalTransactionFees!
+
+		// Calculate fees and rewards for the new block.
+		newBlock.block.totalTransactionFees = calculateTotalFees(
+			newBlock.block.transactions,
+		)
+
+		newBlock.block.blockReward = calculateTotalBlockReward(
+			newBlock.block.blockReward,
+			newBlock.block.metadata?.gasPrice!,
+			newBlock.block.totalTransactionFees,
+		)
+
 		newBlock.block.header.previousBlockHash =
 			this._chains[this._chains.length - 1].block.header.hash
+
 		newBlock.block.header.timestamp = generateTimestampz()
-		newBlock.block.merkleRoot = ''
-		newBlock.block.networkId = ''
+
+		// Perform proof of work and finalize the new block.
 		const { hash, nonce } = proofOfWork(newBlock)
 		newBlock.block.header.nonce = nonce
 		newBlock.block.header.hash = hash
 		newBlock.block.size = calculateSize(newBlock).KB
+
 		newBlock.block.signature = createSignature(
 			newBlock.block.header.hash,
 		).signature
-		this.giveReward(walletMiner, newBlock.block.coinbaseTransaction.reward)
+
 		return newBlock
 	}
 
+	/**
+	 * Gives a reward to the miner for creating a new block.
+	 * @param address - The address of the miner receiving the reward.
+	 * @param reward - The amount of reward to be given.
+	 */
 	private async giveReward(address: string, reward: number) {
-		const oldBalance: structBalance = (await getBalance(
-			address,
-		)) as structBalance
+		const oldBalance = (await getBalance(address)) as structBalance
 		const newBalance = oldBalance.balance + reward
+
 		putBalance(address, {
 			address,
 			balance: newBalance,
@@ -200,7 +231,6 @@ export class BlockChains {
 
 	/**
 	 * Verifies the validity of a given block and the integrity of the blockchain.
-	 * @param block - The block to be verified.
 	 * @returns True if the block and chain are valid, otherwise false.
 	 */
 	public verify(): boolean {
