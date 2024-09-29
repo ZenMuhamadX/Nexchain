@@ -46,7 +46,7 @@ export class MemPool {
 		transaction.timestamp = generateTimestampz()
 		transaction.status = 'pending'
 		transaction.signature = createSignature(transaction).signature
-		transaction.fee = transaction.amount / 10000 * 2 /1000
+		transaction.fee = ((transaction.amount / 10000) * 2) / 1000
 
 		// Validate the transaction
 		const isValidTx = await transactionValidator(transaction)
