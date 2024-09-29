@@ -21,7 +21,7 @@ import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
 import { calculateMerkleRoot } from './transaction/merkleRoot'
-import { getNetworkId} from './network/lib/getNetId'
+import { getNetworkId } from './network/lib/getNetId'
 
 // Manages the blockchain and its operations
 export class BlockChains {

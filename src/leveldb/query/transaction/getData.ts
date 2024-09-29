@@ -29,7 +29,7 @@ export const getDataTransaction = async (
 		return JSON.parse(value) as structJsonValue
 	} catch (error) {
 		loggingErr({
-			error: 'Error getting data',
+			error: error,
 			time: generateTimestampz(),
 			context: 'leveldb',
 			stack: new Error().stack,
