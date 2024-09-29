@@ -1,7 +1,7 @@
 import { leveldb } from '../../leveldb/init'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { loggingErr } from 'src/logging/errorLog'
-import { structBalance } from 'src/leveldb/struct/structBalance'
+import { structBalance } from 'src/transaction/struct/structBalance'
 
 export const getBalance = async (
 	address: string,

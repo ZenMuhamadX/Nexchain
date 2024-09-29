@@ -1,6 +1,6 @@
 import { leveldb } from '../../leveldb/init'
 import { loggingErr } from 'src/logging/errorLog'
-import { structBalance } from 'src/leveldb/struct/structBalance'
+import { structBalance } from 'src/transaction/struct/structBalance'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 
 export const putBalance = (address: string, balance: structBalance): void => {

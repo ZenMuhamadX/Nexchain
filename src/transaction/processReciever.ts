@@ -1,4 +1,4 @@
-import { structBalance } from 'src/leveldb/struct/structBalance'
+import { structBalance } from 'src/transaction/struct/structBalance'
 import { getBalance } from 'src/wallet/balance/getBalance'
 import { putBalance } from 'src/wallet/balance/putBalance'
 

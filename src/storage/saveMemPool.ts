@@ -36,7 +36,7 @@ export const saveMempool = async (transactionData: MemPoolInterface) => {
 			fs.writeFileSync(statePoolFile, JSON.stringify(statePool, null, 2))
 		}
 
-		console.log(`Transaction ${txHash} saved successfully.`)
+		console.log(`txHash: ${txHash}`)
 	} catch (error) {
 		console.error('Error saving mempool data:', error)
 	}

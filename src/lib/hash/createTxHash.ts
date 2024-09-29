@@ -13,7 +13,7 @@ export const createTxHash = (data: MemPoolInterface): string => {
 	}
 	const stringData = JSON.stringify(txObj)
 	const hash = crypto
-		.createHash('sha256')
+		.createHash('SHA256')
 		.update(Buffer.from(stringData))
 		.digest('hex')
 	return `TxN${hash}`

@@ -1,4 +1,4 @@
-import { structBalance } from 'src/leveldb/struct/structBalance'
+import { structBalance } from 'src/transaction/struct/structBalance'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { loggingErr } from 'src/logging/errorLog'
 import { getBalance } from 'src/wallet/balance/getBalance'

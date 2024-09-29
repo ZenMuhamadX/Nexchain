@@ -9,7 +9,6 @@ export const removeMemPool = async (txHash: string) => {
 	try {
 		// 1. Hapus transaksi dari LevelDB
 		await leveldb.del(txHash)
-		console.log(`Transaction ${txHash} deleted from LevelDB.`)
 
 		// 2. Hapus txHash dari statePool.json
 		if (fs.existsSync(statePoolFile)) {
@@ -22,7 +21,6 @@ export const removeMemPool = async (txHash: string) => {
 
 			// Tulis kembali statePool.json tanpa txHash yang sudah dihapus
 			fs.writeFileSync(statePoolFile, JSON.stringify(statePool, null, 2))
-			console.log(`Transaction ${txHash} removed from statePool.json.`)
 		} else {
 			console.log('statePool.json not found, nothing to remove.')
 		}

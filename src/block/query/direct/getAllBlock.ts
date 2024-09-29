@@ -1,5 +1,5 @@
 import { Block } from 'src/model/blocks/block'
-import { chains } from './initBlock'
+import { chains } from '../../initBlock'
 
 export const getAllBlock = (parseMode: boolean = false): string | Block => {
 	const allBlock = chains.getChains()

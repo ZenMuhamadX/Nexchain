@@ -19,7 +19,6 @@ export class Block {
 			height: blockData.height,
 			signature: blockData.signature,
 			size: blockData.size,
-			transactions: blockData.transactions,
 			merkleRoot: blockData.merkleRoot,
 			networkId: blockData.networkId,
 			blockReward: blockData.blockReward,
@@ -28,6 +27,7 @@ export class Block {
 			coinbaseTransaction: blockData.coinbaseTransaction,
 			validator: blockData.validator,
 			metadata: blockData.metadata!,
+			transactions: blockData.transactions,
 		}
 	}
 }

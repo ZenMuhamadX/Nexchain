@@ -16,7 +16,7 @@ import { MemPoolInterface } from './model/interface/memPool.inf'
 import { saveConfigFile } from './storage/saveConfig'
 import { putBalance } from './wallet/balance/putBalance'
 import { getBalance } from './wallet/balance/getBalance'
-import { structBalance } from './leveldb/struct/structBalance'
+import { structBalance } from './transaction/struct/structBalance'
 import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
@@ -177,7 +177,7 @@ export class BlockChains {
 			},
 			metadata: {
 				notes: `BlockChains by NexChain`,
-				gasPrice: 0,
+				gasPrice: ((50 / 500) * 2) / 5,
 				txCount: transactions.length,
 				created_at: generateTimestampz(),
 			},

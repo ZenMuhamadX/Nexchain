@@ -1,5 +1,5 @@
 import { Block } from 'src/model/blocks/block'
-import { chains } from './initBlock'
+import { chains } from '../../initBlock'
 
 export const getLatestBlock = (parseMode: boolean = false): string | Block => {
 	const latestBlock = chains.getLatestBlock()
