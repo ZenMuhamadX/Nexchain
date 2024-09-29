@@ -7,11 +7,11 @@ import { loggingErr } from '../logging/errorLog'
 import { mineLog } from '../logging/mineLog'
 
 // Function to mine a block and add it to the blockchain
-export const miningBlock = (address: string): void => {
+export const miningBlock = async (address: string): Promise<void> => {
 	// Initialize blockchain and memory pool instances
 	const chain = new BlockChains()
 	const pool = new MemPool()
-	const transactions = pool.getValidTransactions()
+	const transactions = await pool.getValidTransactions()
 
 	try {
 		// Check if there are pending transactions to mine
@@ -34,9 +34,9 @@ export const miningBlock = (address: string): void => {
 			// Log mining details if successful
 			mineLog({
 				difficulty: 5, // Consider making this dynamic or configurable
-				hash: chain.getLatestBlock()?.blk.header.hash || 'N/A',
+				hash: chain.getLatestBlock()?.block.header.hash || 'N/A',
 				mined_at: generateTimestampz(),
-				nonce: chain.getLatestBlock()?.blk.header.nonce || 'N/A',
+				nonce: chain.getLatestBlock()?.block.header.nonce || 'N/A',
 				miner: address,
 			})
 		}

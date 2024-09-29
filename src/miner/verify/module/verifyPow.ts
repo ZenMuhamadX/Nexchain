@@ -4,7 +4,7 @@ import { Block } from '../../../model/blocks/block'
 export const verifyPow = (block: Block): boolean => {
 	const difficulty = 4
 	const targetPrefix = '0'.repeat(difficulty) // Generate target prefix based on difficulty
-	const blockHash = block.blk.header.hash
+	const blockHash = block.block.header.hash
 
 	if (!blockHash) {
 		return false // Return false if hash is undefined or null

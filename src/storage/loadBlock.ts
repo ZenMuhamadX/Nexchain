@@ -8,7 +8,7 @@ import { loggingErr } from '../logging/errorLog'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 
 export const loadBlocks = (): Block[] | false => {
-	const dirPath = path.join(__dirname, '../../../blocks')
+	const dirPath = path.join(__dirname, '../../blocks')
 
 	try {
 		if (!fs.existsSync(dirPath)) {
@@ -39,7 +39,7 @@ export const loadBlocks = (): Block[] | false => {
 		})
 
 		// Mengurutkan blok berdasarkan index
-		blocks.sort((a, b) => a.blk.height - b.blk.height)
+		blocks.sort((a, b) => a.block.height - b.block.height)
 
 		return blocks
 	} catch (error) {

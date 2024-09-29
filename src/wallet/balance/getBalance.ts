@@ -11,7 +11,10 @@ export const getBalance = async (
 			console.info('address not provided')
 			return
 		}
-		const balance = await leveldb.get(address, { valueEncoding: 'json' })
+		const balance = await leveldb.get(address, {
+			valueEncoding: 'json',
+			fillCache: true,
+		})
 		if (!balance) {
 			loggingErr({
 				error: 'data not found',

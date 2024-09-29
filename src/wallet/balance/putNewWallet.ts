@@ -1,6 +1,7 @@
 import { leveldb } from '../../leveldb/init'
 import { loggingErr } from 'src/logging/errorLog'
 import { structBalance } from 'src/leveldb/struct/structBalance'
+import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 
 export const putNewWallet = (address: string): void => {
 	try {
@@ -9,7 +10,7 @@ export const putNewWallet = (address: string): void => {
 				error: 'data address not found',
 				stack: new Error().stack,
 				hint: 'data not found',
-				time: new Date().toISOString(),
+				time: generateTimestampz(),
 				warning: null,
 				context: 'leveldb',
 			})
@@ -27,7 +28,7 @@ export const putNewWallet = (address: string): void => {
 	} catch (error) {
 		loggingErr({
 			error: 'Error putting data',
-			time: new Date().toISOString(),
+			time: generateTimestampz(),
 			context: 'leveldb',
 			stack: new Error().stack,
 			hint: 'An unexpected error occurred while putting data.',

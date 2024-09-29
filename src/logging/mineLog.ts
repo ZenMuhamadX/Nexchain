@@ -6,7 +6,7 @@ import fs from 'node:fs'
 
 // Define interface for mining status
 interface Status {
-	mined_at: string
+	mined_at: number
 	hash: string | any
 	miner: string
 	difficulty: number

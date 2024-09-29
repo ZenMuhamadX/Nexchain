@@ -16,7 +16,7 @@ export const saveBlock = (blockData: Block): boolean => {
 		const fileName = createBlockName()
 
 		// Tentukan path file (opsional, jika ingin menyimpan di direktori tertentu)
-		const dirPath = path.join(__dirname, '../../../blocks')
+		const dirPath = path.join(__dirname, '../../blocks')
 		const filePath = path.join(dirPath, `${fileName}.bin`)
 
 		// Membuat direktori jika belum ada

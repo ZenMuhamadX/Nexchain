@@ -8,7 +8,7 @@ import { saveConfigFile } from './saveConfig'
 export const loadConfig = (): defaultConfig | null => {
 	try {
 		// Construct the path to the configuration file
-		const dirPath = path.join(__dirname, '../../../config')
+		const dirPath = path.join(__dirname, '../../config')
 		const filePath = path.join(dirPath, 'chains.config.json')
 
 		// Check if the file exists

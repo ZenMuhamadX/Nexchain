@@ -4,8 +4,8 @@ export const calculateSize = (
 	data: object,
 ): {
 	byte: number
-	KB: string
-	MB: string
+	KB: number
+	MB: number
 } => {
 	// Mengkonversi data ke string JSON
 	const jsonString = JSON.stringify(data)
@@ -18,7 +18,7 @@ export const calculateSize = (
 
 	return {
 		byte,
-		KB: KB.toFixed(2) + 'KB',
-		MB: MB.toFixed(2) + 'MB',
+		KB,
+		MB,
 	}
 }

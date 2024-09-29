@@ -4,13 +4,19 @@ import { Block } from '../../model/blocks/block'
 export const structBlockReadyToHash = (block: Block): Buffer => {
 	const newBlockStruct = {
 		header: {
-			previousHash: block.blk.header.previousHash,
-			timestamp: block.blk.header.timestamp,
-			version: block.blk.header.version,
+			previousHash: block.block.header.previousBlockHash,
+			timestamp: block.block.header.timestamp,
+			version: block.block.header.version,
 		},
-		height: block.blk.height,
-		signature: block.blk.signature,
-		transactions: block.blk.transactions,
+		height: block.block.height,
+		signature: block.block.signature,
+		transactions: block.block.transactions,
+		merkleRoot: block.block.merkleRoot,
+		networkId: block.block.networkId,
+		size: block.block.size,
+		status: 'confirmed',
+		txCount: 0,
+		validator: block.block.validator,
 	}
 	const stringBlock = JSON.stringify(newBlockStruct)
 	return Buffer.from(stringBlock)

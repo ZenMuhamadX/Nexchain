@@ -3,14 +3,8 @@ import fs from 'fs'
 import { defaultConfig } from '../model/interface/defaultConf.inf'
 
 export const saveConfigFile = () => {
-	const dirPath = path.join(__dirname, '../../../config')
+	const dirPath = path.join(__dirname, '../../config')
 	const filePath = path.join(dirPath, 'chains.config.json')
-
-	if (!fs.existsSync(dirPath)) {
-		fs.mkdirSync(dirPath)
-	}
-
-	if (fs.existsSync(filePath)) return
 
 	const defaultConfig: defaultConfig = {
 		network: {
@@ -28,16 +22,18 @@ export const saveConfigFile = () => {
 		},
 		logging: {
 			level: 'info',
-			path: path.join(__dirname, '../../../log'),
+			path: path.join(__dirname, '../../logs'),
 		},
 		wallet: {
-			path: path.join(__dirname, '../../../myWallet/MainWallet.bin'),
+			path: path.join(__dirname, '../../myWallet/MainWallet.bin'),
 			privateKeyEncrypt: {
 				algorithm: 'aes-256-cbc',
 				keySize: 256,
 			},
 		},
 	}
-
+	if (!fs.existsSync(dirPath)) {
+		fs.mkdirSync(dirPath, { recursive: true })
+	}
 	fs.writeFileSync(filePath, JSON.stringify(defaultConfig, null, 4))
 }

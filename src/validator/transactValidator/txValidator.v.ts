@@ -4,6 +4,7 @@ import { loggingErr } from 'src/logging/errorLog'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { verifySignature } from 'src/lib/block/verifySIgnature'
 import { getKeyPair } from 'src/lib/hash/getKeyPair'
+import { hasSufficientBalance } from 'src/wallet/balance/utils/hasSufficientBalance'
 
 const logError = (context: string, hint: string, error: any): boolean => {
 	loggingErr({
@@ -17,72 +18,79 @@ const logError = (context: string, hint: string, error: any): boolean => {
 	return false
 }
 
-export const transactionValidator = (
+export const transactionValidator = async (
 	transaction: MemPoolInterface,
-): boolean => {
+): Promise<boolean> => {
 	const validateInf = memPoolInterfaceValidator.validate(transaction)
-	if (validateInf.error)
-		return (
-			logError(
-				'transactionValidator',
-				'Invalid transaction',
-				validateInf.error.message,
-			) || false
+	if (validateInf.error) {
+		return logError(
+			'transactionValidator',
+			'Invalid transaction',
+			validateInf.error.message,
 		)
+	}
 
-	if (transaction.amount <= 0)
-		return (
-			logError(
-				'transactionValidator',
-				'Invalid transaction amount',
-				'Invalid transaction amount',
-			) || false
+	if (transaction.amount <= 0) {
+		return logError(
+			'transactionValidator',
+			'Invalid transaction amount',
+			'Invalid transaction amount',
 		)
+	}
 
-	if (!verifySignature(transaction, transaction.signature!).status)
-		return (
-			logError(
-				'transactionValidator',
-				'Invalid signature',
-				'Invalid signature',
-			) || false
+	if (!verifySignature(transaction, transaction.signature!).status) {
+		return logError(
+			'transactionValidator',
+			'Invalid signature',
+			'Invalid signature',
 		)
+	}
 
-	if (transaction.from === transaction.to)
-		return (
-			logError(
-				'transactionValidator',
-				'Invalid transaction sender and receiver',
-				'Invalid transaction sender and receiver',
-			) || false
+	if (transaction.from === transaction.to) {
+		return logError(
+			'transactionValidator',
+			'Invalid transaction sender and receiver',
+			'Invalid transaction sender and receiver',
 		)
+	}
 
 	const { publicKey, privateKey } = getKeyPair()
-	if (transaction.from === publicKey)
-		return (
-			logError(
-				'transactionValidator',
-				'Invalid transaction sender',
-				'Invalid transaction sender',
-			) || false
+	if (transaction.from === publicKey) {
+		return logError(
+			'transactionValidator',
+			'Invalid transaction sender',
+			'Invalid transaction sender',
 		)
-	if (transaction.to === privateKey)
-		return (
-			logError(
-				'transactionValidator',
-				'Invalid transaction receiver',
-				'Invalid transaction receiver',
-			) || false
+	}
+	if (transaction.to === privateKey) {
+		return logError(
+			'transactionValidator',
+			'Invalid transaction receiver',
+			'Invalid transaction receiver',
 		)
+	}
 
-	if (transaction.fee! <= 0 || transaction.fee! > transaction.amount)
-		return (
-			logError(
-				'transactionValidator',
-				'Invalid transaction fee',
-				'Invalid transaction fee',
-			) || false
+	if (transaction.fee! <= 0 || transaction.fee! > transaction.amount) {
+		return logError(
+			'transactionValidator',
+			'Invalid transaction fee',
+			'Invalid transaction fee',
 		)
+	}
+
+	const res = await hasSufficientBalance(
+		transaction.from,
+		transaction.amount,
+		transaction.fee!,
+	)
+	if (!res) {
+		return logError(
+			'transactionValidator',
+			'Insufficient balance',
+			'Insufficient balance',
+		)
+	}
+
 	transaction.status = 'confirmed'
 	return true
 }

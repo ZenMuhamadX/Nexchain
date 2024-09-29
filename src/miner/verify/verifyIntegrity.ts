@@ -18,17 +18,20 @@ export const verifyChainIntegrity = (): boolean => {
 		const prevBlock = chains[i - 1]
 
 		// Check if the current block's previousHash matches the previous block's hash
-		if (currentBlock.blk.header.previousHash !== prevBlock.blk.header.hash) {
+		if (
+			currentBlock.block.header.previousBlockHash !==
+			prevBlock.block.header.hash
+		) {
 			return false // Chain integrity compromised
 		}
 
 		// Perform additional verification checks
 		try {
-			verifyHashLength(currentBlock.blk.header.hash)
+			verifyHashLength(currentBlock.block.header.hash)
 			verifyBlock(
 				currentBlock,
-				currentBlock.blk.header.nonce,
-				currentBlock.blk.header.hash,
+				currentBlock.block.header.nonce,
+				currentBlock.block.header.hash,
 			)
 			verifyPow(currentBlock)
 			verifyStruct(currentBlock)

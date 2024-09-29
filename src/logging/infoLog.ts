@@ -7,7 +7,7 @@ import fs from 'node:fs'
 // Define interface for info logging
 interface InfoLog {
 	message: string
-	time: string
+	time: number
 	context?: string
 	metadata?: any
 }

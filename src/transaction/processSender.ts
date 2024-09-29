@@ -1,4 +1,5 @@
 import { structBalance } from "src/leveldb/struct/structBalance"
+import { generateTimestampz } from "src/lib/timestamp/generateTimestampz"
 import { loggingErr } from "src/logging/errorLog"
 import { getBalance } from "src/wallet/balance/getBalance"
 import { putBalance } from "src/wallet/balance/putBalance"
@@ -15,7 +16,7 @@ export const processSender = async (
 			error: 'insufficient balance',
 			stack: new Error().stack,
 			hint: 'insufficient balance',
-			time: new Date().toISOString(),
+			time: generateTimestampz(),
 			warning: null,
 			context: 'leveldb processTransaction',
 		})

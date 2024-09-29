@@ -1,7 +1,6 @@
 /** @format */
 
 // BlockChains.ts
-import immutable from 'deep-freeze'
 import { createGenesisBlock } from './lib/block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/blocks/block'
@@ -15,7 +14,6 @@ import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { MemPoolInterface } from './model/interface/memPool.inf'
 import { saveConfigFile } from './storage/saveConfig'
-import { myWalletAddress } from './wallet/myWalletAddress'
 import { putBalance } from './wallet/balance/putBalance'
 import { getBalance } from './wallet/balance/getBalance'
 import { structBalance } from './leveldb/struct/structBalance'
@@ -77,13 +75,13 @@ export class BlockChains {
 			processTransact(validTransaction)
 			this._chains.push(newBlock)
 			successLog({
-				hash: newBlock.blk.header.hash,
-				height: newBlock.blk.height,
-				previousHash: newBlock.blk.header.previousHash,
-				signature: newBlock.blk.signature,
+				hash: newBlock.block.header.hash,
+				height: newBlock.block.height,
+				previousHash: newBlock.block.header.previousBlockHash,
+				signature: newBlock.block.signature,
 				message: 'Block added to the chain',
-				timestamp: generateTimestampz(),
-				nonce: newBlock.blk.header.nonce,
+				timestamp: generateTimestampz().toString(),
+				nonce: newBlock.block.header.nonce,
 			})
 			return true
 		} catch (error) {
@@ -116,14 +114,6 @@ export class BlockChains {
 	}
 
 	/**
-	 * Retrieves the most recent block in the blockchain.
-	 * @returns The latest block.
-	 */
-	public getLatestBlockJSON(): string {
-		return immutable(JSON.stringify(this._chains[this._chains.length - 1]))
-	}
-
-	/**
 	 * Creates a new block using the provided transactions and miner's wallet address.
 	 * @param transactions - The list of transactions to include in the new block.
 	 * @param walletMiner - The address of the miner's wallet.
@@ -140,33 +130,59 @@ export class BlockChains {
 		if (!transactions || transactions.length === 0) {
 			throw new Error('No transactions provided for the new block.')
 		}
-		const newBlock = new Block(
-			this._chains.length,
-			generateTimestampz(),
-			[
-				{
-					amount: latestBlock.blk.reward,
-					from: 'NexChain',
-					to: walletMiner,
-					signature: createSignature(myWalletAddress()).signature,
-					timestamp: generateTimestampz(),
-					fee: 0,
-					message: 'Reward Miner',
-					status: 'confirmed',
-				},
-				...transactions,
-			],
-			latestBlock.blk.header.hash,
-			'',
-			createSignature(latestBlock.blk.header.hash).signature,
-			'',
-			'',
-		)
-		const proof = proofOfWork(newBlock)
-		newBlock.blk.header.hash = proof.hash
-		newBlock.blk.header.nonce = proof.nonce
-		newBlock.blk.size = calculateSize(newBlock.blk).KB
-		this.giveReward(walletMiner, latestBlock.blk.reward)
+		const newBlock = new Block({
+			header: {
+				difficulty: 5,
+				hash: '',
+				nonce: '',
+				previousBlockHash: '',
+				timestamp: 0,
+				version: '1.0.0',
+				hashingAlgorithm: 'SHA256',
+			},
+			gasUsed: 0.001,
+			totalTransactionFees: 0,
+			height: latestBlock.block.height + 1,
+			merkleRoot: '',
+			networkId: '',
+			signature: '',
+			size: 0,
+			status: 'confirmed',
+			blockReward: 0,
+			coinbaseTransaction: {
+				amount: 50,
+				to: walletMiner,
+				reward: 50,
+			},
+			validator: {
+				validationTime: generateTimestampz(),
+				stakeAmount: 0,
+				rewardAddress: walletMiner,
+			},
+			metadata: {
+				gasPrice: 0,
+				txCount: transactions.length,
+				created_at: generateTimestampz(),
+			},
+			transactions: transactions,
+		})
+		newBlock.block.blockReward =
+			newBlock.block.coinbaseTransaction.reward +
+			newBlock.block.gasUsed +
+			newBlock.block.totalTransactionFees!
+		newBlock.block.header.previousBlockHash =
+			this._chains[this._chains.length - 1].block.header.hash
+		newBlock.block.header.timestamp = generateTimestampz()
+		newBlock.block.merkleRoot = ''
+		newBlock.block.networkId = ''
+		const { hash, nonce } = proofOfWork(newBlock)
+		newBlock.block.header.nonce = nonce
+		newBlock.block.header.hash = hash
+		newBlock.block.size = calculateSize(newBlock).KB
+		newBlock.block.signature = createSignature(
+			newBlock.block.header.hash,
+		).signature
+		this.giveReward(walletMiner, newBlock.block.coinbaseTransaction.reward)
 		return newBlock
 	}
 

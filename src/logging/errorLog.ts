@@ -6,7 +6,7 @@ import fs from 'node:fs'
 // Define interface for error information
 interface ErrorInfo {
 	error: string | any
-	time: string
+	time: number
 	hint?: string
 	warning?: any
 	stack: any

@@ -3,11 +3,11 @@ import fs from 'node:fs'
 import { BSON } from 'bson'
 import { decrypt } from '../secure/decrypt/decrypt'
 import { structWalletToSave } from 'src/model/interface/walletStructinf'
-import { loadConfig } from 'src/storage/loadConfig'
+// import { loadConfig } from 'src/storage/loadConfig'
 
 export const loadWallet = (): structWalletToSave | undefined => {
 	const dirPath = path.join(__dirname, '../../../myWallet')
-	const filePath = loadConfig()?.wallet.path as string
+	const filePath = path.join(dirPath, 'MainWallet.bin')
 
 	try {
 		// Check if the file exists
