@@ -4,23 +4,12 @@
 # Menentukan file markdown sebagai teks
 *.md text
 
-# Menentukan file gambar sebagai biner
-*.png binary
-*.jpg binary
-*.jpeg binary
-*.gif binary
-
 # Menentukan file JavaScript dan TypeScript
 *.js text
 *.ts text
 
 # Menentukan file JSON sebagai teks
 *.json text
-
-# Menentukan file konfigurasi sebagai teks
-*.yml text
-*.yaml text
-*.xml text
 
 # Menentukan file sebagai biner agar tidak diubah
 *.zip binary

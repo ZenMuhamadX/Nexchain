@@ -5,8 +5,6 @@ node_modules
 dist
 *.pem
 *.bin
-.idx
-.vscode
 mempool_versions
 config
 base
