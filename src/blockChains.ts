@@ -22,6 +22,7 @@ import { calculateTotalFees } from './transaction/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
 import { calculateMerkleRoot } from './transaction/merkleRoot'
 import { getNetworkId } from './network/lib/getNetId'
+import { saveHistory } from './wallet/utils/saveYourTransact'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -82,7 +83,7 @@ export class BlockChains {
 			saveBlock(newBlock)
 			processTransact(validTransaction)
 			this._chains.push(newBlock)
-
+			saveHistory()
 			// Log the success of adding the block.
 			successLog({
 				hash: newBlock.block.header.hash,

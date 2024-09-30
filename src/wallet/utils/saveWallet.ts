@@ -25,9 +25,11 @@ const formatString = (input: string): string => {
 }
 
 // Saves the main wallet data to a file
-export const saveMainWallet = (wallet: string): boolean => {
+export const saveMainWallet = (
+	wallet: string,
+	privateKey: string = getKeyPair().privateKey,
+): boolean => {
 	try {
-		const privateKey = getKeyPair().privateKey
 		const encryptedPrivateKey = encrypt(
 			privateKey,
 			process.env.WALLET_PASSWORD!,

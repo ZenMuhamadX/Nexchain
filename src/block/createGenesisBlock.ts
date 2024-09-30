@@ -37,7 +37,7 @@ export const createGenesisBlock = (): Block => {
 			coinbaseTransaction: {
 				amount: 5000000,
 				reward: 5000000,
-				to: 'NxC13i2dWE3fH2UdRFVAC7mpwvhw5tFwUeD6M',
+				to: 'NxC12YWoAES6hAj8mHuJA13CCvbSLD3jtDGys',
 			},
 			validator: {
 				rewardAddress: myWalletAddress(),
@@ -64,8 +64,8 @@ export const createGenesisBlock = (): Block => {
 		genesisBlock.block.header.nonce = validHash.nonce
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
 		saveBlock(genesisBlock)
-		putBalance('NxC13i2dWE3fH2UdRFVAC7mpwvhw5tFwUeD6M', {
-			address: 'NxC13i2dWE3fH2UdRFVAC7mpwvhw5tFwUeD6M',
+		putBalance('NxC12YWoAES6hAj8mHuJA13CCvbSLD3jtDGys', {
+			address: 'NxC12YWoAES6hAj8mHuJA13CCvbSLD3jtDGys',
 			balance: genesisBlock.block.coinbaseTransaction.reward,
 			timesTransaction: 0,
 		})
