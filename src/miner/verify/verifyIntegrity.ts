@@ -1,21 +1,20 @@
-import { BlockChains } from '../../blockChains'
-import { verifyBlock } from './module/verifyBlock'
 import { verifyStruct } from './module/verifyStruct'
 import { verifyPow } from './module/verifyPow'
 import { verifyHashLength } from './module/verifyHashLength'
+import { verifyBlockHash } from './module/verifyBlockHash'
+import { chains } from 'src/block/initBlock'
 
 // Function to verify the integrity of the blockchain
-export const verifyChainIntegrity = (): boolean => {
+export const verifyChainIntegrity = () => {
 	console.info('Checking chain integrity...')
 
 	// Initialize blockchain and get the list of chains
-	const blockChains = new BlockChains()
-	const chains = blockChains.getChains()
+	const blockChains = chains.getChains()
 
 	// Loop through the chains to verify their integrity
-	for (let i = chains.length - 1; i > 0; i--) {
-		const currentBlock = chains[i]
-		const prevBlock = chains[i - 1]
+	for (let i = blockChains.length - 1; i > 0; i--) {
+		const currentBlock = blockChains[i]
+		const prevBlock = blockChains[i - 1]
 
 		// Check if the current block's previousHash matches the previous block's hash
 		if (
@@ -28,23 +27,14 @@ export const verifyChainIntegrity = (): boolean => {
 		// Perform additional verification checks
 		try {
 			verifyHashLength(currentBlock.block.header.hash)
-			verifyBlock(
-				currentBlock,
-				currentBlock.block.header.nonce,
-				currentBlock.block.header.hash,
-			)
+			verifyBlockHash(currentBlock)
 			verifyPow(currentBlock)
-			verifyStruct(currentBlock)
+			verifyStruct()
+			return true // Chain integrity is valid
 		} catch (error) {
 			console.error('Error during verification:', error)
 			return false // Verification failed
 		}
 	}
-
-	// Log verification success after a delay
-	setTimeout(() => {
-		console.info('Chain integrity verified')
-	}, 500)
-
-	return true // Chain integrity verified
+	return true
 }

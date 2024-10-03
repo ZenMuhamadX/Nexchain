@@ -10,6 +10,7 @@ export const createTxHash = (data: MemPoolInterface): string => {
 		to: data.to,
 		amount: data.amount,
 		message: data.message,
+		timestamp: data.timestamp,
 	}
 	const stringData = JSON.stringify(txObj)
 	const hash = crypto

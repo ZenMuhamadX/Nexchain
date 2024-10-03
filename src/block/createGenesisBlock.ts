@@ -29,7 +29,8 @@ export const createGenesisBlock = (): Block => {
 			blockReward: 5000000,
 			totalTransactionFees: 0,
 			height: 0,
-			merkleRoot: '',
+			merkleRoot:
+				'0000000000000000000000000000000000000000000000000000000000000000',
 			networkId: getNetworkId(),
 			signature: '',
 			size: 0,

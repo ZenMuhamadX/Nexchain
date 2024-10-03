@@ -1,10 +1,9 @@
 /** @format */
 
 import msgpack from 'msgpack-lite'
-import { Block } from '../../model/blocks/block'
 
 // Fungsi untuk meng-serialize objek Block menjadi Buffer menggunakan BSON
-export const serializeBlockToBinary = (block: Block): Buffer => {
+export const serializeBlockToBinary = (block: any): Buffer => {
 	try {
 		// Konversi serializedBlock ke Buffer
 		return msgpack.encode(block)

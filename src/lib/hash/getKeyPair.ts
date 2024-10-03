@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { ec as EC } from 'elliptic'
 import { stringToBinary } from '../bin/stringToBinary'
-import { generateSeedFromMnemonic } from 'src/backup/mnemonic/seedFromMnemonic'
+import { generateSeedFromMnemonic } from 'src/backup/mnemonic/createSeedFromMnemonic'
 import { generatePhrase } from 'src/backup/mnemonic/generatePhrase'
 
 // Buat instance dari kurva ECC

@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'node:fs'
-import { BSON } from 'bson'
+import msg from 'msgpack-lite'
 import { decrypt } from '../secure/decrypt/decrypt'
 import { structWalletToSave } from 'src/model/interface/walletStructinf'
 // import { loadConfig } from 'src/storage/loadConfig'
@@ -18,7 +18,7 @@ export const loadWallet = (): structWalletToSave | undefined => {
 
 		// Read file if it exists
 		const fileData = fs.readFileSync(filePath)
-		const walletData = BSON.deserialize(fileData)
+		const walletData = msg.decode(fileData)
 
 		// Check if wallet data is valid
 		if (!walletData || !walletData.data || !walletData.data.encryptPrivateKey) {

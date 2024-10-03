@@ -1,6 +1,5 @@
 import 'dotenv/config'
 import crypto from 'crypto'
-import { BSON } from 'bson'
 import path from 'path'
 import fs from 'fs'
 import { encrypt } from '../secure/encrypt/encrypt'
@@ -8,6 +7,7 @@ import { getKeyPair } from 'src/lib/hash/getKeyPair'
 import { loadConfig } from 'src/storage/loadConfig'
 import { structWalletToSave } from 'src/model/interface/walletStructinf'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
+import msg from 'msgpack-lite'
 
 // Formats the input string to show only the first and last three characters
 const formatString = (input: string): string => {
@@ -60,7 +60,7 @@ export const saveMainWallet = (
 		structToSave.checkSum = addCheckSum(structToSave)
 
 		// Serialize the data and write to file
-		const serializedData = BSON.serialize(structToSave)
+		const serializedData = msg.encode(structToSave)
 
 		fs.writeFileSync(filePath, serializedData, 'binary')
 

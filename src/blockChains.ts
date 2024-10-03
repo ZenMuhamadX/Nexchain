@@ -22,7 +22,7 @@ import { calculateTotalFees } from './transaction/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
 import { calculateMerkleRoot } from './transaction/merkleRoot'
 import { getNetworkId } from './network/lib/getNetId'
-import { saveHistory } from './wallet/utils/saveYourTransact'
+import { saveHistory } from './wallet/utils/saveTxHistory'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -235,6 +235,6 @@ export class BlockChains {
 	 * @returns True if the block and chain are valid, otherwise false.
 	 */
 	public verify(): boolean {
-		return verifyChainIntegrity()
+		return verifyChainIntegrity()!
 	}
 }

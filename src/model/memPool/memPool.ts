@@ -42,11 +42,12 @@ export class MemPool {
 		}
 
 		// Prepare the transaction
-		transaction.txHash = createTxHash(transaction)
 		transaction.timestamp = generateTimestampz()
+		transaction.txHash = createTxHash(transaction)
 		transaction.status = 'pending'
 		transaction.signature = createSignature(transaction).signature
 		transaction.fee = ((transaction.amount / 10000) * 2) / 1000
+		if (transaction.amount < 25) transaction.fee = 0.000001
 
 		// Validate the transaction
 		const isValidTx = await transactionValidator(transaction)

@@ -70,7 +70,7 @@ export const transactionValidator = async (
 		)
 	}
 
-	if (transaction.fee! <= 0 || transaction.fee! > transaction.amount) {
+	if (transaction.fee! > transaction.amount) {
 		return logError(
 			'transactionValidator',
 			'Invalid transaction fee',
