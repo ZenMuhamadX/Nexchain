@@ -1,3 +1,4 @@
+import { decode, encode } from 'msgpack-lite'
 import { leveldb } from '../../leveldb/init'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { loggingErr } from 'src/logging/errorLog'
@@ -11,10 +12,13 @@ export const getBalance = async (
 			console.info('address not provided')
 			return
 		}
-		const balance = await leveldb.get(address, {
-			valueEncoding: 'json',
+		const serializeKey = encode(address)
+		const balance = await leveldb.get(serializeKey, {
+			valueEncoding: 'buffer',
+			keyEncoding: 'buffer',
 			fillCache: true,
 		})
+		const deserializedBalance = decode(balance)
 		if (!balance) {
 			loggingErr({
 				error: 'data not found',
@@ -26,7 +30,7 @@ export const getBalance = async (
 			})
 			return
 		}
-		return balance
+		return deserializedBalance
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error('Error getting data:', error.message)

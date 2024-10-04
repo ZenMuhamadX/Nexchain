@@ -2,6 +2,7 @@ import { leveldb } from '../../leveldb/init'
 import { loggingErr } from 'src/logging/errorLog'
 import { structBalance } from 'src/transaction/struct/structBalance'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
+import { encode } from 'msgpack-lite'
 
 export const putBalance = (address: string, balance: structBalance): void => {
 	try {
@@ -19,9 +20,12 @@ export const putBalance = (address: string, balance: structBalance): void => {
 		if (balance.timesTransaction === undefined) {
 			balance.timesTransaction = 0
 		}
-		leveldb.put(address, JSON.stringify(balance), {
+		const serializeBalance = encode(balance)
+		const serializeKey = encode(address)
+		leveldb.put(serializeKey, serializeBalance, {
 			sync: true,
 			valueEncoding: 'buffer',
+			keyEncoding: 'buffer',
 		})
 	} catch (error) {
 		loggingErr({
