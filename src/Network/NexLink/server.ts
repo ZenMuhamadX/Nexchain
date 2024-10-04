@@ -1,16 +1,40 @@
 import WebSocket from 'ws'
+import { COM } from '../interface/INTERFACE_COM'
+import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 
-const wss = new WebSocket.Server({ port: 445 })
+const ws = new WebSocket.Server({ port: 8000 })
 
-wss.on('connection', (ws) => {
-	console.log('Client connected')
-	ws.on('message', (message) => {
-		console.log(`Received message: ${message}`)
-		ws.send(`You sent: ${message}`)
+ws.on('connection', (socket) => {
+	console.log('peer connected')
+	const message: COM = {
+		type: 'CHECK',
+		header: {
+			nodeId: 0,
+			timestamp: generateTimestampz(),
+			version: '1.0.0',
+		},
+		data: 'ok',
+	}
+	socket.on('message', (data) => {
+		if (data.toString() === 'ping') {
+			socket.send('pong')
+		} else if (data.toString() === 'check') {
+			socket.send(Buffer.from(JSON.stringify(message)))
+		}
+	})
+	socket.on('close', () => {
+		console.log('peer disconnected')
 	})
 })
-wss.on('close', () => {
-	console.log('Client disconnected')
+
+ws.on('error', (err) => {
+	console.error(err)
 })
 
-console.log('Server started on port 445')
+ws.on('listening', () => {
+	console.log('listen on port 8000')
+})
+
+ws.on('close', () => {
+	console.log('Client disconnected')
+})
