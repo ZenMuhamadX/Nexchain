@@ -1,25 +1,26 @@
 import WebSocket from 'ws'
+import { getIpV4 } from '../utils/getIpV4'
 import { COM } from '../interface/INTERFACE_COM'
+import { getLatestBlock } from 'src/block/query/direct/getLatestBlock'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 
 const ws = new WebSocket.Server({ port: 8000 })
 
 ws.on('connection', (socket) => {
 	console.log('peer connected')
-	const message: COM = {
-		type: 'CHECK',
-		header: {
-			nodeId: 0,
-			timestamp: generateTimestampz(),
-			version: '1.0.0',
-		},
-		data: 'ok',
-	}
-	socket.on('message', (data) => {
-		if (data.toString() === 'ping') {
-			socket.send('pong')
-		} else if (data.toString() === 'check') {
-			socket.send(JSON.stringify(message))
+	socket.on('message', (instructions, isBinary) => {
+		if (instructions.toString() === 'GET_LASTBLOCK' && isBinary === false) {
+			const blockData = getLatestBlock(true)
+			const response: COM = {
+				type: 'GET_LASTBLOCK',
+				header: {
+					nodeId: 0,
+					timestamp: generateTimestampz(),
+					version: '0.1.0',
+				},
+				data: blockData,
+			}
+			socket.send(response.toString())
 		}
 	})
 	socket.on('close', () => {
@@ -32,7 +33,7 @@ ws.on('error', (err) => {
 })
 
 ws.on('listening', () => {
-	console.log('listen on port 8000')
+	console.log(`${getIpV4()}:8000`)
 })
 
 ws.on('close', () => {
