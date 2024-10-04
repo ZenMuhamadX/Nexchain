@@ -1,7 +1,6 @@
 /** @format */
 
 // BlockChains.ts
-import { createGenesisBlock } from './block/createGenesisBlock'
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/blocks/block'
 import { saveBlock } from './storage/saveBlock'
@@ -9,7 +8,6 @@ import { loggingErr } from './logging/errorLog'
 import { successLog } from './logging/succesLog'
 import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/POW'
-import { loadBlocks } from './storage/loadBlock'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { MemPoolInterface } from './model/interface/memPool.inf'
@@ -23,47 +21,14 @@ import { calculateTotalBlockReward } from './miner/calculateReward'
 import { calculateMerkleRoot } from './transaction/merkleRoot'
 import { getNetworkId } from './network/lib/getNetId'
 import { saveHistory } from './wallet/utils/saveTxHistory'
+import { getLatestBlock } from './block/query/direct/getLatestBlock'
+import { getAllBlock } from './block/query/direct/getAllBlock'
 
 // Manages the blockchain and its operations
 export class BlockChains {
-	private readonly _chains: Block[]
-
 	constructor() {
 		// Initialize the configuration file and load existing blocks.
 		saveConfigFile()
-		const loadedBlocks = this.loadBlocksFromStorage()
-		this._chains =
-			loadedBlocks.length > 0 ? loadedBlocks : this.initializeChain()
-	}
-
-	/**
-	 * Initializes the blockchain with the genesis block.
-	 * @returns An array containing the genesis block.
-	 */
-	private initializeChain(): Block[] {
-		return [createGenesisBlock()]
-	}
-
-	/**
-	 * Loads blocks from storage.
-	 * @returns An array of blocks.
-	 */
-	private loadBlocksFromStorage(): Block[] {
-		try {
-			const loadedBlocks = loadBlocks()
-			return Array.isArray(loadedBlocks) ? loadedBlocks : []
-		} catch (error) {
-			// Log the error if loading fails and return an empty array.
-			loggingErr({
-				error: error instanceof Error ? error.message : 'Unknown error',
-				context: 'BlockChains',
-				warning: null,
-				time: generateTimestampz(),
-				hint: 'Error loading blocks from storage',
-				stack: new Error().stack,
-			})
-			return [] // Return an empty array in case of an error
-		}
 	}
 
 	/**
@@ -82,7 +47,6 @@ export class BlockChains {
 			await this.giveReward(walletMiner, newBlock.block.blockReward)
 			saveBlock(newBlock)
 			processTransact(validTransaction)
-			this._chains.push(newBlock)
 			saveHistory()
 			// Log the success of adding the block.
 			successLog({
@@ -109,23 +73,6 @@ export class BlockChains {
 			return false
 		}
 	}
-
-	/**
-	 * Retrieves all blocks in the blockchain.
-	 * @returns A read-only array of blocks.
-	 */
-	public getChains(): ReadonlyArray<Block> {
-		return this._chains as ReadonlyArray<Block>
-	}
-
-	/**
-	 * Retrieves the most recent block in the blockchain.
-	 * @returns The latest block.
-	 */
-	public getLatestBlock(): Block {
-		return this._chains[this._chains.length - 1] as Block
-	}
-
 	/**
 	 * Creates a new block using the provided transactions and miner's wallet address.
 	 * @param transactions - The list of transactions to include in the new block.
@@ -136,8 +83,9 @@ export class BlockChains {
 		transactions: MemPoolInterface[],
 		walletMiner: string,
 	): Block {
-		const currentBlockHeight = this._chains.length
-		const latestBlock = this.getLatestBlock()
+		const allBlock = getAllBlock(false) as Block[]
+		const currentBlockHeight = allBlock.length - 1
+		const latestBlock = getLatestBlock() as Block
 
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')
@@ -197,7 +145,7 @@ export class BlockChains {
 		)
 
 		newBlock.block.header.previousBlockHash =
-			this._chains[this._chains.length - 1].block.header.hash
+			allBlock[allBlock.length - 1].block.header.hash
 
 		newBlock.block.header.timestamp = generateTimestampz()
 

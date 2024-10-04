@@ -6,6 +6,7 @@ import path from 'node:path'
 import { deserializeBlockFromBinary } from '../lib/utils/deserialize'
 import { loggingErr } from '../logging/errorLog'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
+import { createGenesisBlock } from 'src/block/createGenesisBlock'
 
 export const loadBlocks = (): Block[] | false => {
 	const dirPath = path.join(__dirname, '../../blocks')
@@ -19,7 +20,7 @@ export const loadBlocks = (): Block[] | false => {
 		const files = fs.readdirSync(dirPath)
 
 		if (files.length === 0) {
-			return false
+			createGenesisBlock()
 		}
 
 		// Filter file yang berawalan 'blk' dan berformat .bin

@@ -1,10 +1,11 @@
-import { chains } from 'src/block/initBlock'
+import { Block } from 'src/model/blocks/block'
 import { MemPoolInterface } from 'src/model/interface/memPool.inf'
+import { loadBlocks } from 'src/storage/loadBlock'
 
 export const getHistoryByAddress = (
 	address: string,
 ): MemPoolInterface[] | null => {
-	const blocks = chains.getChains()
+	const blocks = loadBlocks() as Block[]
 	const filteredTransactions: any[] = []
 
 	blocks.forEach((block) => {

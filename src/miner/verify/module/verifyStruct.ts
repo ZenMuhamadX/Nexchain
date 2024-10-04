@@ -1,7 +1,8 @@
-import { chains } from 'src/block/initBlock'
 import { generateTimestampz } from '../../../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../../../logging/errorLog'
 import Joi from 'joi'
+import { loadBlocks } from 'src/storage/loadBlock'
+import { Block } from 'src/model/blocks/block'
 
 // Function to verify the structure of a block using Joi schema validation
 export const verifyStruct = () => {
@@ -64,8 +65,9 @@ export const verifyStruct = () => {
 		metadata: metadataSchema.optional(), // Use .optional() if metadata is not required
 		transactions: Joi.array().items(memPoolInterfaceSchema).required(),
 	})
+	const chains = loadBlocks() as Block[]
 	// Validate the block structure against the schema
-	chains.getChains().map((block) => {
+	chains.map((block) => {
 		const { error, warning } = blockStructSchema.validate(block.block)
 		if (error) {
 			loggingErr({

@@ -33,7 +33,7 @@ export const proofOfWork = (block: Block): VerifiedResult => {
 
 		// Perbarui konsol dengan informasi saat ini
 		process.stdout.write(
-			`Nonce: ${nonce} | Total Hashes: ${totalHashes} | Waktu: ${elapsedTime.toFixed(2)} detik | Kecepatan: ${hashesPerSecond.toFixed(2)} hashes/detik\r`,
+			`Nonce: ${nonce} | Total Hashes: ${totalHashes} | Time: ${elapsedTime.toFixed(2)} s | Speed: ${hashesPerSecond.toFixed(2)} hashes/s\r`,
 		)
 
 		// Periksa apakah hash memenuhi kriteria kesulitan

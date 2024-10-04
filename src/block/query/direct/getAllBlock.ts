@@ -1,10 +1,10 @@
 import { Block } from 'src/model/blocks/block'
-import { chains } from '../../initBlock'
+import { loadBlocks } from 'src/storage/loadBlock'
 
-export const getAllBlock = (parseMode: boolean = false): string | Block => {
-	const allBlock = chains.getChains()
-	if (!parseMode) {
-		return JSON.stringify(allBlock)
+export const getAllBlock = (stringMode: boolean = false): string | Block[] => {
+	const allBlock = loadBlocks() as Block[]
+	if (!stringMode) {
+		return allBlock
 	} else {
 		return JSON.stringify(allBlock, null, 2)
 	}

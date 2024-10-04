@@ -6,11 +6,11 @@ import { Block } from '../model/blocks/block'
 import { createSignature } from '../lib/block/createSignature'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { calculateSize } from '../lib/utils/calculateSize'
-import { saveBlock } from '../storage/saveBlock'
 import { putBalance } from 'src/wallet/balance/putBalance'
 import { myWalletAddress } from 'src/wallet/myWalletAddress'
 import { calculateTotalFees } from 'src/transaction/totalFees'
 import { getNetworkId } from 'src/network/lib/getNetId'
+import { saveBlock } from 'src/storage/saveBlock'
 
 export const createGenesisBlock = (): Block => {
 	try {

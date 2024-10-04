@@ -2,14 +2,15 @@ import { verifyStruct } from './module/verifyStruct'
 import { verifyPow } from './module/verifyPow'
 import { verifyHashLength } from './module/verifyHashLength'
 import { verifyBlockHash } from './module/verifyBlockHash'
-import { chains } from 'src/block/initBlock'
+import { loadBlocks } from 'src/storage/loadBlock'
+import { Block } from 'src/model/blocks/block'
 
 // Function to verify the integrity of the blockchain
 export const verifyChainIntegrity = () => {
 	console.info('Checking chain integrity...')
 
 	// Initialize blockchain and get the list of chains
-	const blockChains = chains.getChains()
+	const blockChains = loadBlocks() as Block[]
 
 	// Loop through the chains to verify their integrity
 	for (let i = blockChains.length - 1; i > 0; i--) {

@@ -5,6 +5,8 @@ import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../logging/errorLog'
 import { mineLog } from '../logging/mineLog'
 import { chains } from 'src/block/initBlock'
+import { getLatestBlock } from 'src/block/query/direct/getLatestBlock'
+import { Block } from 'src/model/blocks/block'
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {
@@ -41,11 +43,12 @@ export const miningBlock = async (address: string): Promise<void> => {
 		const successMine = await chains.addBlockToChain(transactions, address)
 		if (successMine) {
 			// Log mining details if successful
+			const lastBlock = getLatestBlock(false) as Block
 			mineLog({
 				difficulty: 5, // Consider making this dynamic or configurable
-				hash: chains.getLatestBlock()?.block.header.hash || 'N/A',
+				hash: lastBlock?.block.header.hash || 'N/A',
 				mined_at: generateTimestampz(),
-				nonce: chains.getLatestBlock()?.block.header.nonce || 'N/A',
+				nonce: lastBlock?.block.header.nonce || 'N/A',
 				miner: address,
 			})
 		}
