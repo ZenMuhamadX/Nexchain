@@ -1,6 +1,6 @@
 /** @format */
 
-import { getLastBlockNumber } from "./getLatestBlockNum"
+import { getLastBlockNumber } from './getLatestBlockNum'
 
 export const createBlockName = (): string => {
 	const lastNum = getLastBlockNumber()
