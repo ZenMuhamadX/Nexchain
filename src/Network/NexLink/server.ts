@@ -19,7 +19,7 @@ ws.on('connection', (socket) => {
 		if (data.toString() === 'ping') {
 			socket.send('pong')
 		} else if (data.toString() === 'check') {
-			socket.send(Buffer.from(JSON.stringify(message)))
+			socket.send(JSON.stringify(message))
 		}
 	})
 	socket.on('close', () => {
