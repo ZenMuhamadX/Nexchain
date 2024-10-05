@@ -12,7 +12,7 @@ export interface COM {
 		| 'ERROR'
 		| 'GET_LASTBLOCK'
 	header: {
-		nodeId: number
+		nodeId: string
 		timestamp: number
 		version: string
 	}

@@ -3,6 +3,7 @@ import { getIpV4 } from '../utils/getIpV4'
 import { COM } from '../interface/INTERFACE_COM'
 import { getLatestBlock } from 'src/block/query/direct/getLatestBlock'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
+import { generateNetworkId } from '../utils/getNetId'
 
 const ws = new WebSocket.Server({ port: 8000 })
 
@@ -14,7 +15,7 @@ ws.on('connection', (socket) => {
 			const response: COM = {
 				type: 'GET_LASTBLOCK',
 				header: {
-					nodeId: 0,
+					nodeId: generateNetworkId(),
 					timestamp: generateTimestampz(),
 					version: '0.1.0',
 				},

@@ -9,8 +9,8 @@ import { calculateSize } from '../lib/utils/calculateSize'
 import { putBalance } from 'src/wallet/balance/putBalance'
 import { myWalletAddress } from 'src/wallet/myWalletAddress'
 import { calculateTotalFees } from 'src/transaction/totalFees'
-import { getNetworkId } from 'src/network/lib/getNetId'
 import { saveBlock } from 'src/storage/saveBlock'
+import { generateNetworkId } from 'src/Network/utils/getNetId'
 
 export const createGenesisBlock = (): Block => {
 	try {
@@ -31,7 +31,7 @@ export const createGenesisBlock = (): Block => {
 			height: 0,
 			merkleRoot:
 				'0000000000000000000000000000000000000000000000000000000000000000',
-			networkId: getNetworkId(),
+			networkId: generateNetworkId(),
 			signature: '',
 			size: 0,
 			status: 'confirmed',

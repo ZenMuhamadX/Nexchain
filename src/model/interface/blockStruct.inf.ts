@@ -15,7 +15,7 @@ export interface blockStruct {
 	size: number
 	totalTransactionFees: number // Optional field to store the total transaction fees in the block
 	merkleRoot: string
-	networkId: number
+	networkId: string
 	status: 'confirmed' | 'pending'
 	blockReward: number
 	coinbaseTransaction: {
