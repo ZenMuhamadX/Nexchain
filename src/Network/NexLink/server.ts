@@ -21,7 +21,7 @@ ws.on('connection', (socket) => {
 				},
 				data: blockData,
 			}
-			socket.send(response.toString())
+			socket.send(JSON.stringify(response))
 		}
 	})
 	socket.on('close', () => {
