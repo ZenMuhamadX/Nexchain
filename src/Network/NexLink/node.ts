@@ -1,3 +1,4 @@
 import { Node } from './nodeManager'
 const ports = 3001
-new Node(ports)
+const node1 = new Node(ports)
+node1.connectToPeer(3002)
