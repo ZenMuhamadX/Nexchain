@@ -1,8 +1,11 @@
+import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { getIpV4 } from './getIpV4'
 
-export const generateNetworkId = (): string => {
+export const getNetworkId = (): string => {
 	const ipAddress = getIpV4() as string
-	const hash = hashString(ipAddress).substring(0, 10)
+	const timestamp = generateTimestampz()
+	const data = `${ipAddress}${timestamp}`
+	const hash = hashString(data).substring(0, 10)
 	return `0x${hash}`
 }
 

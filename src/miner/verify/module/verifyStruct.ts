@@ -57,7 +57,7 @@ export const verifyStruct = () => {
 		size: Joi.number().required(),
 		totalTransactionFees: Joi.number().optional(),
 		merkleRoot: Joi.string().required(),
-		networkId: Joi.number().required(),
+		networkId: Joi.string().required(),
 		status: Joi.valid('confirmed', 'pending').required(),
 		blockReward: Joi.number().required(),
 		coinbaseTransaction: coinbaseTransactionSchema.required(),

@@ -22,7 +22,7 @@ import { calculateMerkleRoot } from './transaction/merkleRoot'
 import { saveHistory } from './wallet/utils/saveTxHistory'
 import { getLatestBlock } from './block/query/direct/getLatestBlock'
 import { getAllBlock } from './block/query/direct/getAllBlock'
-import { generateNetworkId } from './Network/utils/getNetId'
+import { getNetworkId } from './Network/utils/getNetId'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -109,7 +109,7 @@ export class BlockChains {
 			totalTransactionFees: 0,
 			height: currentBlockHeight + 1,
 			merkleRoot: calculateMerkleRoot(transactions),
-			networkId: generateNetworkId(),
+			networkId: getNetworkId(),
 			signature: '',
 			size: 0,
 			status: 'confirmed',
