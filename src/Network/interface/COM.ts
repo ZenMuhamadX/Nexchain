@@ -1,5 +1,11 @@
 export interface COM {
-	type: 'CREATE_TRANSACTION' | 'REQ_BLOCK' | 'PEERS_ID' | 'GREETING' | 'MINE'
+	type:
+		| 'CREATE_TRANSACTION'
+		| 'REQ_BLOCK'
+		| 'PEERS_ID'
+		| 'GREETING'
+		| 'MINE'
+		| 'UPDATE_BLOCK'
 	payload: any
 	nodeSender?: string
 	timestamp?: number

@@ -45,7 +45,7 @@ export const miningBlock = async (address: string): Promise<void> => {
 			// Log mining details if successful
 			const lastBlock = getLatestBlock(false) as Block
 			mineLog({
-				difficulty: 3, // Consider making this dynamic or configurable
+				difficulty: 1, // Consider making this dynamic or configurable
 				hash: lastBlock?.block.header.hash || 'N/A',
 				mined_at: generateTimestampz(),
 				nonce: lastBlock?.block.header.nonce || 'N/A',

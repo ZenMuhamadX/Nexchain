@@ -9,6 +9,7 @@ import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { miningBlock } from 'src/miner/mining'
 import { validateMessageInterface } from './validateInf'
 import { leveldb } from 'src/leveldb/init'
+import { getLatestBlock } from 'src/block/query/direct/getLatestBlock'
 
 // Konfigurasi logger
 const logger = winston.createLogger({
@@ -155,6 +156,12 @@ export class Node {
 				break
 			case 'MINE':
 				miningBlock(data.payload)
+				this.broadcast({
+					type: 'UPDATE_BLOCK',
+					nodeSender: this.id,
+					payload: getLatestBlock(false),
+					timestamp: generateTimestampz(),
+				})
 				logger.info(`Node ${this.id} received mining request:`, data)
 				break
 			case 'REQ_BLOCK':
