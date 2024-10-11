@@ -3,9 +3,9 @@ import { createTransact } from 'src/transaction/createTransact'
 import WebSocket, { WebSocketServer } from 'ws'
 
 export class Node {
-	port: number
-	peers: WebSocket[] = []
-	server: WebSocketServer
+	private port: number
+	private peers: WebSocket[] = []
+	private server: WebSocketServer
 
 	constructor(port: number) {
 		this.port = port
@@ -33,7 +33,8 @@ export class Node {
 	}
 
 	// Koneksikan node ke peer lain
-	public connectToPeer(peerAddress: string) {
+	public connectToPeer(port: number) {
+		const peerAddress = `ws://localhost:${port}`
 		const ws = new WebSocket(peerAddress)
 
 		ws.on('open', () => {
