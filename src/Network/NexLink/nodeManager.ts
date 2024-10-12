@@ -64,6 +64,11 @@ export class Node {
 				this.savePeerList() // Save peer list on disconnect
 				this.reconnectToPeers() // Attempt to reconnect to peers
 			})
+
+			// Handle connection errors
+			ws.on('error', (error) => {
+				logger.error(`WebSocket error: ${error.message}`)
+			})
 		})
 	}
 
@@ -72,8 +77,7 @@ export class Node {
 		try {
 			const data = JSON.parse(message)
 			const parsedData = this.convertMessage(data)
-			this.broadcast(parsedData)
-			this.handleMessage(parsedData)
+			this.checkMessageStatus(parsedData)
 		} catch (err) {
 			logger.error(`Failed to parse message: ${message}, error: ${err}`)
 		}
@@ -147,14 +151,17 @@ export class Node {
 		const parsedData = this.convertMessage({
 			type: 'PEERS_ID',
 			payload: { data: Array.from(this.peerIds) },
+			isClient: false,
+			forwardCount: 0,
 		})
 		this.broadcast(parsedData)
 	}
-
-	// Function to broadcast messages to all peers
 	private broadcast(data: ParseMessage) {
+		data.forwardCount = (data.forwardCount || 0) + 1 // Increment forwardCount
 		this.peers.forEach((peer) => {
-			peer.send(JSON.stringify(data))
+			if (peer.readyState === WebSocket.OPEN) {
+				peer.send(JSON.stringify(data))
+			}
 		})
 	}
 
@@ -168,36 +175,49 @@ export class Node {
 	}
 
 	// Handle messages received from other nodes
-	private handleMessage(data: ParseMessage) {
-		if (!validateMessageInterface(data)) {
-			logger.error('Invalid message format, check logs for details')
-			return
-		}
+	private checkMessageStatus(data: ParseMessage) {
+		this.processedMessages.add(data.messageId)
+		const maxForwardCount = 1000 // Set the maximum forward count
 		if (this.processedMessages.has(data.messageId)) {
 			logger.warn(`Duplicate message received: ${data.messageId}`)
 			return
+		} else if (!validateMessageInterface(data)) {
+			logger.error('Invalid message format, check logs for details')
+			return
+		} else if (data.forwardCount && data.forwardCount > maxForwardCount) {
+			logger.warn(`Message ${data.messageId} exceeded forward limit.`)
+			return
+		} else if (data.isClient) {
+			this.handleClientCommand(data)
+			return
 		}
-		this.processedMessages.add(data.messageId)
+		logger.info(`Node ${this.id} received message from peer`)
+	}
 
-		// Handle message types
-		switch (data.type) {
-			case 'CREATE_TRANSACTION':
-				this.handleCreateTransaction(data)
-				break
-			case 'PEERS_ID':
-				this.handlePeerIds(data.payload.data)
-				break
-			case 'GREETING':
-				logger.info(`Node ${this.id} received greeting:`, data)
-				break
-			case 'MINE':
-				this.handleMiningRequest(data)
-				break
-			case 'REQ_BLOCK':
-				logger.info(`Node ${this.id} received request for block:`, data)
-				break
-			default:
-				logger.warn(`Node ${this.id}: Unknown message type:`, data.type)
+	private handleClientCommand(data: ParseMessage) {
+		if (data.isClient) {
+			this.broadcast(data) // Broadcast to all peers
+			logger.info(`Node ${this.id} processing command from client:`, data)
+			// Handle message types
+			switch (data.type) {
+				case 'CREATE_TRANSACTION':
+					this.handleCreateTransaction(data)
+					break
+				case 'PEERS_ID':
+					this.handlePeerIds(data.payload.data)
+					break
+				case 'GREETING':
+					logger.info(`Node ${this.id} received greeting:`, data)
+					break
+				case 'MINE':
+					this.handleMiningRequest(data)
+					break
+				case 'REQ_BLOCK':
+					logger.info(`Node ${this.id} received request for block:`, data)
+					break
+				default:
+					logger.warn(`Node ${this.id}: Unknown message type:`, data.type)
+			}
 		}
 	}
 

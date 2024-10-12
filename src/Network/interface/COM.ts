@@ -7,4 +7,6 @@ export interface COM {
 		| 'MINE'
 		| 'UPDATE_BLOCK'
 	payload: { data: any }
+	isClient: boolean
+	forwardCount: number
 }
