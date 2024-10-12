@@ -25,12 +25,6 @@ const logger = winston.createLogger({
 	],
 })
 
-// Interface for parsed messages
-interface ParseMessage extends COM {
-	messageId: string
-	timestamp: number
-}
-
 export class Node {
 	private port: number
 	private peers: WebSocket[] = []
@@ -76,8 +70,7 @@ export class Node {
 	private handleIncomingMessage(message: string) {
 		try {
 			const data = JSON.parse(message)
-			const parsedData = this.convertMessage(data)
-			this.checkMessageStatus(parsedData)
+			this.checkMessageStatus(data)
 		} catch (err) {
 			logger.error(`Failed to parse message: ${message}, error: ${err}`)
 		}
@@ -148,15 +141,17 @@ export class Node {
 
 	// Broadcast all connected peer IDs
 	private broadcastPeerIds() {
-		const parsedData = this.convertMessage({
+		const parsedData: COM = {
 			type: 'PEERS_ID',
 			payload: { data: Array.from(this.peerIds) },
 			isClient: false,
 			forwardCount: 0,
-		})
+			messageId: generateMessageId(),
+			timestamp: generateTimestampz(),
+		}
 		this.broadcast(parsedData)
 	}
-	private broadcast(data: ParseMessage) {
+	private broadcast(data: COM) {
 		data.forwardCount = (data.forwardCount || 0) + 1 // Increment forwardCount
 		this.peers.forEach((peer) => {
 			if (peer.readyState === WebSocket.OPEN) {
@@ -165,23 +160,14 @@ export class Node {
 		})
 	}
 
-	// Convert message format to include messageId and timestamp
-	private convertMessage(data: COM): ParseMessage {
-		return {
-			...data,
-			messageId: generateMessageId(),
-			timestamp: generateTimestampz(),
-		}
-	}
-
-	private checkMessageStatus(data: ParseMessage) {
+	private checkMessageStatus(data: COM) {
 		// 1. Validasi format pesan
 		if (!validateMessageInterface(data)) {
 			logger.error('Invalid message format, check logs for details')
 			return
 		}
 
-		const maxForwardCount = 1000 // Set the maximum forward count
+		const maxForwardCount = 2 // Set the maximum forward count
 
 		// 2. Cek duplikasi
 		if (this.processedMessages.has(data.messageId)) {
@@ -207,7 +193,7 @@ export class Node {
 		logger.info(`Node ${this.id} received message from peer`)
 	}
 
-	private handleClientCommand(data: ParseMessage) {
+	private handleClientCommand(data: COM) {
 		if (data.isClient) {
 			this.broadcast(data) // Broadcast to all peers
 			logger.info(`Node ${this.id} processing command from client:`, data)
@@ -235,7 +221,7 @@ export class Node {
 	}
 
 	// Handle transaction creation
-	private handleCreateTransaction(data: ParseMessage) {
+	private handleCreateTransaction(data: COM) {
 		createTransact(data.payload.data)
 			.then(() => {
 				logger.info(`Transaction processed: ${data.payload.data}`)
@@ -246,7 +232,7 @@ export class Node {
 	}
 
 	// Handle mining request
-	private handleMiningRequest(data: ParseMessage) {
+	private handleMiningRequest(data: COM) {
 		miningBlock(data.payload.data)
 		logger.info(`Node ${this.id} received mining request:`, data)
 	}

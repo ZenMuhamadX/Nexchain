@@ -9,4 +9,6 @@ export interface COM {
 	payload: { data: any }
 	isClient: boolean
 	forwardCount: number
+	messageId: string
+	timestamp: number
 }

@@ -22,6 +22,8 @@ ws.on('open', () => {
 		payload: { data: tx },
 		isClient: true,
 		forwardCount: 0,
+		messageId: '123',
+		timestamp: 123,
 	}
 	ws.send(JSON.stringify(message))
 	ws.close()
