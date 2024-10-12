@@ -7,4 +7,6 @@ export const COMValidate = Joi.object({
 	}).required(),
 	messageId: Joi.string().required(),
 	timestamp: Joi.number().required(),
+	isClient: Joi.boolean().required(),
+	forwardCount: Joi.number().required(),
 })
