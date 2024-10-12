@@ -1,5 +1,5 @@
 import { createSignature } from 'src/lib/block/createSignature'
-import { createTxHash } from '../../lib/hash/createTxHash'
+import { createTxnHash } from '../../lib/hash/createTxHash'
 import { generateTimestampz } from '../../lib/timestamp/generateTimestampz'
 import { loadConfig } from '../../storage/loadConfig'
 import { MemPoolInterface } from '../interface/memPool.inf'
@@ -42,8 +42,7 @@ export class MemPool {
 		}
 
 		// Prepare the transaction
-		transaction.timestamp = generateTimestampz()
-		transaction.txHash = createTxHash(transaction)
+		transaction.txHash = createTxnHash(transaction)
 		transaction.status = 'pending'
 		transaction.signature = createSignature(transaction).signature
 		transaction.fee = ((transaction.amount / 10000) * 2) / 1000
