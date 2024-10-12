@@ -174,23 +174,36 @@ export class Node {
 		}
 	}
 
-	// Handle messages received from other nodes
 	private checkMessageStatus(data: ParseMessage) {
-		this.processedMessages.add(data.messageId)
+		// 1. Validasi format pesan
+		if (!validateMessageInterface(data)) {
+			logger.error('Invalid message format, check logs for details')
+			return
+		}
+
 		const maxForwardCount = 1000 // Set the maximum forward count
+
+		// 2. Cek duplikasi
 		if (this.processedMessages.has(data.messageId)) {
 			logger.warn(`Duplicate message received: ${data.messageId}`)
 			return
-		} else if (!validateMessageInterface(data)) {
-			logger.error('Invalid message format, check logs for details')
-			return
-		} else if (data.forwardCount && data.forwardCount > maxForwardCount) {
+		}
+
+		// 3. Cek forwardCount
+		if (data.forwardCount && data.forwardCount > maxForwardCount) {
 			logger.warn(`Message ${data.messageId} exceeded forward limit.`)
 			return
-		} else if (data.isClient) {
+		}
+
+		// 4. Tandai pesan sebagai diproses
+		this.processedMessages.add(data.messageId)
+
+		// 5. Penanganan perintah klien
+		if (data.isClient) {
 			this.handleClientCommand(data)
 			return
 		}
+
 		logger.info(`Node ${this.id} received message from peer`)
 	}
 
