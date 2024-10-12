@@ -6,7 +6,5 @@ export interface COM {
 		| 'GREETING'
 		| 'MINE'
 		| 'UPDATE_BLOCK'
-	payload: any
-	nodeSender?: string
-	timestamp?: number
+	payload: { data: any }
 }

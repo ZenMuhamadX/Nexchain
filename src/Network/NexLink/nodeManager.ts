@@ -1,17 +1,16 @@
-import { MemPoolInterface } from 'src/model/interface/memPool.inf'
-import { createTransact } from 'src/transaction/createTransact'
 import WebSocket, { WebSocketServer } from 'ws'
 import winston from 'winston'
 import * as path from 'path'
 import { getNetworkId } from '../utils/getNetId'
 import { COM } from '../interface/COM'
-import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { miningBlock } from 'src/miner/mining'
 import { validateMessageInterface } from './validateInf'
 import { leveldb } from 'src/leveldb/init'
-import { getLatestBlock } from 'src/block/query/direct/getLatestBlock'
+import { generateMessageId } from '../utils/getMessageId'
+import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
+import { createTransact } from 'src/transaction/createTransact'
 
-// Konfigurasi logger
+// Logger configuration
 const logger = winston.createLogger({
 	level: 'info',
 	format: winston.format.combine(
@@ -26,84 +25,105 @@ const logger = winston.createLogger({
 	],
 })
 
+// Interface for parsed messages
+interface ParseMessage extends COM {
+	messageId: string
+	timestamp: number
+}
+
 export class Node {
 	private port: number
 	private peers: WebSocket[] = []
-	private peerIds: Set<string> = new Set() // Set untuk menyimpan ID peer yang terhubung
+	private peerIds: Set<string> = new Set() // Set to store connected peer IDs
 	private server: WebSocketServer
-	public id: string // ID unik untuk setiap node
+	public id: string // Unique ID for each node
+	private processedMessages: Set<string> = new Set() // To track processed messages
 
 	constructor(port: number) {
 		this.port = port
 		this.id = getNetworkId() // Generate a unique ID for the node
 		this.server = new WebSocketServer({ port: this.port })
 		this.initServer()
-		this.loadPeerList() // Memuat daftar peer saat inisialisasi
+		this.loadPeerList() // Load peer list on initialization
 		logger.info(`Node ${this.id} running on port ${this.port}`)
 	}
 
-	// Inisialisasi WebSocket server untuk menerima koneksi dari peer lain
+	// Initialize WebSocket server to accept connections from other peers
 	private initServer() {
 		this.server.on('connection', (ws: WebSocket) => {
 			logger.info(`Node ${this.id} connected to peer on port ${this.port}`)
 
-			// Saat menerima pesan dari peer
+			// Handle incoming messages from peers
 			ws.on('message', (message: string) => {
-				const data = JSON.parse(message)
-				this.handleMessage(data)
+				this.handleIncomingMessage(message)
 			})
 
-			// Saat koneksi ditutup
+			// Handle connection close
 			ws.on('close', () => {
 				logger.info(`Connection closed on node ${this.id} (port ${this.port})`)
-				this.savePeerList() // Simpan daftar peer saat koneksi terputus
-				this.reconnectToPeers() // Coba untuk menghubungkan kembali ke peers
+				this.savePeerList() // Save peer list on disconnect
+				this.reconnectToPeers() // Attempt to reconnect to peers
 			})
 		})
 	}
 
-	// Koneksikan node ke peer lain
+	// Handle incoming messages safely
+	private handleIncomingMessage(message: string) {
+		try {
+			const data = JSON.parse(message)
+			const parsedData = this.convertMessage(data)
+			this.handleMessage(parsedData)
+		} catch (err) {
+			logger.error(`Failed to parse message: ${message}, error: ${err}`)
+		}
+	}
+
+	// Connect to another peer
 	public connectToPeer(port: number) {
 		const peerAddress = `ws://localhost:${port}`
 		const ws = new WebSocket(peerAddress)
 
 		ws.on('open', () => {
 			logger.info(`Node ${this.id} connected to peer at ${peerAddress}`)
-			this.peers.push(ws) // Tambahkan peer ke daftar peers
-			this.peerIds.add(port.toString()) // Tambahkan ID node peer yang terhubung
-			this.savePeerList() // Simpan ID ke LevelDB
-			this.broadcastPeerIds() // Broadcast ID ke semua peer
+			this.peers.push(ws)
+			this.peerIds.add(port.toString())
+			this.savePeerList()
+			this.broadcastPeerIds()
 		})
 
 		ws.on('message', (message: string) => {
-			const data = JSON.parse(message)
-			this.handleMessage(data)
+			this.handleIncomingMessage(message)
 		})
 
 		ws.on('close', () => {
 			logger.info(`Node ${this.id} disconnected from peer at ${peerAddress}`)
-			this.peers = this.peers.filter((peer) => peer !== ws) // Hapus peer dari daftar jika koneksi terputus
-			this.peerIds.delete(port.toString()) // Hapus ID node peer dari set
-			this.broadcastPeerIds() // Broadcast ID yang terhubung yang diperbarui
+			this.peers = this.peers.filter((peer) => peer !== ws)
+			this.peerIds.delete(port.toString())
+			this.broadcastPeerIds()
+		})
+
+		// Handle connection errors
+		ws.on('error', (error) => {
+			logger.error(`Connection error to peer ${peerAddress}: ${error.message}`)
 		})
 	}
 
-	// Memuat daftar peer dari LevelDB
+	// Load peer list from LevelDB
 	private async loadPeerList() {
 		try {
 			const peers = await leveldb.get('peerList')
 			if (peers) {
 				const ids = JSON.parse(peers)
-				ids.forEach((id: string) => {
-					this.connectToPeer(Number(id)) // Coba menghubungkan ke setiap peer
-				})
+				for (const id of ids) {
+					this.connectToPeer(Number(id))
+				}
 			}
 		} catch (err) {
 			logger.error(`Error loading peer list: ${err}`)
 		}
 	}
 
-	// Menyimpan daftar peer ke LevelDB
+	// Save peer list to LevelDB
 	private async savePeerList() {
 		try {
 			await leveldb.put('peerList', JSON.stringify(Array.from(this.peerIds)))
@@ -112,57 +132,65 @@ export class Node {
 		}
 	}
 
-	// Mencoba menghubungkan kembali ke peers yang ada
+	// Attempt to reconnect to existing peers with a delay
 	private reconnectToPeers() {
 		this.peerIds.forEach((peerId) => {
-			this.connectToPeer(Number(peerId)) // Coba hubungkan kembali ke setiap peer
+			setTimeout(() => {
+				this.connectToPeer(Number(peerId))
+			}, 5000) // Delay for 5 seconds before reconnecting
 		})
 	}
 
-	// Broadcast ID semua peer yang terhubung
+	// Broadcast all connected peer IDs
 	private broadcastPeerIds() {
-		this.broadcast({
+		const parsedData = this.convertMessage({
 			type: 'PEERS_ID',
-			payload: Array.from(this.peerIds),
-			nodeSender: this.id,
-			timestamp: generateTimestampz(),
+			payload: { data: Array.from(this.peerIds) },
 		})
+		this.broadcast(parsedData)
 	}
 
-	// Fungsi untuk mem-broadcast pesan ke semua peer
-	private broadcast(data: COM) {
+	// Function to broadcast messages to all peers
+	private broadcast(data: ParseMessage) {
 		this.peers.forEach((peer) => {
 			peer.send(JSON.stringify(data))
 		})
 	}
 
-	// Fungsi untuk menangani pesan yang diterima dari node lain
-	private handleMessage(data: COM) {
+	// Convert message format to include messageId and timestamp
+	private convertMessage(data: COM): ParseMessage {
+		return {
+			...data,
+			messageId: generateMessageId(),
+			timestamp: generateTimestampz(),
+		}
+	}
+
+	// Handle messages received from other nodes
+	private handleMessage(data: ParseMessage) {
 		if (!validateMessageInterface(data)) {
 			logger.error('Invalid message format, check logs for details')
 			return
 		}
+		if (this.processedMessages.has(data.messageId)) {
+			logger.warn(`Duplicate message received: ${data.messageId}`)
+			return
+		}
+		this.processedMessages.add(data.messageId)
+
+		// Handle message types
 		switch (data.type) {
 			case 'CREATE_TRANSACTION':
-				data.nodeSender = this.id
-				data.timestamp = generateTimestampz()
-				this.addNewTransaction(data.payload)
+				this.handleCreateTransaction(data)
 				break
 			case 'PEERS_ID':
-				this.handlePeerIds(data.payload)
+				this.handlePeerIds(data.payload.data)
 				break
-			case 'GREETING': // Menangani pesan dari client
+			case 'GREETING':
 				logger.info(`Node ${this.id} received greeting:`, data)
 				break
 			case 'MINE':
-				miningBlock(data.payload)
-				this.broadcast({
-					type: 'UPDATE_BLOCK',
-					nodeSender: this.id,
-					payload: getLatestBlock(false),
-					timestamp: generateTimestampz(),
-				})
-				logger.info(`Node ${this.id} received mining request:`, data)
+				this.handleMiningRequest(data)
 				break
 			case 'REQ_BLOCK':
 				logger.info(`Node ${this.id} received request for block:`, data)
@@ -172,32 +200,26 @@ export class Node {
 		}
 	}
 
-	// Menangani ID peer yang diterima
-	private handlePeerIds(ids: string[]) {
-		ids.forEach((id) => this.peerIds.add(id)) // Tambahkan ID baru yang diterima
-		logger.info(`Node ${this.id} updated peer IDs:`, Array.from(this.peerIds))
-	}
-
-	// Menambahkan transaksi baru ke mempool dan broadcast ke semua peer
-	public addNewTransaction(transaction: MemPoolInterface) {
-		this.broadcast({
-			type: 'CREATE_TRANSACTION',
-			nodeSender: this.id,
-			payload: transaction,
-			timestamp: generateTimestampz(),
-		})
-		createTransact(transaction)
+	// Handle transaction creation
+	private handleCreateTransaction(data: ParseMessage) {
+		createTransact(data.payload.data)
 			.then(() => {
-				logger.info(
-					`Node ${this.id}: New transaction added to mempool:`,
-					transaction,
-				)
+				logger.info(`Transaction processed: ${data.payload.data}`)
 			})
 			.catch((err) => {
-				logger.error(
-					`Node ${this.id}: Error adding transaction to mempool:`,
-					err,
-				)
+				logger.error(`Transaction processing error: ${err}`)
 			})
+	}
+
+	// Handle mining request
+	private handleMiningRequest(data: ParseMessage) {
+		miningBlock(data.payload.data)
+		logger.info(`Node ${this.id} received mining request:`, data)
+	}
+
+	// Handle received peer IDs
+	private handlePeerIds(ids: string[]) {
+		ids.forEach((id) => this.peerIds.add(id)) // Add new peer IDs
+		logger.info(`Node ${this.id} updated peer IDs:`, Array.from(this.peerIds))
 	}
 }
