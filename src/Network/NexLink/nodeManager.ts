@@ -72,6 +72,7 @@ export class Node {
 		try {
 			const data = JSON.parse(message)
 			const parsedData = this.convertMessage(data)
+			this.broadcast(parsedData)
 			this.handleMessage(parsedData)
 		} catch (err) {
 			logger.error(`Failed to parse message: ${message}, error: ${err}`)
