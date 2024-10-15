@@ -1,15 +1,15 @@
 import WebSocket from 'ws'
 import { COM } from '../interface/COM'
-import { MemPoolInterface } from 'src/model/interface/memPool.inf'
 import { myWalletAddress } from 'src/wallet/myWalletAddress'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { generateMessageId } from '../utils/getMessageId'
+import { comTxInterface } from 'src/model/interface/commonTxInterface'
 
 // Ganti dengan port node yang sesuai
 const nodePort = 3002
 const ws = new WebSocket(`ws://localhost:${nodePort}`)
 
-const tx: MemPoolInterface = {
+const tx: comTxInterface = {
 	amount: 20,
 	from: myWalletAddress(),
 	to: 'x',

@@ -1,8 +1,8 @@
 import crypto from 'crypto'
 import { Block } from '../model/blocks/block'
-import { structBlockReadyToHash } from '../lib/block/blkReadyToHash'
+import { structBlockReadyToHash } from '../lib/block/convertBlock'
 
-const DIFFICULTY_PREFIX = '00000' // Sesuaikan dengan kriteria kesulitan yang diinginkan
+const DIFFICULTY_PREFIX = '0000' // Sesuaikan dengan kriteria kesulitan yang diinginkan
 
 interface VerifiedResult {
 	nonce: string

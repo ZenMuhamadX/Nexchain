@@ -5,14 +5,16 @@ import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../logging/errorLog'
 import { mineLog } from '../logging/mineLog'
 import { chains } from 'src/block/initBlock'
-import { getLatestBlock } from 'src/block/query/direct/getLatestBlock'
+import { getLatestBlock } from 'src/block/query/direct/block/getLatestBlock'
 import { Block } from 'src/model/blocks/block'
+import { txInterface } from 'src/model/interface/memPool.inf'
+import _ from 'lodash'
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {
 	// Initialize blockchain and memory pool instances
 	const pool = new MemPool()
-	const transactions = await pool.getValidTransactions()
+	const transactions: txInterface[] = await pool.getValidTransactions()
 
 	try {
 		// Check if there are pending transactions to mine
@@ -27,6 +29,11 @@ export const miningBlock = async (address: string): Promise<void> => {
 			})
 			return
 		}
+		_.map(transactions, (tx) => {
+			tx.isValidate = true
+			tx.isPending = false
+			tx.status = 'confirmed'
+		})
 		const isBlockValid = chains.verify()
 		if (!isBlockValid) {
 			loggingErr({
@@ -43,9 +50,9 @@ export const miningBlock = async (address: string): Promise<void> => {
 		const successMine = await chains.addBlockToChain(transactions, address)
 		if (successMine) {
 			// Log mining details if successful
-			const lastBlock = getLatestBlock(false) as Block
+			const lastBlock = (await getLatestBlock(false)) as Block
 			mineLog({
-				difficulty: 1, // Consider making this dynamic or configurable
+				difficulty: 3, // Consider making this dynamic or configurable
 				hash: lastBlock?.block.header.hash || 'N/A',
 				mined_at: generateTimestampz(),
 				nonce: lastBlock?.block.header.nonce || 'N/A',

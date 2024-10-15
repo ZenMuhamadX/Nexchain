@@ -1,7 +1,7 @@
-import { leveldb } from '../../leveldb/init'
 import { loggingErr } from 'src/logging/errorLog'
 import { structBalance } from 'src/transaction/struct/structBalance'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
+import { leveldbState } from 'src/leveldb/state'
 
 export const putNewWallet = (address: string): void => {
 	try {
@@ -21,7 +21,7 @@ export const putNewWallet = (address: string): void => {
 			balance: 0,
 			timesTransaction: 0,
 		}
-		leveldb.put(address, JSON.stringify(initBalance), {
+		leveldbState.put(address, JSON.stringify(initBalance), {
 			sync: true,
 			valueEncoding: 'buffer',
 		})

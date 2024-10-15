@@ -3,26 +3,26 @@
 // BlockChains.ts
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
 import { Block } from './model/blocks/block'
-import { saveBlock } from './storage/saveBlock'
+import { saveBlock } from './storage/block/saveBlock'
 import { loggingErr } from './logging/errorLog'
 import { successLog } from './logging/succesLog'
 import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/POW'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
-import { MemPoolInterface } from './model/interface/memPool.inf'
-import { saveConfigFile } from './storage/saveConfig'
+import { txInterface } from './model/interface/memPool.inf'
+import { saveConfigFile } from './storage/conf/saveConfig'
 import { putBalance } from './wallet/balance/putBalance'
 import { getBalance } from './wallet/balance/getBalance'
 import { structBalance } from './transaction/struct/structBalance'
 import { processTransact } from './transaction/processTransact'
-import { calculateTotalFees } from './transaction/totalFees'
+import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
-import { calculateMerkleRoot } from './transaction/merkleRoot'
-import { saveHistory } from './wallet/utils/saveTxHistory'
-import { getLatestBlock } from './block/query/direct/getLatestBlock'
-import { getAllBlock } from './block/query/direct/getAllBlock'
+import { calculateMerkleRoot } from './transaction/utils/createMerkleRoot'
+import { getLatestBlock } from './block/query/direct/block/getLatestBlock'
+import { getAllBlock } from './block/query/direct/block/getAllBlock'
 import { getNetworkId } from './Network/utils/getNetId'
+import { getKeyPair } from './lib/hash/getKeyPair'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -38,16 +38,15 @@ export class BlockChains {
 	 * @returns True if the block was added successfully, otherwise false.
 	 */
 	public async addBlockToChain(
-		validTransaction: MemPoolInterface[],
+		validTransaction: txInterface[],
 		walletMiner: string,
 	): Promise<boolean> {
 		try {
 			// Create a new block and process the transactions.
-			const newBlock = this.createBlock(validTransaction, walletMiner)
+			const newBlock = await this.createBlock(validTransaction, walletMiner)
 			await this.giveReward(walletMiner, newBlock.block.blockReward)
 			saveBlock(newBlock)
-			processTransact(validTransaction)
-			saveHistory()
+			processTransact(validTransaction, newBlock)
 			// Log the success of adding the block.
 			successLog({
 				hash: newBlock.block.header.hash,
@@ -79,13 +78,14 @@ export class BlockChains {
 	 * @param walletMiner - The address of the miner's wallet.
 	 * @returns The newly created block.
 	 */
-	private createBlock(
-		transactions: MemPoolInterface[],
+	private async createBlock(
+		transactions: txInterface[],
 		walletMiner: string,
-	): Block {
-		const allBlock = getAllBlock(false) as Block[]
+	): Promise<Block> {
+		const allBlock = await getAllBlock()
 		const currentBlockHeight = allBlock.length - 1
-		const latestBlock = getLatestBlock() as Block
+		const latestBlock = (await getLatestBlock()) as Block
+		const { privateKey } = getKeyPair()
 
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')
@@ -113,7 +113,7 @@ export class BlockChains {
 			signature: '',
 			size: 0,
 			status: 'confirmed',
-			blockReward: 0,
+			blockReward: 50,
 			coinbaseTransaction: {
 				amount: 50,
 				to: walletMiner,
@@ -157,6 +157,7 @@ export class BlockChains {
 
 		newBlock.block.signature = createSignature(
 			newBlock.block.header.hash,
+			privateKey,
 		).signature
 
 		return newBlock
@@ -182,7 +183,7 @@ export class BlockChains {
 	 * Verifies the validity of a given block and the integrity of the blockchain.
 	 * @returns True if the block and chain are valid, otherwise false.
 	 */
-	public verify(): boolean {
-		return verifyChainIntegrity()!
+	public async verify(): Promise<boolean> {
+		return await verifyChainIntegrity()!
 	}
 }

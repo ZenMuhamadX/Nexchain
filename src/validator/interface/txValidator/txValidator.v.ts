@@ -1,9 +1,8 @@
-import { MemPoolInterface } from 'src/model/interface/memPool.inf'
-import { memPoolInterfaceValidator } from '../infValidator/mempool.v'
+import { txInterface } from 'src/model/interface/memPool.inf'
+import { txInterfaceValidator } from '../infValidator/mempool.v'
 import { loggingErr } from 'src/logging/errorLog'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { verifySignature } from 'src/lib/block/verifySIgnature'
-import { getKeyPair } from 'src/lib/hash/getKeyPair'
 import { hasSufficientBalance } from 'src/wallet/balance/utils/hasSufficientBalance'
 
 const logError = (context: string, hint: string, error: any): boolean => {
@@ -19,9 +18,11 @@ const logError = (context: string, hint: string, error: any): boolean => {
 }
 
 export const transactionValidator = async (
-	transaction: MemPoolInterface,
+	transaction: txInterface,
+	publicKey: string,
+	privateKey: string,
 ): Promise<boolean> => {
-	const validateInf = memPoolInterfaceValidator.validate(transaction)
+	const validateInf = txInterfaceValidator.validate(transaction)
 	if (validateInf.error) {
 		return logError(
 			'transactionValidator',
@@ -38,7 +39,7 @@ export const transactionValidator = async (
 		)
 	}
 
-	if (!verifySignature(transaction, transaction.signature!).status) {
+	if (!verifySignature(transaction, transaction.signature!, publicKey).status) {
 		return logError(
 			'transactionValidator',
 			'Invalid signature',
@@ -53,8 +54,6 @@ export const transactionValidator = async (
 			'Invalid transaction sender and receiver',
 		)
 	}
-
-	const { publicKey, privateKey } = getKeyPair()
 	if (transaction.from === publicKey) {
 		return logError(
 			'transactionValidator',
@@ -91,6 +90,9 @@ export const transactionValidator = async (
 		)
 	}
 
-	transaction.status = 'confirmed'
+	transaction.status = 'pending'
+	transaction.isValidate = true
+	transaction.isPending = true
+	console.log(`TxNHash: ${transaction.txHash}`)
 	return true
 }

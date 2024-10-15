@@ -5,10 +5,11 @@ import { getNetworkId } from '../utils/getNetId'
 import { COM } from '../interface/COM'
 import { miningBlock } from 'src/miner/mining'
 import { validateMessageInterface } from './validateInf'
-import { leveldb } from 'src/leveldb/init'
 import { generateMessageId } from '../utils/getMessageId'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import { createTransact } from 'src/transaction/createTransact'
+import _ from 'lodash'
+import { leveldbState } from 'src/leveldb/state'
 
 // Logger configuration
 const logger = winston.createLogger({
@@ -95,7 +96,7 @@ export class Node {
 
 		ws.on('close', () => {
 			logger.info(`Node ${this.id} disconnected from peer at ${peerAddress}`)
-			this.peers = this.peers.filter((peer) => peer !== ws)
+			this.peers = _.filter(this.peers, (peer) => peer !== ws)
 			this.peerIds.delete(port.toString())
 			this.broadcastPeerIds()
 		})
@@ -109,7 +110,7 @@ export class Node {
 	// Load peer list from LevelDB
 	private async loadPeerList() {
 		try {
-			const peers = await leveldb.get('peerList')
+			const peers = await leveldbState.get('peerList')
 			if (peers) {
 				const ids = JSON.parse(peers)
 				for (const id of ids) {
@@ -124,7 +125,10 @@ export class Node {
 	// Save peer list to LevelDB
 	private async savePeerList() {
 		try {
-			await leveldb.put('peerList', JSON.stringify(Array.from(this.peerIds)))
+			await leveldbState.put(
+				'peerList',
+				JSON.stringify(Array.from(this.peerIds)),
+			)
 		} catch (err) {
 			logger.error(`Error saving peer list: ${err}`)
 		}
@@ -132,7 +136,7 @@ export class Node {
 
 	// Attempt to reconnect to existing peers with a delay
 	private reconnectToPeers() {
-		this.peerIds.forEach((peerId) => {
+		_.forEach(this.peerIds, (peerId) => {
 			setTimeout(() => {
 				this.connectToPeer(Number(peerId))
 			}, 5000) // Delay for 5 seconds before reconnecting
@@ -153,7 +157,7 @@ export class Node {
 	}
 	private broadcast(data: COM) {
 		data.forwardCount = (data.forwardCount || 0) + 1 // Increment forwardCount
-		this.peers.forEach((peer) => {
+		_.forEach(this.peers, (peer) => {
 			if (peer.readyState === WebSocket.OPEN) {
 				peer.send(JSON.stringify(data))
 			}
@@ -239,7 +243,7 @@ export class Node {
 
 	// Handle received peer IDs
 	private handlePeerIds(ids: string[]) {
-		ids.forEach((id) => this.peerIds.add(id)) // Add new peer IDs
+		_.forEach(ids, (id) => this.peerIds.add(id)) // Add new peer IDs
 		logger.info(`Node ${this.id} updated peer IDs:`, Array.from(this.peerIds))
 	}
 }

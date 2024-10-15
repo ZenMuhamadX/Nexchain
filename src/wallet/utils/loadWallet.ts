@@ -3,7 +3,6 @@ import fs from 'node:fs'
 import msg from 'msgpack-lite'
 import { decrypt } from '../secure/decrypt/decrypt'
 import { structWalletToSave } from 'src/model/interface/walletStructinf'
-// import { loadConfig } from 'src/storage/loadConfig'
 
 export const loadWallet = (): structWalletToSave | undefined => {
 	const dirPath = path.join(__dirname, '../../../myWallet')
@@ -27,15 +26,12 @@ export const loadWallet = (): structWalletToSave | undefined => {
 		}
 
 		const rawPrivateKey = walletData.data.encryptPrivateKey
-		const walletPassword = process.env.WALLET_PASSWORD
-
-		if (!walletPassword) {
-			console.error('Environment variable WALLET_PASSWORD is not available.')
-			return undefined
-		}
 
 		// Decrypt the private key
-		const decryptedPrivateKey = decrypt(rawPrivateKey, walletPassword)
+		const decryptedPrivateKey = decrypt(
+			rawPrivateKey,
+			process.env.WALLET_PASSWORD as string,
+		)
 		walletData.data.decryptPrivateKey = decryptedPrivateKey
 
 		return walletData as structWalletToSave

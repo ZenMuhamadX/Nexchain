@@ -7,13 +7,20 @@ import { createSignature } from '../lib/block/createSignature'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { calculateSize } from '../lib/utils/calculateSize'
 import { putBalance } from 'src/wallet/balance/putBalance'
-import { myWalletAddress } from 'src/wallet/myWalletAddress'
-import { calculateTotalFees } from 'src/transaction/totalFees'
-import { saveBlock } from 'src/storage/saveBlock'
+import { calculateTotalFees } from 'src/transaction/utils/totalFees'
+import { saveBlock } from 'src/storage/block/saveBlock'
 import { getNetworkId } from 'src/Network/utils/getNetId'
+import { getBlockByHeight } from './query/direct/block/getBlockByHeight'
+import { getKeyPair } from 'src/lib/hash/getKeyPair'
 
-export const createGenesisBlock = (): Block => {
+export const createGenesisBlock = async (): Promise<Block | undefined> => {
+	const block = await getBlockByHeight(0)
+	if (block) {
+		console.log('Genesis block already exists.')
+		return
+	}
 	try {
+		const { privateKey } = getKeyPair()
 		// transactGenesis.txHash = createTxHash(transactGenesis)
 		const genesisBlock = new Block({
 			header: {
@@ -41,7 +48,7 @@ export const createGenesisBlock = (): Block => {
 				to: 'NxC12YWoAES6hAj8mHuJA13CCvbSLD3jtDGys',
 			},
 			validator: {
-				rewardAddress: myWalletAddress(),
+				rewardAddress: 'NxC12YWoAES6hAj8mHuJA13CCvbSLD3jtDGys',
 				stakeAmount: 0,
 				validationTime: generateTimestampz(),
 			},
@@ -59,6 +66,7 @@ export const createGenesisBlock = (): Block => {
 		)
 		genesisBlock.block.signature = createSignature(
 			genesisBlock.block.header.hash,
+			privateKey,
 		).signature
 		const validHash = proofOfWork(genesisBlock)
 		genesisBlock.block.header.hash = validHash.hash

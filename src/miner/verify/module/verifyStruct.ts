@@ -1,11 +1,11 @@
+import { getAllBlock } from 'src/block/query/direct/block/getAllBlock'
 import { generateTimestampz } from '../../../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../../../logging/errorLog'
 import Joi from 'joi'
-import { loadBlocks } from 'src/storage/loadBlock'
-import { Block } from 'src/model/blocks/block'
+import _ from 'lodash'
 
 // Function to verify the structure of a block using Joi schema validation
-export const verifyStruct = () => {
+export const verifyStruct = async () => {
 	// Define the schema for the MemPoolInterface
 	const memPoolInterfaceSchema = Joi.object({
 		to: Joi.string().required(),
@@ -14,9 +14,11 @@ export const verifyStruct = () => {
 		txHash: Joi.string().required(),
 		timestamp: Joi.number().required(),
 		signature: Joi.string().required(),
-		message: Joi.string().optional(),
+		message: Joi.any().optional(),
 		fee: Joi.number().required(),
 		status: Joi.string().required(),
+		isPending: Joi.boolean().required(),
+		isValidate: Joi.boolean().required(),
 	})
 
 	// Define the schema for the coinbaseTransaction object
@@ -55,19 +57,19 @@ export const verifyStruct = () => {
 		height: Joi.number().required(),
 		signature: Joi.string().required(),
 		size: Joi.number().required(),
-		totalTransactionFees: Joi.number().optional(),
+		totalTransactionFees: Joi.any().optional(),
 		merkleRoot: Joi.string().required(),
 		networkId: Joi.string().required(),
 		status: Joi.valid('confirmed', 'pending').required(),
-		blockReward: Joi.number().required(),
+		blockReward: Joi.any().required(),
 		coinbaseTransaction: coinbaseTransactionSchema.required(),
 		validator: validatorSchema.required(),
 		metadata: metadataSchema.optional(), // Use .optional() if metadata is not required
 		transactions: Joi.array().items(memPoolInterfaceSchema).required(),
 	})
-	const chains = loadBlocks() as Block[]
+	const chains = await getAllBlock()
 	// Validate the block structure against the schema
-	chains.map((block) => {
+	_.map(chains, (block) => {
 		const { error, warning } = blockStructSchema.validate(block.block)
 		if (error) {
 			loggingErr({

@@ -4,36 +4,20 @@ import path from 'path'
 import fs from 'fs'
 import { encrypt } from '../secure/encrypt/encrypt'
 import { getKeyPair } from 'src/lib/hash/getKeyPair'
-import { loadConfig } from 'src/storage/loadConfig'
+import { loadConfig } from 'src/storage/conf/loadConfig'
 import { structWalletToSave } from 'src/model/interface/walletStructinf'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
 import msg from 'msgpack-lite'
 
-// Formats the input string to show only the first and last three characters
-const formatString = (input: string): string => {
-	try {
-		if (input.length < 6) {
-			throw new Error('Input string must be at least 6 characters long.')
-		}
-		const firstThree = input.slice(0, 3)
-		const lastThree = input.slice(-3)
-		return `${firstThree}...${lastThree}`
-	} catch (error) {
-		console.error('Error formatting string:', error)
-		throw error // Re-throw to allow calling functions to handle it
-	}
-}
-
 // Saves the main wallet data to a file
-export const saveMainWallet = (
+export const saveMainWallet = async (
 	wallet: string,
 	privateKey: string = getKeyPair().privateKey,
-): boolean => {
+): Promise<boolean> => {
 	try {
-		const encryptedPrivateKey = encrypt(
-			privateKey,
-			process.env.WALLET_PASSWORD!,
-		)
+		const password = process.env.WALLET_PASSWORD as string
+		// Encrypt the private key
+		const encryptedPrivateKey = encrypt(privateKey, password)
 
 		// Determine the file name and path
 		const dirPath = path.join(__dirname, '../../../myWallet')
@@ -50,7 +34,7 @@ export const saveMainWallet = (
 				address: wallet,
 				publicKey: getKeyPair().publicKey,
 				encryptPrivateKey: encryptedPrivateKey as string,
-				decryptPrivateKey: formatString(privateKey),
+				decryptPrivateKey: privateKey,
 			},
 			metadata: {
 				timestamp: generateTimestampz(),
@@ -63,6 +47,8 @@ export const saveMainWallet = (
 		const serializedData = msg.encode(structToSave)
 
 		fs.writeFileSync(filePath, serializedData, 'binary')
+
+		console.log('Wallet saved successfully.', filePath)
 
 		return true
 	} catch (error) {

@@ -1,9 +1,9 @@
 import path from 'path'
 import fs from 'fs'
-import { defaultConfig } from '../model/interface/defaultConf.inf'
+import { defaultConfig } from '../../model/interface/defaultConf.inf'
 
 export const saveConfigFile = () => {
-	const dirPath = path.join(__dirname, '../../config')
+	const dirPath = path.join(__dirname, '../../../config')
 	const filePath = path.join(dirPath, 'chains.config.json')
 
 	const defaultConfig: defaultConfig = {

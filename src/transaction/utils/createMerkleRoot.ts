@@ -1,16 +1,17 @@
+import _ from 'lodash'
 import { sha256 } from 'src/lib/hash/hash'
-import { MemPoolInterface } from 'src/model/interface/memPool.inf'
+import { txInterface } from 'src/model/interface/memPool.inf'
 
 // Fungsi untuk menghitung Merkle Root
-export const calculateMerkleRoot = (
-	transactions: MemPoolInterface[],
-): string => {
+export const calculateMerkleRoot = (transactions: txInterface[]): string => {
 	if (transactions.length === 0) {
 		return '' // Jika tidak ada transaksi, kembalikan string kosong
 	}
 
 	// Hash semua transaksi untuk mendapatkan hash awal
-	let hashedTransactions = transactions.map((tx) => sha256(JSON.stringify(tx)))
+	let hashedTransactions = _.map(transactions, (tx) =>
+		sha256(JSON.stringify(tx)),
+	)
 
 	// Proses untuk menggabungkan hash sampai tersisa satu hash (Merkle Root)
 	while (hashedTransactions.length > 1) {

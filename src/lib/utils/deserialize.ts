@@ -4,7 +4,7 @@ import { Block } from '../../model/blocks/block'
 import msgpack from 'msgpack-lite'
 
 // Fungsi untuk mendeserialize Buffer menjadi objek Block menggunakan BSON
-export const deserializeBlockFromBinary = (buffer: Buffer): Block => {
+export const deserializeDataFromBinary = (buffer: Buffer): Block => {
 	try {
 		// Deserialize buffer kembali ke objek Block
 		const deserializedBlock = msgpack.decode(buffer)

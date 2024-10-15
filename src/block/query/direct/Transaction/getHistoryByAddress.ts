@@ -1,17 +1,16 @@
-import { Block } from 'src/model/blocks/block'
-import { MemPoolInterface } from 'src/model/interface/memPool.inf'
-import { loadBlocks } from 'src/storage/loadBlock'
+import { txInterface } from 'src/model/interface/memPool.inf'
+import { getAllBlock } from '../block/getAllBlock'
+import _ from 'lodash'
 
-export const getHistoryByAddress = (
+export const getHistoryByAddress = async (
 	address: string,
-): MemPoolInterface[] | null => {
-	const blocks = loadBlocks() as Block[]
+): Promise<txInterface[] | undefined> => {
+	const blocks = await getAllBlock()
 	const filteredTransactions: any[] = []
-
-	blocks.forEach((block) => {
+	_.forEach(blocks, (block) => {
 		const transactions = block.block.transactions
 
-		transactions.forEach((transaction) => {
+		_.forEach(transactions, (transaction) => {
 			if (transaction.from === address || transaction.to === address) {
 				filteredTransactions.push({
 					...transaction,

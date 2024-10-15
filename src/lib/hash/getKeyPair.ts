@@ -36,7 +36,9 @@ export const getKeyPair = (): {
 		return { publicKey, privateKey, mnemonic }
 	} else {
 		// Menghasilkan pasangan kunci ECC baru
-		const keyPair = ec.genKeyPair({ entropy: Buffer.from(entropy.seed, 'hex') })
+		const keyPair = ec.genKeyPair({
+			entropy: Buffer.from(entropy.seed, 'hex'),
+		})
 		const publicKey = keyPair.getPublic('hex')
 		const privateKey = keyPair.getPrivate('hex')
 

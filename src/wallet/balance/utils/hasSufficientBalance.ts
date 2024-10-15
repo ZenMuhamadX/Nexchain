@@ -14,19 +14,8 @@ export const hasSufficientBalance = async (
 
 	try {
 		const balance = await getBalance(address)
-
-		if (balance === undefined) {
-			console.info('Address not found')
-			return false
-		}
-
-		if (amount < 0) {
-			console.info('Amount must be a positive number')
-			return false
-		}
-
-		if (fee < 0) {
-			console.info('Fee must be a non-negative number')
+		if (!balance) {
+			console.info('insufficient balance')
 			return false
 		}
 

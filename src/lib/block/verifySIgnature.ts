@@ -1,19 +1,18 @@
 import { ec as EC } from 'elliptic'
-import { MemPoolInterface } from '../../model/interface/memPool.inf'
+import { txInterface } from '../../model/interface/memPool.inf'
 import { Block } from '../../model/blocks/block'
-import { getKeyPair } from '../hash/getKeyPair'
 
 const ec = new EC('secp256k1')
 
 // Fungsi untuk memverifikasi signature
 export const verifySignature = (
-	data: string | Block | MemPoolInterface,
+	data: string | Block | txInterface,
 	signature: string,
+	publicKey: string,
 ): { status: boolean; message: string } => {
-	const pubKey = getKeyPair().publicKey
 	const stringData = JSON.stringify(data)
 	const dataBuffer = Buffer.from(stringData)
-	const key = ec.keyFromPublic(pubKey, 'hex')
+	const key = ec.keyFromPublic(publicKey, 'hex')
 
 	// Check if the key is valid
 	if (!key) {

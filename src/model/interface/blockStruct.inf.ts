@@ -1,4 +1,4 @@
-import { MemPoolInterface } from './memPool.inf'
+import { txInterface } from './memPool.inf'
 
 export interface blockStruct {
 	header: {
@@ -34,5 +34,5 @@ export interface blockStruct {
 		created_at: number // Changed to number (UNIX timestamp) for consistency
 		notes: any
 	}
-	transactions: MemPoolInterface[]
+	transactions: txInterface[]
 }
