@@ -1,21 +1,3 @@
-# Menentukan file teks
-*.txt text
+# Auto detect text files and perform LF normalization
 
-# Menentukan file markdown sebagai teks
-*.md text
-
-# Menentukan file JavaScript dan TypeScript
-*.js text
-*.ts text
-
-# Menentukan file JSON sebagai teks
-*.json text
-
-# Menentukan file sebagai biner agar tidak diubah
-*.zip binary
-*.tar binary
-*.gz binary
-*.7z binary
-
-# Menyimpan file .gitignore dalam format UNIX
-.gitignore text eol=lf
+* text=auto
