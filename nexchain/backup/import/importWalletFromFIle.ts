@@ -2,8 +2,8 @@ import path from 'path'
 import fs from 'fs'
 import { verifyMnemonic } from './helpers/verifyMnemonic'
 import { generateSeedFromMnemonic } from '../mnemonic/createSeedFromMnemonic'
-import { getBalance } from 'nexchain/account_based/balance/getBalance'
-import { saveMainWallet } from 'nexchain/account_based/utils/saveWallet'
+import { getBalance } from 'nexchain/account/balance/getBalance'
+import { saveMainWallet } from 'nexchain/account/utils/saveWallet'
 
 const dirPath = path.join(__dirname, '../../../MyBackup')
 const filePath = path.join(dirPath, 'walletBackup.json')

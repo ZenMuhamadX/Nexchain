@@ -1,5 +1,5 @@
 /** @format */
-import { Block } from '../../model/blocks/block'
+import { Block } from '../../model/block/block'
 import { setBlockState } from './setState'
 import { writeBlockHash } from './writeBlockData'
 import { writeBlockHeight } from './indexing'

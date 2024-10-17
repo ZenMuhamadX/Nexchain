@@ -1,6 +1,6 @@
 import { createHash } from 'crypto'
 import { structBlockReadyToHash } from 'nexchain/lib/block/convertBlock'
-import { Block } from 'nexchain/model/blocks/block'
+import { Block } from 'nexchain/model/block/block'
 
 export const verifyBlockHash = (currentBlock: Block) => {
 	const blockReadyToHash = structBlockReadyToHash(currentBlock)

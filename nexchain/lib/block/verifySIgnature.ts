@@ -1,6 +1,6 @@
 import { ec as EC } from 'elliptic'
 import { txInterface } from '../../model/interface/memPool.inf'
-import { Block } from '../../model/blocks/block'
+import { Block } from '../../model/block/block'
 
 const ec = new EC('secp256k1')
 

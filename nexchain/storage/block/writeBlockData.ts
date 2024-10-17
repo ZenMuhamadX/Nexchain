@@ -1,5 +1,5 @@
 import { leveldb } from 'nexchain/leveldb/block'
-import { Block } from 'nexchain/model/blocks/block'
+import { Block } from 'nexchain/model/block/block'
 
 export const writeBlockHash = (blockHash: string, blockData: Block): void => {
 	const parsedBlockData = JSON.stringify(blockData, null, 2)

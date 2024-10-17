@@ -1,5 +1,4 @@
 import crypto from 'crypto'
-import { loadConfig } from 'nexchain/storage/conf/loadConfig'
 
 // Fungsi untuk menghasilkan kunci dan IV dari password
 export const deriveKeyAndIv = (
@@ -16,7 +15,7 @@ export const deriveKeyAndIv = (
 }
 
 export const encrypt = (data: string, password: string): string | undefined => {
-	const ALGORITHM = loadConfig()?.wallet.privateKeyEncrypt.algorithm
+	const ALGORITHM = 'aes-256-cbc'
 	try {
 		if (!data || !password) throw new Error('data or password are required.')
 

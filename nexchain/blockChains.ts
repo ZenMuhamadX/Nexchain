@@ -2,7 +2,7 @@
 
 // BlockChains.ts
 import { generateTimestampz } from './lib/timestamp/generateTimestampz'
-import { Block } from './model/blocks/block'
+import { Block } from './model/block/block'
 import { saveBlock } from './storage/block/saveBlock'
 import { loggingErr } from '../logging/errorLog'
 import { successLog } from '../logging/succesLog'
@@ -11,9 +11,8 @@ import { proofOfWork } from './miner/POW'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { txInterface } from './model/interface/memPool.inf'
-import { saveConfigFile } from './storage/conf/saveConfig'
-import { putBalance } from './account_based/balance/putBalance'
-import { getBalance } from './account_based/balance/getBalance'
+import { putBalance } from './account/balance/putBalance'
+import { getBalance } from './account/balance/getBalance'
 import { structBalance } from './transaction/struct/structBalance'
 import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/utils/totalFees'
@@ -26,8 +25,7 @@ import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
-		// Initialize the configuration file and load existing blocks.
-		saveConfigFile()
+		console.log('BlockChains constructor called.')
 	}
 
 	/**

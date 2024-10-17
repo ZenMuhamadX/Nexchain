@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { Block } from '../model/blocks/block'
+import { Block } from '../model/block/block'
 import { structBlockReadyToHash } from '../lib/block/convertBlock'
 
 const DIFFICULTY_PREFIX = '0000' // Sesuaikan dengan kriteria kesulitan yang diinginkan

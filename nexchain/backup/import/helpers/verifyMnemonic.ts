@@ -1,8 +1,8 @@
 import bip39 from 'bip39'
 import { ec as EC } from 'elliptic'
 import bs58 from 'bs58'
-import { addChecksum } from 'nexchain/account_based/utils/addChecksum'
-import { processPubKey } from 'nexchain/account_based/utils/processPubKey'
+import { addChecksum } from 'nexchain/account/utils/addChecksum'
+import { processPubKey } from 'nexchain/account/utils/processPubKey'
 const ec = new EC('secp256k1')
 
 export const verifyMnemonic = (

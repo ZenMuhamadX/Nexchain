@@ -2,11 +2,11 @@
 
 import { loggingErr } from '../../logging/errorLog'
 import { proofOfWork } from '../miner/POW'
-import { Block } from '../model/blocks/block'
+import { Block } from '../model/block/block'
 import { createSignature } from '../lib/block/createSignature'
 import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { calculateSize } from '../lib/utils/calculateSize'
-import { putBalance } from 'nexchain/account_based/balance/putBalance'
+import { putBalance } from 'nexchain/account/balance/putBalance'
 import { calculateTotalFees } from 'nexchain/transaction/utils/totalFees'
 import { saveBlock } from 'nexchain/storage/block/saveBlock'
 import { getNetworkId } from 'Network/utils/getNetId'

@@ -1,5 +1,5 @@
 import { Buffer } from 'buffer'
-import { Block } from '../../model/blocks/block'
+import { Block } from '../../model/block/block'
 
 export const structBlockReadyToHash = (block: Block): Buffer => {
 	const newBlockStruct = {

@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
-import { myWalletAddress } from 'nexchain/account_based/myWalletAddress'
+import { myWalletAddress } from 'nexchain/account/myWalletAddress'
 import { textCli } from '../figlet/textSync'
-import { getBalance } from 'nexchain/account_based/balance/getBalance'
+import { getBalance } from 'nexchain/account/balance/getBalance'
 import { program } from './init'
 program
 	.name('create-wallet')
