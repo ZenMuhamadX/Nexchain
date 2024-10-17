@@ -8,7 +8,7 @@
 		"build": "bun run initial && tsc",
 		"format": "prettier --write .",
 		"check": "bun run initial && bunx tsc && rm -r dist",
-		"initial": "bun run ./src/init/init.ts ",
+		"initial": "bun run ./nexchain/init/init.ts ",
 		"prepare": "husky"
 	},
 	"repository": {
