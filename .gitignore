@@ -5,3 +5,13 @@ node_modules
 dist
 *.pem
 *.bin
+mempool_versions
+config
+base
+logs
+key
+blocks
+myWallet
+state
+MyBackup
+history
