@@ -12,6 +12,7 @@ import { saveBlock } from 'nexchain/storage/block/saveBlock'
 import { getNetworkId } from 'Network/utils/getNetId'
 import { getBlockByHeight } from './query/direct/block/getBlockByHeight'
 import { getKeyPair } from 'nexchain/lib/hash/getKeyPair'
+import { countHashDifficulty } from 'nexchain/lib/hash/countHashDifficulty'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0)
@@ -21,10 +22,9 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	}
 	try {
 		const { privateKey } = getKeyPair()
-		// transactGenesis.txHash = createTxHash(transactGenesis)
 		const genesisBlock = new Block({
 			header: {
-				difficulty: 3,
+				difficulty: 0,
 				hash: '',
 				nonce: 0,
 				previousBlockHash:
@@ -69,6 +69,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			privateKey,
 		).signature
 		const validHash = proofOfWork(genesisBlock)
+		genesisBlock.block.header.difficulty = countHashDifficulty(validHash.hash)
 		genesisBlock.block.header.hash = validHash.hash
 		genesisBlock.block.header.nonce = validHash.nonce
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
