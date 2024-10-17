@@ -1,6 +1,6 @@
-import { verifySignature } from "nexchain/lib/block/verifySIgnature"
-import { txInterface } from "nexchain/model/interface/memPool.inf"
-import { validateField } from "./validateField"
+import { verifySignature } from 'nexchain/lib/block/verifySIgnature'
+import { txInterface } from 'nexchain/model/interface/memPool.inf'
+import { validateField } from './validateField'
 
 export const validateTransactionSignature = (
 	transaction: txInterface,

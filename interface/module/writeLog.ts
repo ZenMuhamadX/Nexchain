@@ -1,7 +1,11 @@
-import { loggingErr } from "logging/errorLog"
-import { generateTimestampz } from "nexchain/lib/timestamp/generateTimestampz"
+import { loggingErr } from 'logging/errorLog'
+import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 
-export const logError = (context: string, hint: string, error: any): boolean => {
+export const logError = (
+	context: string,
+	hint: string,
+	error: any,
+): boolean => {
 	loggingErr({
 		context,
 		hint,

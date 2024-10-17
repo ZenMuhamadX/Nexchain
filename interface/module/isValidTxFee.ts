@@ -1,5 +1,5 @@
-import { txInterface } from "nexchain/model/interface/memPool.inf"
-import { validateField } from "./validateField"
+import { txInterface } from 'nexchain/model/interface/memPool.inf'
+import { validateField } from './validateField'
 
 export const validateTransactionFees = (transaction: txInterface): boolean => {
 	return validateField(

@@ -1,4 +1,4 @@
-import { logError } from "./writeLog"
+import { logError } from './writeLog'
 
 export const validateField = (
 	writeError: boolean,
