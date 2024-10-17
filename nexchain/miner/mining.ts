@@ -7,8 +7,9 @@ import { mineLog } from '../../logging/mineLog'
 import { chains } from 'nexchain/block/initBlock'
 import { Block } from 'nexchain/model/blocks/block'
 import { txInterface } from 'nexchain/model/interface/memPool.inf'
-import _ from 'lodash'
 import { getCurrentBlock } from 'nexchain/block/query/direct/block/getCurrentBlock'
+import _ from 'lodash'
+import { isChainsValid } from 'nexchain/block/isChainValid'
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {
@@ -34,8 +35,8 @@ export const miningBlock = async (address: string): Promise<void> => {
 			tx.isPending = false
 			tx.status = 'confirmed'
 		})
-		const isBlockValid = chains.verify()
-		if (!isBlockValid) {
+		const isAllBlockValid = await isChainsValid()
+		if (!isAllBlockValid) {
 			loggingErr({
 				error: 'Block is not valid',
 				context: 'miningBlock',

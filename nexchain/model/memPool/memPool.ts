@@ -28,12 +28,8 @@ export class MemPool {
 		transaction: txInterface,
 	): Promise<boolean | txInterface> {
 		// Validate the transaction
-		const { privateKey, publicKey } = getKeyPair()
-		const isValidTx = await transactionValidator(
-			transaction,
-			publicKey,
-			privateKey,
-		)
+		const { publicKey } = getKeyPair()
+		const isValidTx = await transactionValidator(transaction, publicKey)
 		if (!isValidTx) return false
 
 		// Save the transaction
