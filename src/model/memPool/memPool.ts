@@ -2,8 +2,8 @@ import { transactionValidator } from 'src/validator/interface/txValidator/txVali
 import { saveMempool } from 'src/storage/mempool/saveMemPool'
 import { loadMempool } from 'src/storage/mempool/loadMempool'
 import { txInterface } from '../interface/memPool.inf'
-import { saveHistory } from 'src/transaction/utils/saveTxHistory'
 import { getKeyPair } from 'src/lib/hash/getKeyPair'
+import { saveTxHistory } from 'src/transaction/saveTxHistory'
 
 export class MemPool {
 	constructor() {
@@ -38,7 +38,7 @@ export class MemPool {
 
 		// Save the transaction
 		await saveMempool(transaction)
-		saveHistory(transaction.txHash!, transaction)
+		saveTxHistory(transaction.txHash!, transaction)
 		return transaction
 	}
 

@@ -1,11 +1,11 @@
-import { getAllBlock } from 'src/block/query/direct/block/getAllBlock'
+import { Block } from 'src/model/blocks/block'
 import { generateTimestampz } from '../../../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../../../logging/errorLog'
 import Joi from 'joi'
 import _ from 'lodash'
 
 // Function to verify the structure of a block using Joi schema validation
-export const verifyStruct = async () => {
+export const verifyStruct = async (chains: Block) => {
 	// Define the schema for the MemPoolInterface
 	const memPoolInterfaceSchema = Joi.object({
 		to: Joi.string().required(),
@@ -49,7 +49,7 @@ export const verifyStruct = async () => {
 			previousBlockHash: Joi.string().required(),
 			timestamp: Joi.number().required(),
 			hash: Joi.string().required(),
-			nonce: Joi.string().required(),
+			nonce: Joi.number().required(),
 			version: Joi.string().required(),
 			difficulty: Joi.number().required(),
 			hashingAlgorithm: Joi.string().optional(),
@@ -67,21 +67,18 @@ export const verifyStruct = async () => {
 		metadata: metadataSchema.optional(), // Use .optional() if metadata is not required
 		transactions: Joi.array().items(memPoolInterfaceSchema).required(),
 	})
-	const chains = await getAllBlock()
 	// Validate the block structure against the schema
-	_.map(chains, (block) => {
-		const { error, warning } = blockStructSchema.validate(block.block)
-		if (error) {
-			loggingErr({
-				error,
-				stack: new Error().stack,
-				time: generateTimestampz(),
-				warning: warning?.message,
-				context: 'Block verifyStruct',
-				hint: 'Invalid block structure',
-			})
-			return false // Structure is invalid
-		}
-		return true
-	})
+	const { error, warning } = blockStructSchema.validate(chains.block)
+	if (error) {
+		loggingErr({
+			error,
+			stack: new Error().stack,
+			time: generateTimestampz(),
+			warning: warning?.message,
+			context: 'Block verifyStruct',
+			hint: 'Invalid block structure',
+		})
+		return false // Structure is invalid
+	}
+	return true
 }

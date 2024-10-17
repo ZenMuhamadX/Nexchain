@@ -4,11 +4,9 @@ import { processSender } from './sender/processSender'
 import { processReciever } from './reciever/processReciever'
 import { removeMemPool } from 'src/storage/mempool/removeMempool'
 import { generateTimestampz } from 'src/lib/timestamp/generateTimestampz'
-import { saveHistory } from './utils/saveTxHistory'
-import { Block } from 'src/model/blocks/block'
 import _ from 'lodash'
 
-export const processTransact = (txData: txInterface[], block: Block): void => {
+export const processTransact = (txData: txInterface[]): void => {
 	if (txData.length === 0) {
 		loggingErr({
 			error: 'data not found',
@@ -28,14 +26,5 @@ export const processTransact = (txData: txInterface[], block: Block): void => {
 		processSender(senderAddress, amount, fee)
 		processReciever(recieverAddress, amount)
 		removeMemPool(tx.txHash!)
-		saveHistory(tx.txHash!, {
-			...tx,
-			metadata: {
-				blockHash: block.block.header.hash,
-				blockHeight: block.block.height,
-				blockTimestamp: block.block.header.timestamp,
-				merkleRoot: block.block.merkleRoot,
-			},
-		})
 	})
 }

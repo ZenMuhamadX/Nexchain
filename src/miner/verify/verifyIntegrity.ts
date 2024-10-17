@@ -2,39 +2,22 @@ import { verifyStruct } from './module/verifyStruct'
 import { verifyPow } from './module/verifyPow'
 import { verifyHashLength } from './module/verifyHashLength'
 import { verifyBlockHash } from './module/verifyBlockHash'
-import { getAllBlock } from 'src/block/query/direct/block/getAllBlock'
+import { getBlockByHeight } from 'src/block/query/direct/block/getBlockByHeight'
 
 // Function to verify the integrity of the blockchain
-export const verifyChainIntegrity = async () => {
+export const verifyChainIntegrity = async (): Promise<boolean> => {
 	console.info('Checking chain integrity...')
-
-	// Initialize blockchain and get the list of chains
-	const blockChains = await getAllBlock()
-
-	// Loop through the chains to verify their integrity
-	for (let i = blockChains.length - 1; i > 0; i--) {
-		const currentBlock = blockChains[i]
-		const prevBlock = blockChains[i - 1]
-
-		// Check if the current block's previousHash matches the previous block's hash
-		if (
-			currentBlock.block.header.previousBlockHash !==
-			prevBlock.block.header.hash
-		) {
-			return false // Chain integrity compromised
+	let currentHeight = 0
+	while (true) {
+		const block = await getBlockByHeight(currentHeight)
+		if (!block) {
+			console.info('Chain integrity verified.')
+			return true
 		}
-
-		// Perform additional verification checks
-		try {
-			verifyHashLength(currentBlock.block.header.hash)
-			verifyBlockHash(currentBlock)
-			verifyPow(currentBlock)
-			verifyStruct()
-			return true // Chain integrity is valid
-		} catch (error) {
-			console.error('Error during verification:', error)
-			return false // Verification failed
-		}
+		verifyStruct(block)
+		verifyPow(block)
+		verifyHashLength(block.block.header.hash)
+		verifyBlockHash(block)
+		currentHeight++
 	}
-	return true
 }

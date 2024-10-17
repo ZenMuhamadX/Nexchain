@@ -5,10 +5,10 @@ import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../logging/errorLog'
 import { mineLog } from '../logging/mineLog'
 import { chains } from 'src/block/initBlock'
-import { getLatestBlock } from 'src/block/query/direct/block/getLatestBlock'
 import { Block } from 'src/model/blocks/block'
 import { txInterface } from 'src/model/interface/memPool.inf'
 import _ from 'lodash'
+import { getCurrentBlock } from 'src/block/query/direct/block/getCurrentBlock'
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {
@@ -50,7 +50,7 @@ export const miningBlock = async (address: string): Promise<void> => {
 		const successMine = await chains.addBlockToChain(transactions, address)
 		if (successMine) {
 			// Log mining details if successful
-			const lastBlock = (await getLatestBlock(false)) as Block
+			const lastBlock: Block = await getCurrentBlock()
 			mineLog({
 				difficulty: 3, // Consider making this dynamic or configurable
 				hash: lastBlock?.block.header.hash || 'N/A',

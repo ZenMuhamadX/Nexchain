@@ -5,7 +5,7 @@ import { structBlockReadyToHash } from '../lib/block/convertBlock'
 const DIFFICULTY_PREFIX = '0000' // Sesuaikan dengan kriteria kesulitan yang diinginkan
 
 interface VerifiedResult {
-	nonce: string
+	nonce: number
 	hash: string
 }
 
@@ -49,7 +49,7 @@ export const proofOfWork = (block: Block): VerifiedResult => {
 				`Kecepatan akhir: ${finalHashesPerSecond.toFixed(2)} hashes/detik`,
 			)
 			console.log('Job done')
-			return { nonce: nonce.toString(), hash }
+			return { nonce: nonce, hash }
 		}
 
 		nonce++ // Tingkatkan nonce dan coba lagi

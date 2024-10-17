@@ -10,8 +10,8 @@ interface savedHistory extends txInterface {
 	}
 }
 
-export const saveHistory = async (txHash: string, txData: savedHistory) => {
-	await leveldbHistory.put(txHash, txData, {
+export const saveTxHistory = async (txHash: string, txData: savedHistory) => {
+	await leveldbHistory.put(`txnHash:${txHash}`, txData, {
 		sync: false,
 		keyEncoding: 'utf-8',
 		valueEncoding: 'json',

@@ -1,23 +1,20 @@
-import { leveldb } from 'src/leveldb/block'
 import { Block } from 'src/model/blocks/block'
 import { getBlockByHash } from './getBlockByHash'
+import { leveldbState } from 'src/leveldb/state'
 
 export const getBlockByHeight = async (
 	height: number,
 ): Promise<Block | undefined> => {
-	const blockHash = await leveldb
-		.get(`Height-${height}`, {
+	try {
+		const blockHash = await leveldbState.get(`blockHeight:${height}`, {
 			fillCache: true,
-			keyEncoding: 'buffer',
+			keyEncoding: 'utf-8',
 			valueEncoding: 'utf-8',
 		})
-		.catch(() => {
-			return undefined
-		})
-	if (!blockHash) {
-		console.info('block not found')
+		if (!blockHash) return undefined
+		const data = await getBlockByHash(blockHash)
+		return data
+	} catch (error) {
 		return undefined
 	}
-	const data = await getBlockByHash(blockHash)
-	return data
 }

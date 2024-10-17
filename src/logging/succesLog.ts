@@ -12,7 +12,7 @@ interface BlockInfo {
 	height?: number
 	signature?: string
 	message?: string
-	nonce?: string
+	nonce?: number
 }
 
 // Define log directory and file paths

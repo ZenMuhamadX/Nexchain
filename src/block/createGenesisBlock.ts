@@ -17,16 +17,16 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0)
 	if (block) {
 		console.log('Genesis block already exists.')
-		return
+		return undefined
 	}
 	try {
 		const { privateKey } = getKeyPair()
 		// transactGenesis.txHash = createTxHash(transactGenesis)
 		const genesisBlock = new Block({
 			header: {
-				difficulty: 5,
+				difficulty: 3,
 				hash: '',
-				nonce: '',
+				nonce: 0,
 				previousBlockHash:
 					'0000000000000000000000000000000000000000000000000000000000000000',
 				timestamp: generateTimestampz(),

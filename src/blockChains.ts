@@ -19,10 +19,9 @@ import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
 import { calculateMerkleRoot } from './transaction/utils/createMerkleRoot'
-import { getLatestBlock } from './block/query/direct/block/getLatestBlock'
-import { getAllBlock } from './block/query/direct/block/getAllBlock'
 import { getNetworkId } from './Network/utils/getNetId'
 import { getKeyPair } from './lib/hash/getKeyPair'
+import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -46,7 +45,7 @@ export class BlockChains {
 			const newBlock = await this.createBlock(validTransaction, walletMiner)
 			await this.giveReward(walletMiner, newBlock.block.blockReward)
 			saveBlock(newBlock)
-			processTransact(validTransaction, newBlock)
+			processTransact(validTransaction)
 			// Log the success of adding the block.
 			successLog({
 				hash: newBlock.block.header.hash,
@@ -82,9 +81,8 @@ export class BlockChains {
 		transactions: txInterface[],
 		walletMiner: string,
 	): Promise<Block> {
-		const allBlock = await getAllBlock()
-		const currentBlockHeight = allBlock.length - 1
-		const latestBlock = (await getLatestBlock()) as Block
+		const latestBlock: Block = await getCurrentBlock()
+		const currentHeight = latestBlock.block.height
 		const { privateKey } = getKeyPair()
 
 		if (!latestBlock) {
@@ -100,14 +98,14 @@ export class BlockChains {
 			header: {
 				difficulty: 5,
 				hash: '',
-				nonce: '',
+				nonce: 0,
 				previousBlockHash: '',
 				timestamp: 0,
 				version: '1.0.0',
 				hashingAlgorithm: 'SHA256',
 			},
 			totalTransactionFees: 0,
-			height: currentBlockHeight + 1,
+			height: currentHeight + 1,
 			merkleRoot: calculateMerkleRoot(transactions),
 			networkId: getNetworkId(),
 			signature: '',
@@ -144,8 +142,7 @@ export class BlockChains {
 			newBlock.block.totalTransactionFees,
 		)
 
-		newBlock.block.header.previousBlockHash =
-			allBlock[allBlock.length - 1].block.header.hash
+		newBlock.block.header.previousBlockHash = latestBlock.block.header.hash
 
 		newBlock.block.header.timestamp = generateTimestampz()
 

@@ -8,6 +8,15 @@ export const processReciever = async (
 ) => {
 	const transferAmount = amount
 	const oldData = await getBalance(recieverAddress)
+	if (!oldData) {
+		const newData: structBalance = {
+			address: recieverAddress,
+			balance: transferAmount,
+			timesTransaction: 0,
+		}
+		putBalance(recieverAddress, newData)
+		return
+	}
 	const oldBalance = oldData?.balance as number
 	const calculateBalance = oldBalance + transferAmount
 	const newData: structBalance = {
