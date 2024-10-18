@@ -1,0 +1,17 @@
+import { Block } from '../../model/block/block'
+
+export const prepareBlockForHashing = ({ block }: Block): string => {
+	const newBlockStruct = {
+		previousBlockHash: block.header.previousBlockHash,
+		timestamp: block.header.timestamp,
+		version: block.header.version,
+		hashingAlgorithm: block.header.hashingAlgorithm,
+		height: block.height,
+		merkleRoot: block.merkleRoot,
+		networkId: block.networkId,
+		status: block.status,
+		blockReward: block.blockReward,
+		transactions: block.transactions, // Merkle root akan dihasilkan dari transaksi
+	}
+	return JSON.stringify(newBlockStruct)
+}
