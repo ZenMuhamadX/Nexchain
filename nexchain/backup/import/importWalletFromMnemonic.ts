@@ -1,7 +1,7 @@
 import { verifyMnemonic } from './helpers/verifyMnemonic'
 import { generateSeedFromMnemonic } from '../mnemonic/createSeedFromMnemonic'
-import { getBalance } from 'nexchain/account_based/balance/getBalance'
-import { saveMainWallet } from 'nexchain/account_based/utils/saveWallet'
+import { getBalance } from 'nexchain/account/balance/getBalance'
+import { saveMainWallet } from 'nexchain/account/utils/saveWallet'
 
 interface recoveryWalletData {
 	walletAddress: string

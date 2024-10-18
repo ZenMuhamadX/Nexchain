@@ -1,4 +1,4 @@
-import { Block } from '../../../model/blocks/block'
+import { Block } from '../../../model/block/block'
 
 // Function to verify if the block's hash meets the Proof of Work (PoW) difficulty
 export const verifyPow = (block: Block): boolean => {

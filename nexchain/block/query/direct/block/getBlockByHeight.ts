@@ -1,4 +1,4 @@
-import { Block } from 'nexchain/model/blocks/block'
+import { Block } from 'nexchain/model/block/block'
 import { getBlockByHash } from './getBlockByHash'
 import { leveldbState } from 'nexchain/leveldb/state'
 

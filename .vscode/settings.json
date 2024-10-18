@@ -1,0 +1,6 @@
+{
+	"gitlens.currentLine.format": "💼 ${author} 📅 ${date:MMMM d, yyyy} ⏰ ${time:HH:mm} - 📝 ${message} (🔑 ${hash})",
+	"gitlens.currentLine.uncommittedChangesFormat": null,
+	"gitlens.codeLens.recentChange.enabled": true,
+	"gitlens.statusBar.enabled": true
+}

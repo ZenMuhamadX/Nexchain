@@ -1,6 +1,6 @@
 import { structBalance } from 'nexchain/transaction/struct/structBalance'
-import { getBalance } from 'nexchain/account_based/balance/getBalance'
-import { putBalance } from 'nexchain/account_based/balance/putBalance'
+import { getBalance } from 'nexchain/account/balance/getBalance'
+import { putBalance } from 'nexchain/account/balance/putBalance'
 
 export const processReciever = async (
 	recieverAddress: string,

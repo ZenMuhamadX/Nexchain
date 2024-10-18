@@ -1,6 +1,6 @@
 import { leveldbState } from 'nexchain/leveldb/state'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
-import { Block } from 'nexchain/model/blocks/block'
+import { Block } from 'nexchain/model/block/block'
 
 export interface blockState {
 	currentBlockHeight: number

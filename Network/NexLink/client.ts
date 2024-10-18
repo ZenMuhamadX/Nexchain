@@ -1,6 +1,6 @@
 import WebSocket from 'ws'
 import { COM } from '../interface/COM'
-import { myWalletAddress } from 'nexchain/account_based/myWalletAddress'
+import { myWalletAddress } from 'nexchain/account/myWalletAddress'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 import { generateMessageId } from '../utils/getMessageId'
 import { comTxInterface } from 'nexchain/model/interface/commonTxInterface'

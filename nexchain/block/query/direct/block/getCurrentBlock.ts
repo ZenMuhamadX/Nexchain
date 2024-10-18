@@ -1,4 +1,4 @@
-import { Block } from 'nexchain/model/blocks/block'
+import { Block } from 'nexchain/model/block/block'
 import { getBlockByHeight } from './getBlockByHeight'
 import { getBlockState } from 'nexchain/storage/block/getState'
 

@@ -1,4 +1,4 @@
-import { Block } from 'nexchain/model/blocks/block'
+import { Block } from 'nexchain/model/block/block'
 import { generateTimestampz } from '../../../lib/timestamp/generateTimestampz'
 import { loggingErr } from '../../../../logging/errorLog'
 import Joi from 'joi'
