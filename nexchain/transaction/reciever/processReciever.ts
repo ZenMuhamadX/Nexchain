@@ -22,7 +22,7 @@ export const processReciever = async (
 	const newData: structBalance = {
 		address: recieverAddress,
 		balance: calculateBalance,
-		timesTransaction: 0,
+		timesTransaction: oldData?.timesTransaction! + 1 || 1, // Mengupdate timesTransaction
 	}
 	putBalance(recieverAddress, newData)
 }

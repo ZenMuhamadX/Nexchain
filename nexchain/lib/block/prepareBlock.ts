@@ -11,7 +11,7 @@ export const prepareBlockForHashing = ({ block }: Block): string => {
 		networkId: block.networkId,
 		status: block.status,
 		blockReward: block.blockReward,
-		transactions: block.transactions, // Merkle root akan dihasilkan dari transaksi
+		transactions: block.transactions,
 	}
 	return JSON.stringify(newBlockStruct)
 }
