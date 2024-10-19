@@ -17,7 +17,7 @@
 		"url": "git+https://github.com/ZenMuhamadX/blockChains.git"
 	},
 	"bin": {
-		"nex": "./src/cli/command/command.ts"
+		"nex": "src/cli/command/command.ts"
 	},
 	"author": "Zen",
 	"license": "ISC",
@@ -46,17 +46,6 @@
 		"typescript-eslint": "^8.8.1"
 	},
 	"dependencies": {
-		"@chainsafe/libp2p-noise": "^16.0.0",
-		"@chainsafe/libp2p-yamux": "^7.0.1",
-		"@libp2p/bootstrap": "^11.0.8",
-		"@libp2p/identify": "^3.0.8",
-		"@libp2p/kad-dht": "^14.0.1",
-		"@libp2p/mdns": "^11.0.8",
-		"@libp2p/mplex": "^11.0.8",
-		"@libp2p/ping": "^2.0.8",
-		"@libp2p/plaintext": "^2.0.8",
-		"@libp2p/tcp": "^10.0.9",
-		"@libp2p/websockets": "^9.0.8",
 		"bip39": "^3.1.0",
 		"bs58": "^6.0.0",
 		"bs64": "^0.1.0",
@@ -69,11 +58,6 @@
 		"joi": "^17.13.3",
 		"level": "^8.0.1",
 		"libp2p": "^2.1.9",
-		"libp2p-gossipsub": "^0.13.0",
-		"libp2p-mplex": "^0.10.7",
-		"libp2p-secio": "^0.13.1",
-		"libp2p-tcp": "^0.17.2",
-		"libp2p-tls": "^0.1.0",
 		"lodash": "^4.17.21",
 		"msgpack-lite": "^0.1.26",
 		"msgpack5": "^6.0.2",
@@ -90,5 +74,6 @@
 	},
 	"peerDependencies": {
 		"typescript": "^5.5.4"
-	}
+	},
+	"keywords": []
 }
