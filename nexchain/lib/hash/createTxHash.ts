@@ -1,7 +1,7 @@
 /** @format */
 
 import crypto from 'crypto'
-import { txInterface } from '../../model/interface/Nexcoin.inf.'
+import { txInterface } from '../../../interface/Nexcoin.inf'
 
 // Membuat hash dari data transaksi dengan nonce yang diberikan.
 export const createTxnHash = (data: txInterface): string => {

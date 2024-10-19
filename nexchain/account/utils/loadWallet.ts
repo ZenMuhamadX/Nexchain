@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'node:fs'
 import msg from 'msgpack-lite'
-import { structWalletToSave } from 'nexchain/model/interface/walletStructinf'
+import { structWalletToSave } from 'interface/walletStructinf'
 
 export const loadWallet = (): structWalletToSave | undefined => {
 	const dirPath = path.join(__dirname, '../../../myWallet')

@@ -1,4 +1,4 @@
-import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
+import { txInterface } from 'interface/Nexcoin.inf'
 import _ from 'lodash'
 
 export const calculateTotalFees = (transaction: txInterface[]): number => {
