@@ -1,5 +1,5 @@
 import { leveldbHistory } from 'nexchain/leveldb/history'
-import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
+import { txInterface } from 'interface/Nexcoin.inf'
 
 interface savedHistory extends txInterface {
 	metadata?: {

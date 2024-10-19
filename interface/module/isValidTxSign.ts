@@ -1,5 +1,5 @@
 import { verifySignature } from 'nexchain/lib/block/verifySIgnature'
-import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
+import { txInterface } from 'interface/Nexcoin.inf'
 import { validateField } from './validateField'
 
 export const validateTransactionSignature = (

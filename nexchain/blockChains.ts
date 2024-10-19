@@ -10,10 +10,9 @@ import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/Pow'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
-import { txInterface } from './model/interface/Nexcoin.inf.'
+import { txInterface } from '../interface/Nexcoin.inf'
 import { putBalance } from './account/balance/putBalance'
 import { getBalance } from './account/balance/getBalance'
-import { structBalance } from './transaction/struct/structBalance'
 import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
@@ -25,7 +24,7 @@ import { loadKeyPair } from './account/utils/loadKeyPair'
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
-		console.log('BlockChains constructor called.')
+		console.log('Chains called.')
 	}
 
 	/**
@@ -52,7 +51,6 @@ export class BlockChains {
 			} catch (saveError) {
 				throw new Error('Failed to save block: ' + saveError!)
 			}
-
 			await processTransact(validTransaction)
 
 			// Log the success of adding the block.
@@ -176,13 +174,21 @@ export class BlockChains {
 	 * @param reward - The amount of reward to be given.
 	 */
 	private async giveReward(address: string, reward: number) {
-		const oldBalance = (await getBalance(address)) as structBalance
+		const oldBalance = await getBalance(address)
+		if (!oldBalance) {
+			putBalance(address, {
+				address,
+				balance: reward,
+				timesTransaction: 0,
+			})
+			return
+		}
 		const newBalance = oldBalance.balance + reward
 
 		putBalance(address, {
 			address,
 			balance: newBalance,
-			timesTransaction: oldBalance.timesTransaction + 1,
+			timesTransaction: oldBalance.timesTransaction,
 		})
 	}
 

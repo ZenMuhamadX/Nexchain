@@ -1,5 +1,5 @@
-import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
-import { txInterfaceValidator } from '../infValidator/mempool.v'
+import { txInterface } from 'interface/Nexcoin.inf'
+import { txInterfaceValidator } from './joi/mempool.v'
 import { hasSufficientBalance } from 'nexchain/account/balance/utils/hasSufficientBalance'
 import { validateTransactionAmount } from 'interface/module/isValidTxAmount'
 import { logError } from 'interface/module/writeLog'

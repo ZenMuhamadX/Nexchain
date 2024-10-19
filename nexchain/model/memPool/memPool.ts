@@ -1,12 +1,14 @@
-import { transactionValidator } from 'interface/txValidator/txValidator.v'
+import { transactionValidator } from 'interface/validate/txValidator.v'
 import { saveMempool } from 'nexchain/storage/mempool/saveMemPool'
 import { loadMempool } from 'nexchain/storage/mempool/loadMempool'
-import { txInterface } from '../interface/Nexcoin.inf.'
+import { txInterface } from '../../../interface/Nexcoin.inf'
 import { saveTxHistory } from 'nexchain/transaction/saveTxHistory'
 import { loadKeyPair } from 'nexchain/account/utils/loadKeyPair'
 
 export class MemPool {
-	constructor() {}
+	constructor() {
+		console.log('MemPool called')
+	}
 
 	/**
 	 * Adds a transaction to the memory pool.

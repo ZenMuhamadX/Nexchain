@@ -1,4 +1,4 @@
-import { txInterface } from './Nexcoin.inf.'
+import { txInterface } from './Nexcoin.inf'
 
 export interface blockStruct {
 	header: {
