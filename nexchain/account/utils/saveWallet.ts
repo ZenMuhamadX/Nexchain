@@ -4,18 +4,18 @@ import path from 'path'
 import fs from 'fs'
 import { structWalletToSave } from 'nexchain/model/interface/walletStructinf'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
-import msg from 'msgpack-lite'
 import { loadKeyPair } from './loadKeyPair'
+import msg from 'msgpack-lite'
 
 // Saves the main wallet data to a file
 export const saveMainWallet = async (
-	address: string,
+	wallet: string,
 	privateKey: string = loadKeyPair().privateKey,
 ): Promise<boolean> => {
 	try {
 		// Determine the file name and path
 		const dirPath = path.join(__dirname, '../../../myWallet')
-		const filePath = path.join(dirPath, 'MainWallet.bin')
+		const filePath = path.join(dirPath, 'mainWallet.bin')
 
 		// Create directory if it does not exist
 		if (!fs.existsSync(dirPath)) {
@@ -25,7 +25,7 @@ export const saveMainWallet = async (
 		// Prepare the data to be saved
 		const structToSave: structWalletToSave = {
 			data: {
-				address,
+				address: wallet,
 				publicKey: loadKeyPair().publicKey,
 				privateKey,
 			},
