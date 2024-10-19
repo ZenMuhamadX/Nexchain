@@ -1,16 +1,16 @@
-import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
+import { TxInterface } from 'interface/Nexcoin.inf'
 import { validateField } from './validateField'
 import { isValidAddress } from 'nexchain/transaction/validate/isValidAddress'
 
-export const validateAddresses = (transaction: txInterface): boolean => {
+export const validateAddresses = (transaction: TxInterface): boolean => {
 	return (
 		validateField(
-			!isValidAddress(transaction.from),
+			!isValidAddress(transaction.sender),
 			'transactionValidator',
 			'Invalid transaction sender address',
 		) &&
 		validateField(
-			!isValidAddress(transaction.to),
+			!isValidAddress(transaction.receiver),
 			'transactionValidator',
 			'Invalid transaction receiver address',
 		)

@@ -33,7 +33,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 				version: '1.0.0',
 				hashingAlgorithm: 'SHA256',
 			},
-			blockReward: 5000000,
+			blockReward: 500,
 			totalTransactionFees: 0,
 			height: 0,
 			merkleRoot:
@@ -43,12 +43,11 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			size: 0,
 			status: 'confirmed',
 			coinbaseTransaction: {
-				amount: 5000000,
-				reward: 5000000,
-				to: 'NxC16UUyJeUMzrNygmf1zcCcZxjqgKCJwJtfd',
+				amount: 500,
+				to: 'NxC1MAgAtQVbrv8XmAQsY5ZRbtkqLxV7GQEoV',
 			},
 			validator: {
-				rewardAddress: 'NxC16UUyJeUMzrNygmf1zcCcZxjqgKCJwJtfd',
+				rewardAddress: 'NxC1MAgAtQVbrv8XmAQsY5ZRbtkqLxV7GQEoV',
 				stakeAmount: 0,
 				validationTime: generateTimestampz(),
 			},
@@ -73,9 +72,9 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		genesisBlock.block.header.hash = validHash.hash
 		genesisBlock.block.header.nonce = validHash.nonce
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
-		putBalance('NxC16UUyJeUMzrNygmf1zcCcZxjqgKCJwJtfd', {
-			address: 'NxC16UUyJeUMzrNygmf1zcCcZxjqgKCJwJtfd',
-			balance: genesisBlock.block.coinbaseTransaction.reward,
+		putBalance(genesisBlock.block.coinbaseTransaction.to, {
+			address: genesisBlock.block.coinbaseTransaction.to,
+			balance: genesisBlock.block.coinbaseTransaction.amount,
 			timesTransaction: 0,
 		})
 		saveBlock(genesisBlock)

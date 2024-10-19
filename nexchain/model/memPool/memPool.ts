@@ -1,12 +1,14 @@
-import { transactionValidator } from 'interface/txValidator/txValidator.v'
+import { transactionValidator } from 'interface/validate/txValidator.v'
 import { saveMempool } from 'nexchain/storage/mempool/saveMemPool'
 import { loadMempool } from 'nexchain/storage/mempool/loadMempool'
-import { txInterface } from '../interface/Nexcoin.inf.'
 import { saveTxHistory } from 'nexchain/transaction/saveTxHistory'
 import { loadKeyPair } from 'nexchain/account/utils/loadKeyPair'
+import { TxInterface } from 'interface/Nexcoin.inf'
 
 export class MemPool {
-	constructor() {}
+	constructor() {
+		console.log('MemPool called')
+	}
 
 	/**
 	 * Adds a transaction to the memory pool.
@@ -14,8 +16,8 @@ export class MemPool {
 	 * @returns True if the transaction was added successfully, otherwise false.
 	 */
 	public async addTransaction(
-		transaction: txInterface,
-	): Promise<boolean | txInterface> {
+		transaction: TxInterface,
+	): Promise<boolean | TxInterface> {
 		// Validate the transaction
 		const { publicKey } = loadKeyPair()
 		const isValidTx = await transactionValidator(transaction, publicKey)
@@ -30,8 +32,8 @@ export class MemPool {
 	 * Gets all valid transactions in the memory pool.
 	 * @returns An array of transactions.
 	 */
-	public async getValidTransactions(): Promise<txInterface[]> {
+	public async getValidTransactions(): Promise<TxInterface[]> {
 		const data = await loadMempool()
-		return data as txInterface[]
+		return data as TxInterface[]
 	}
 }

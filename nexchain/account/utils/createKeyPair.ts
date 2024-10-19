@@ -36,8 +36,8 @@ export const createKeyPair = (): {
 	const binaryMnemonic = stringToBinary(entropy.mnemonic)
 
 	// Menyimpan kunci ke file
-	fs.writeFileSync(publicKeyPath, `NxC${publicKey}`)
-	fs.writeFileSync(privateKeyPath, `NxC${privateKey}`)
+	fs.writeFileSync(publicKeyPath, publicKey)
+	fs.writeFileSync(privateKeyPath, privateKey)
 	fs.writeFileSync(mnemonicPath, binaryMnemonic)
 	fs.writeFileSync(
 		warningPath,
@@ -48,8 +48,8 @@ export const createKeyPair = (): {
 	)
 
 	return {
-		publicKey: `NxC${publicKey}`,
-		privateKey: `NxC${privateKey}`,
+		publicKey: publicKey,
+		privateKey: privateKey,
 		mnemonic: entropy.mnemonic,
 	}
 }

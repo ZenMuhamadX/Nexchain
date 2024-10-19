@@ -1,6 +1,5 @@
-import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
-import { txInterfaceValidator } from '../infValidator/mempool.v'
-import { hasSufficientBalance } from 'nexchain/account/balance/utils/hasSufficientBalance'
+import { txInterfaceValidator } from './joi/mempool.v'
+import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
 import { validateTransactionAmount } from 'interface/module/isValidTxAmount'
 import { logError } from 'interface/module/writeLog'
 import { validateTransactionSignature } from 'interface/module/isValidTxSign'
@@ -8,9 +7,10 @@ import { validateTransactionSenderReceiver } from 'interface/module/isValidTxSen
 import { validateTransactionFees } from 'interface/module/isValidTxFee'
 import { validateAddresses } from 'interface/module/isValidAddress'
 import { validateAddressLengths } from 'interface/module/isValidAddressLength'
+import { TxInterface } from 'interface/Nexcoin.inf'
 
 export const transactionValidator = async (
-	transaction: txInterface,
+	transaction: TxInterface,
 	publicKey: string,
 ): Promise<boolean> => {
 	const { error } = txInterfaceValidator.validate(transaction)
@@ -35,7 +35,7 @@ export const transactionValidator = async (
 
 	if (
 		!(await hasSufficientBalance(
-			transaction.from,
+			transaction.sender,
 			transaction.amount,
 			transaction.fee!,
 		))
@@ -48,7 +48,7 @@ export const transactionValidator = async (
 	}
 
 	transaction.status = 'pending'
-	transaction.isValidate = transaction.isPending = true
+	transaction.isValid = transaction.isPending = true
 	console.log(`TxnHash: ${transaction.txHash}`)
 	return true
 }

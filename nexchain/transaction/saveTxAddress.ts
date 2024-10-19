@@ -22,7 +22,9 @@ const addTxHashToAddress = async (
 ): Promise<void> => {
 	try {
 		// Cek apakah alamat sudah ada di database
-		const existingTxHashes = await leveldbHistory.get(address).catch(() => null)
+		const existingTxHashes = await leveldbHistory
+			.get(`address:${address}`)
+			.catch(() => null)
 
 		let newTxHashes: string[]
 
@@ -32,11 +34,15 @@ const addTxHashToAddress = async (
 		} else {
 			// Jika alamat ada, ambil existing txHash array
 			newTxHashes = JSON.parse(existingTxHashes)
-			newTxHashes.push(txHash)
+
+			// Tambahkan txHash baru jika belum ada (untuk menghindari duplikasi)
+			if (!newTxHashes.includes(txHash)) {
+				newTxHashes.push(txHash)
+			}
 		}
 
 		// Simpan array yang diperbarui kembali ke LevelDB
-		await leveldbHistory.put(`adress:${address}`, JSON.stringify(newTxHashes))
+		await leveldbHistory.put(`address:${address}`, JSON.stringify(newTxHashes))
 	} catch (error) {
 		console.error(`Error adding txHash to address ${address}:`, error)
 	}

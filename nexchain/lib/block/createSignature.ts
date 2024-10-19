@@ -1,12 +1,12 @@
 import { ec as EC } from 'elliptic'
 import { Block } from '../../model/block/block'
-import { txInterface } from '../../model/interface/Nexcoin.inf.'
+import { TxInterface } from '../../../interface/Nexcoin.inf'
 
 const ec = new EC('secp256k1')
 
 // Fungsi untuk membuat signature
 export const createSignature = (
-	data: string | Block | txInterface,
+	data: string | Block | TxInterface,
 	privateKey: string,
 ): { status: boolean; signature: string } => {
 	// Mengubah data menjadi string JSON dan buffer

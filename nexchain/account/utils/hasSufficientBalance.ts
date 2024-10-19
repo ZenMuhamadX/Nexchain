@@ -1,5 +1,5 @@
 import { loggingErr } from 'logging/errorLog'
-import { getBalance } from '../getBalance'
+import { getBalance } from '../balance/getBalance'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 
 export const hasSufficientBalance = async (

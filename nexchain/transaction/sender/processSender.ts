@@ -3,7 +3,7 @@ import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
 import { getBalance } from 'nexchain/account/balance/getBalance'
 import { putBalance } from 'nexchain/account/balance/putBalance'
-import { hasSufficientBalance } from 'nexchain/account/balance/utils/hasSufficientBalance'
+import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
 
 export const processSender = async (
 	senderAddress: string,

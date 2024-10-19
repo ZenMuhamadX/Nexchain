@@ -1,8 +1,8 @@
 import { leveldbMempool } from 'nexchain/leveldb/memPool'
-import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
+import { TxInterface } from 'interface/Nexcoin.inf'
 
-export const loadMempool = async (): Promise<txInterface[]> => {
-	const loadedPool: txInterface[] = []
+export const loadMempool = async (): Promise<TxInterface[]> => {
+	const loadedPool: TxInterface[] = []
 
 	for await (const [key, value] of leveldbMempool.iterator({
 		gte: '0x',

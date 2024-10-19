@@ -1,20 +1,20 @@
 import { loadKeyPair } from 'nexchain/account/utils/loadKeyPair'
 import { createSignature } from 'nexchain/lib/block/createSignature'
 import { createTxnHash } from 'nexchain/lib/hash/createTxHash'
-import { comTxInterface } from 'nexchain/model/interface/commonTxInterface'
-import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
+import { comTxInterface } from 'interface/commonTxInterface'
 import { MemPool } from 'nexchain/model/memPool/memPool'
+import { TxInterface } from 'interface/Nexcoin.inf'
 
 export const createTransact = async (transaction: comTxInterface) => {
 	const x = new MemPool()
-	const convertTx: txInterface = {
+	const convertTx: TxInterface = {
 		amount: transaction.amount,
-		to: transaction.to,
-		from: transaction.from,
+		receiver: transaction.receiver,
+		sender: transaction.sender,
 		timestamp: transaction.timestamp,
 		fee: ((transaction.amount / 10000) * 2) / 1000,
 		isPending: true,
-		isValidate: false,
+		isValid: false,
 		message: Buffer.from(
 			`NexChains A Next Generation Blockchain for Everyone \n ${transaction.message}`,
 		),
