@@ -1,12 +1,11 @@
 import { loggingErr } from 'logging/errorLog'
-import { txInterface } from 'nexchain/model/interface/memPool.inf'
+import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
 import { processSender } from './sender/processSender'
 import { processReciever } from './reciever/processReciever'
 import { removeMemPool } from 'nexchain/storage/mempool/removeMempool'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
-import _ from 'lodash'
 
-export const processTransact = (txData: txInterface[]): void => {
+export const processTransact = async (txData: txInterface[]): Promise<void> => {
 	if (txData.length === 0) {
 		loggingErr({
 			error: 'data not found',
@@ -18,13 +17,21 @@ export const processTransact = (txData: txInterface[]): void => {
 		})
 		return
 	}
-	_.map(txData, (tx) => {
-		const senderAddress = tx.from
-		const recieverAddress = tx.to
-		const amount = tx.amount
-		const fee = tx.fee!
-		processSender(senderAddress, amount, fee)
-		processReciever(recieverAddress, amount)
-		removeMemPool(tx.txHash!)
-	})
+
+	for (const tx of txData) {
+		try {
+			await processSender(tx.from, tx.amount, tx.fee!)
+			await processReciever(tx.to, tx.amount)
+			await removeMemPool(tx.txHash!)
+		} catch (error) {
+			loggingErr({
+				error: error instanceof Error ? error.message : 'Unknown error',
+				stack: new Error().stack,
+				hint: 'Error processing transaction',
+				time: generateTimestampz(),
+				warning: null,
+				context: 'leveldb processTransaction',
+			})
+		}
+	}
 }

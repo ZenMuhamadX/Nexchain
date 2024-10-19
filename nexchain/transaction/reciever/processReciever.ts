@@ -7,12 +7,12 @@ export const processReciever = async (
 	amount: number,
 ) => {
 	const transferAmount = amount
-	const oldData = await getBalance(recieverAddress)
+	const oldData = await getBalance(recieverAddress).catch(() => null)
 	if (!oldData) {
 		const newData: structBalance = {
 			address: recieverAddress,
 			balance: transferAmount,
-			timesTransaction: 0,
+			timesTransaction: 1,
 		}
 		putBalance(recieverAddress, newData)
 		return
@@ -22,7 +22,7 @@ export const processReciever = async (
 	const newData: structBalance = {
 		address: recieverAddress,
 		balance: calculateBalance,
-		timesTransaction: 0,
+		timesTransaction: oldData?.timesTransaction! + 1, // Mengupdate timesTransaction
 	}
 	putBalance(recieverAddress, newData)
 }

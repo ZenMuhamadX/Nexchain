@@ -6,7 +6,7 @@ import { loggingErr } from '../../logging/errorLog'
 import { mineLog } from '../../logging/mineLog'
 import { chains } from 'nexchain/block/initBlock'
 import { Block } from 'nexchain/model/block/block'
-import { txInterface } from 'nexchain/model/interface/memPool.inf'
+import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
 import { getCurrentBlock } from 'nexchain/block/query/direct/block/getCurrentBlock'
 import _ from 'lodash'
 import { isChainsValid } from 'nexchain/block/isChainValid'
@@ -19,7 +19,7 @@ export const miningBlock = async (address: string): Promise<void> => {
 
 	try {
 		// Check if there are pending transactions to mine
-		if (!transactions) {
+		if (transactions.length === 0) {
 			loggingErr({
 				error: 'No pending transactions to mine',
 				context: 'miningBlock',
@@ -30,23 +30,27 @@ export const miningBlock = async (address: string): Promise<void> => {
 			})
 			return
 		}
-		_.map(transactions, (tx) => {
+
+		// Mark transactions as validated and confirmed
+		transactions.forEach((tx) => {
 			tx.isValidate = true
 			tx.isPending = false
 			tx.status = 'confirmed'
 		})
+
 		const isAllBlockValid = await isChainsValid()
 		if (!isAllBlockValid) {
 			loggingErr({
 				error: 'Block is not valid',
 				context: 'miningBlock',
-				hint: 'Prev Block is not valid',
+				hint: '',
 				time: generateTimestampz(),
 				warning: null,
 				stack: new Error().stack,
 			})
 			return
 		}
+
 		// Attempt to add a new block to the blockchain
 		const successMine = await chains.addBlockToChain(transactions, address)
 		if (successMine) {
@@ -59,11 +63,20 @@ export const miningBlock = async (address: string): Promise<void> => {
 				nonce: lastBlock?.block.header.nonce || 'N/A',
 				miner: address,
 			})
+		} else {
+			loggingErr({
+				error: 'Failed to mine block',
+				context: 'miningBlock',
+				hint: 'Block was not added to the chain',
+				time: generateTimestampz(),
+				warning: null,
+				stack: new Error().stack,
+			})
 		}
 	} catch (error) {
 		// Log error details if an exception is thrown
 		loggingErr({
-			error: error || 'Unknown error',
+			error: error instanceof Error ? error.message : 'Unknown error',
 			context: 'miningBlock',
 			hint: 'Error mining block',
 			warning: null,

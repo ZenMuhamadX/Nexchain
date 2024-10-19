@@ -7,10 +7,10 @@ import { saveBlock } from './storage/block/saveBlock'
 import { loggingErr } from '../logging/errorLog'
 import { successLog } from '../logging/succesLog'
 import { createSignature } from './lib/block/createSignature'
-import { proofOfWork } from './miner/POW'
+import { proofOfWork } from './miner/Pow'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
-import { txInterface } from './model/interface/memPool.inf'
+import { txInterface } from './model/interface/Nexcoin.inf.'
 import { putBalance } from './account/balance/putBalance'
 import { getBalance } from './account/balance/getBalance'
 import { structBalance } from './transaction/struct/structBalance'
@@ -19,8 +19,8 @@ import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
 import { calculateMerkleRoot } from './transaction/utils/createMerkleRoot'
 import { getNetworkId } from '../Network/utils/getNetId'
-import { getKeyPair } from './lib/hash/getKeyPair'
 import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
+import { loadKeyPair } from './account/utils/loadKeyPair'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -39,11 +39,22 @@ export class BlockChains {
 		walletMiner: string,
 	): Promise<boolean> {
 		try {
+			if (!validTransaction.length) {
+				throw new Error('No valid transactions provided')
+			}
+
 			// Create a new block and process the transactions.
 			const newBlock = await this.createBlock(validTransaction, walletMiner)
 			await this.giveReward(walletMiner, newBlock.block.blockReward)
-			saveBlock(newBlock)
-			processTransact(validTransaction)
+
+			try {
+				saveBlock(newBlock)
+			} catch (saveError) {
+				throw new Error('Failed to save block: ' + saveError!)
+			}
+
+			await processTransact(validTransaction)
+
 			// Log the success of adding the block.
 			successLog({
 				hash: newBlock.block.header.hash,
@@ -69,6 +80,7 @@ export class BlockChains {
 			return false
 		}
 	}
+
 	/**
 	 * Creates a new block using the provided transactions and miner's wallet address.
 	 * @param transactions - The list of transactions to include in the new block.
@@ -81,7 +93,7 @@ export class BlockChains {
 	): Promise<Block> {
 		const latestBlock: Block = await getCurrentBlock()
 		const currentHeight = latestBlock.block.height
-		const { privateKey } = getKeyPair()
+		const { privateKey } = loadKeyPair()
 
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')

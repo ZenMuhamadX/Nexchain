@@ -1,4 +1,4 @@
-import { txInterface } from 'nexchain/model/interface/memPool.inf'
+import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
 import { txInterfaceValidator } from '../infValidator/mempool.v'
 import { hasSufficientBalance } from 'nexchain/account/balance/utils/hasSufficientBalance'
 import { validateTransactionAmount } from 'interface/module/isValidTxAmount'
