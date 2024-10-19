@@ -1,5 +1,5 @@
 import { leveldbMempool } from 'nexchain/leveldb/memPool'
-import { txInterface } from 'nexchain/model/interface/memPool.inf'
+import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
 
 export const loadMempool = async (): Promise<txInterface[]> => {
 	const loadedPool: txInterface[] = []

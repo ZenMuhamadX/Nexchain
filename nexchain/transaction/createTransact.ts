@@ -2,7 +2,7 @@ import { loadKeyPair } from 'nexchain/account/utils/loadKeyPair'
 import { createSignature } from 'nexchain/lib/block/createSignature'
 import { createTxnHash } from 'nexchain/lib/hash/createTxHash'
 import { comTxInterface } from 'nexchain/model/interface/commonTxInterface'
-import { txInterface } from 'nexchain/model/interface/memPool.inf'
+import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
 import { MemPool } from 'nexchain/model/memPool/memPool'
 
 export const createTransact = async (transaction: comTxInterface) => {

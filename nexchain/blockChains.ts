@@ -10,7 +10,7 @@ import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/Pow'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
-import { txInterface } from './model/interface/memPool.inf'
+import { txInterface } from './model/interface/Nexcoin.inf.'
 import { putBalance } from './account/balance/putBalance'
 import { getBalance } from './account/balance/getBalance'
 import { structBalance } from './transaction/struct/structBalance'
@@ -40,21 +40,21 @@ export class BlockChains {
 	): Promise<boolean> {
 		try {
 			if (!validTransaction.length) {
-				throw new Error('No valid transactions provided');
+				throw new Error('No valid transactions provided')
 			}
-	
+
 			// Create a new block and process the transactions.
-			const newBlock = await this.createBlock(validTransaction, walletMiner);
-			await this.giveReward(walletMiner, newBlock.block.blockReward);
-	
+			const newBlock = await this.createBlock(validTransaction, walletMiner)
+			await this.giveReward(walletMiner, newBlock.block.blockReward)
+
 			try {
-				saveBlock(newBlock);
+				saveBlock(newBlock)
 			} catch (saveError) {
-				throw new Error('Failed to save block: ' + saveError!);
+				throw new Error('Failed to save block: ' + saveError!)
 			}
-	
-			await processTransact(validTransaction);
-	
+
+			await processTransact(validTransaction)
+
 			// Log the success of adding the block.
 			successLog({
 				hash: newBlock.block.header.hash,
@@ -64,9 +64,9 @@ export class BlockChains {
 				message: 'Block added to the chain',
 				timestamp: generateTimestampz().toString(),
 				nonce: newBlock.block.header.nonce,
-			});
-	
-			return true;
+			})
+
+			return true
 		} catch (error) {
 			// Log the error if adding the block fails.
 			loggingErr({
@@ -76,11 +76,11 @@ export class BlockChains {
 				time: generateTimestampz(),
 				hint: 'Error adding block to chain',
 				stack: new Error().stack,
-			});
-			return false;
+			})
+			return false
 		}
 	}
-	
+
 	/**
 	 * Creates a new block using the provided transactions and miner's wallet address.
 	 * @param transactions - The list of transactions to include in the new block.

@@ -1,4 +1,4 @@
-import { txInterface } from 'nexchain/model/interface/memPool.inf'
+import { txInterface } from 'nexchain/model/interface/Nexcoin.inf.'
 import { validateField } from './validateField'
 
 export const validateTransactionSenderReceiver = (
