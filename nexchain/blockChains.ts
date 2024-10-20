@@ -19,12 +19,11 @@ import { calculateTotalBlockReward } from './miner/calculateReward'
 import { calculateMerkleRoot } from './transaction/utils/createMerkleRoot'
 import { getNetworkId } from '../Network/utils/getNetId'
 import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
-import { loadKeyPair } from './account/utils/loadKeyPair'
+import { loadWallet } from './account/utils/loadWallet'
 
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
-		console.log('Chains called.')
 		console.log('Chains called.')
 	}
 
@@ -92,7 +91,7 @@ export class BlockChains {
 	): Promise<Block> {
 		const latestBlock: Block = await getCurrentBlock()
 		const currentHeight = latestBlock.block.height
-		const { privateKey } = loadKeyPair()
+		const { privateKey } = loadWallet(walletName)
 
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')
