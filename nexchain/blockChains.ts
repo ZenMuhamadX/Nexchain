@@ -25,6 +25,7 @@ import { loadKeyPair } from './account/utils/loadKeyPair'
 export class BlockChains {
 	constructor() {
 		console.log('Chains called.')
+		console.log('Chains called.')
 	}
 
 	/**
