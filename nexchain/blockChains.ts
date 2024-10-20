@@ -10,7 +10,7 @@ import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/Pow'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
-import { txInterface } from '../interface/Nexcoin.inf'
+import { TxInterface } from '../interface/Nexcoin.inf'
 import { putBalance } from './account/balance/putBalance'
 import { getBalance } from './account/balance/getBalance'
 import { processTransact } from './transaction/processTransact'
@@ -25,6 +25,7 @@ import { loadKeyPair } from './account/utils/loadKeyPair'
 export class BlockChains {
 	constructor() {
 		console.log('Chains called.')
+		console.log('Chains called.')
 	}
 
 	/**
@@ -34,7 +35,7 @@ export class BlockChains {
 	 * @returns True if the block was added successfully, otherwise false.
 	 */
 	public async addBlockToChain(
-		validTransaction: txInterface[],
+		validTransaction: TxInterface[],
 		walletMiner: string,
 	): Promise<boolean> {
 		try {
@@ -86,7 +87,7 @@ export class BlockChains {
 	 * @returns The newly created block.
 	 */
 	private async createBlock(
-		transactions: txInterface[],
+		transactions: TxInterface[],
 		walletMiner: string,
 	): Promise<Block> {
 		const latestBlock: Block = await getCurrentBlock()
@@ -123,7 +124,6 @@ export class BlockChains {
 			coinbaseTransaction: {
 				amount: 50,
 				to: walletMiner,
-				reward: 50,
 			},
 			validator: {
 				validationTime: generateTimestampz(),

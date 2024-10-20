@@ -1,12 +1,12 @@
 import { ec as EC } from 'elliptic'
-import { txInterface } from '../../../interface/Nexcoin.inf'
+import { TxInterface } from '../../../interface/Nexcoin.inf'
 import { Block } from '../../model/block/block'
 
 const ec = new EC('secp256k1')
 
 // Fungsi untuk memverifikasi signature
 export const verifySignature = (
-	data: string | Block | txInterface,
+	data: string | Block | TxInterface,
 	signature: string,
 	publicKey: string,
 ): { status: boolean; message: string } => {

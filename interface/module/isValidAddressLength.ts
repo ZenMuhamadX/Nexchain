@@ -1,15 +1,15 @@
-import { txInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/Nexcoin.inf'
 import { validateField } from './validateField'
 
-export const validateAddressLengths = (transaction: txInterface): boolean => {
+export const validateAddressLengths = (transaction: TxInterface): boolean => {
 	return (
 		validateField(
-			transaction.from.length !== 37,
+			transaction.sender.length !== 37,
 			'transactionValidator',
 			'Invalid transaction sender length',
 		) &&
 		validateField(
-			transaction.to.length !== 37,
+			transaction.receiver.length !== 37,
 			'transactionValidator',
 			'Invalid receiver address length',
 		)

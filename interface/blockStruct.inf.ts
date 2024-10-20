@@ -1,4 +1,4 @@
-import { txInterface } from './Nexcoin.inf'
+import { TxInterface } from './Nexcoin.inf'
 
 export interface blockStruct {
 	header: {
@@ -21,7 +21,6 @@ export interface blockStruct {
 	coinbaseTransaction: {
 		to: string
 		amount: number
-		reward: number
 	}
 	validator: {
 		rewardAddress: string
@@ -34,5 +33,5 @@ export interface blockStruct {
 		created_at: number // Changed to number (UNIX timestamp) for consistency
 		notes: any
 	}
-	transactions: txInterface[]
+	transactions: TxInterface[]
 }

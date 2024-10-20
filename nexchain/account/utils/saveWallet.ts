@@ -15,7 +15,7 @@ export const saveMainWallet = async (
 	try {
 		// Determine the file name and path
 		const dirPath = path.join(__dirname, '../../../myWallet')
-		const filePath = path.join(dirPath, 'mainWallet.bin')
+		const filePath = path.join(dirPath, 'MainWallet.bin')
 
 		// Create directory if it does not exist
 		if (!fs.existsSync(dirPath)) {

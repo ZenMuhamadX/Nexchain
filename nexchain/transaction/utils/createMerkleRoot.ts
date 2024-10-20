@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import { sha256 } from 'nexchain/lib/hash/hash'
-import { txInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/Nexcoin.inf'
 
 // Fungsi untuk menghitung Merkle Root
-export const calculateMerkleRoot = (transactions: txInterface[]): string => {
+export const calculateMerkleRoot = (transactions: TxInterface[]): string => {
 	if (transactions.length === 0) {
 		return '' // Jika tidak ada transaksi, kembalikan string kosong
 	}

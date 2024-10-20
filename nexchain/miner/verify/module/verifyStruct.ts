@@ -25,7 +25,6 @@ export const verifyStruct = async (chains: Block) => {
 	const coinbaseTransactionSchema = Joi.object({
 		to: Joi.string().required(),
 		amount: Joi.number().required(),
-		reward: Joi.number().required(),
 	})
 
 	// Define the schema for the validator object

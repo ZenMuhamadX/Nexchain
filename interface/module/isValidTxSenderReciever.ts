@@ -1,11 +1,11 @@
-import { txInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/Nexcoin.inf'
 import { validateField } from './validateField'
 
 export const validateTransactionSenderReceiver = (
-	transaction: txInterface,
+	transaction: TxInterface,
 ): boolean => {
 	return validateField(
-		transaction.from === transaction.to,
+		transaction.sender === transaction.receiver,
 		'transactionValidator',
 		'Invalid transaction sender and receiver',
 	)

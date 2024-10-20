@@ -6,7 +6,7 @@ import { loggingErr } from '../../logging/errorLog'
 import { mineLog } from '../../logging/mineLog'
 import { chains } from 'nexchain/block/initBlock'
 import { Block } from 'nexchain/model/block/block'
-import { txInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/Nexcoin.inf'
 import { getCurrentBlock } from 'nexchain/block/query/direct/block/getCurrentBlock'
 import _ from 'lodash'
 import { isChainsValid } from 'nexchain/block/isChainValid'
@@ -15,7 +15,7 @@ import { isChainsValid } from 'nexchain/block/isChainValid'
 export const miningBlock = async (address: string): Promise<void> => {
 	// Initialize blockchain and memory pool instances
 	const pool = new MemPool()
-	const transactions: txInterface[] = await pool.getValidTransactions()
+	const transactions: TxInterface[] = await pool.getValidTransactions()
 
 	try {
 		// Check if there are pending transactions to mine
@@ -33,7 +33,7 @@ export const miningBlock = async (address: string): Promise<void> => {
 
 		// Mark transactions as validated and confirmed
 		transactions.forEach((tx) => {
-			tx.isValidate = true
+			tx.isValid = true
 			tx.isPending = false
 			tx.status = 'confirmed'
 		})

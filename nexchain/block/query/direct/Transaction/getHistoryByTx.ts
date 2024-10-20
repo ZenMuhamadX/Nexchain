@@ -1,9 +1,9 @@
 import { leveldbHistory } from 'nexchain/leveldb/history'
-import { txInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/Nexcoin.inf'
 
 export const getHistoryByTxHash = async (
 	txHash: string,
-): Promise<txInterface | null> => {
+): Promise<TxInterface | null> => {
 	const data = await leveldbHistory.get(`txnHash:${txHash}`, {
 		fillCache: true,
 		keyEncoding: 'utf8',
