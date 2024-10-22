@@ -25,6 +25,7 @@ import { loadWallet } from './account/utils/loadWallet'
 export class BlockChains {
 	constructor() {
 		console.log('Chains called.')
+		console.log('Chains called.')
 	}
 
 	/**
