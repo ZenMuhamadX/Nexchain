@@ -1,66 +1,60 @@
-import 'dotenv/config'
-import crypto from 'crypto'
-import path from 'path'
-import fs from 'fs'
+import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { structWalletToSave } from 'interface/walletStructinf'
-import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
-import { loadKeyPair } from './loadKeyPair'
-import msg from 'msgpack-lite'
+import path from 'path'
+import readline from 'readline'
 
-// Saves the main wallet data to a file
-export const saveMainWallet = async (
-	wallet: string,
-	privateKey: string = loadKeyPair().privateKey,
-): Promise<boolean> => {
-	try {
-		// Determine the file name and path
-		const dirPath = path.join(__dirname, '../../../myWallet')
-		const filePath = path.join(dirPath, 'MainWallet.bin')
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
 
-		// Create directory if it does not exist
-		if (!fs.existsSync(dirPath)) {
-			fs.mkdirSync(dirPath, { recursive: true })
-		}
-
-		// Prepare the data to be saved
-		const structToSave: structWalletToSave = {
-			data: {
-				address: wallet,
-				publicKey: loadKeyPair().publicKey,
-				privateKey,
-			},
-			metadata: {
-				timestamp: generateTimestampz(),
-				label: 'Main wallet',
-			},
-		}
-		structToSave.checkSum = addCheckSum(structToSave)
-
-		// Serialize the data and write to file
-		const serializedData = msg.encode(structToSave)
-
-		fs.writeFileSync(filePath, serializedData, 'binary')
-
-		console.log('Wallet saved successfully.', filePath)
-
-		return true
-	} catch (error) {
-		// Handle errors that occur during the saving process
-		console.error('Error saving wallet:', error)
-		return false
-	}
+// Fungsi untuk menangani penekanan Ctrl+C
+const handleExit = () => {
+	console.log('\nExiting...')
+	rl.close()
+	process.exit()
 }
 
-// Adds a checksum to the data for integrity verification
-const addCheckSum = (data: any) => {
+process.on('SIGINT', handleExit)
+
+export const saveWallet = (data: structWalletToSave, fileName: string) => {
+	const dirPath = path.join(__dirname, '../../../wallet/')
+	const filePath = path.join(dirPath, `${fileName}.json`)
+
 	try {
-		const formatData = JSON.stringify(data)
-		return crypto
-			.createHash('sha512')
-			.update(Buffer.from(formatData))
-			.digest('hex')
+		if (!existsSync(dirPath)) {
+			mkdirSync(dirPath, { recursive: true })
+		}
+
+		if (existsSync(filePath)) {
+			rl.question(
+				'Wallet already exists. Do you want to overwrite it? (yes/no) ',
+				(answer) => {
+					if (answer.toLowerCase() === 'yes') {
+						writeFileSync(filePath, JSON.stringify(data, null, 2))
+						console.log(`Wallet saved to ${filePath}`)
+					} else {
+						console.log('Wallet not saved.')
+					}
+					rl.close()
+				},
+			)
+		} else {
+			rl.question(
+				`Wallet does not exist. Do you want to create a new wallet with the name "${fileName}"? (yes/no) `,
+				(answer) => {
+					if (answer.toLowerCase() === 'yes') {
+						writeFileSync(filePath, JSON.stringify(data, null, 2))
+						console.log(`Wallet created and saved to ${filePath}`)
+					} else {
+						console.log('No wallet created.')
+					}
+					rl.close()
+				},
+			)
+		}
 	} catch (error) {
-		console.error('Error generating checksum:', error)
-		throw error // Re-throw to allow calling functions to handle it
+		console.error('Error saving wallet:', error)
+		rl.close()
 	}
 }

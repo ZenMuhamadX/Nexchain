@@ -12,7 +12,7 @@ import { saveBlock } from 'nexchain/storage/block/saveBlock'
 import { getNetworkId } from 'Network/utils/getNetId'
 import { getBlockByHeight } from './query/direct/block/getBlockByHeight'
 import { countHashDifficulty } from 'nexchain/lib/hash/countHashDifficulty'
-import { loadKeyPair } from 'nexchain/account/utils/loadKeyPair'
+import { loadWallet } from 'nexchain/account/utils/loadWallet'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0)
@@ -21,7 +21,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		return undefined
 	}
 	try {
-		const { privateKey } = loadKeyPair()
+		const { privateKey } = loadWallet()!
 		const genesisBlock = new Block({
 			header: {
 				difficulty: 0,
@@ -44,10 +44,10 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			status: 'confirmed',
 			coinbaseTransaction: {
 				amount: 500,
-				to: 'NxC1MAgAtQVbrv8XmAQsY5ZRbtkqLxV7GQEoV',
+				to: 'NxCbe89049c9b139f69e6828d2bec981a16322b3e39',
 			},
 			validator: {
-				rewardAddress: 'NxC1MAgAtQVbrv8XmAQsY5ZRbtkqLxV7GQEoV',
+				rewardAddress: 'NxCbe89049c9b139f69e6828d2bec981a16322b3e39',
 				stakeAmount: 0,
 				validationTime: generateTimestampz(),
 			},
@@ -75,7 +75,10 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		putBalance(genesisBlock.block.coinbaseTransaction.to, {
 			address: genesisBlock.block.coinbaseTransaction.to,
 			balance: genesisBlock.block.coinbaseTransaction.amount,
-			timesTransaction: 0,
+			timesTransaction: 1,
+			isContract: false,
+			lastTransactionDate: generateTimestampz(),
+			nonce: 0,
 		})
 		saveBlock(genesisBlock)
 		return genesisBlock

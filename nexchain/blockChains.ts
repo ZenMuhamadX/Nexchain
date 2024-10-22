@@ -91,7 +91,7 @@ export class BlockChains {
 	): Promise<Block> {
 		const latestBlock: Block = await getCurrentBlock()
 		const currentHeight = latestBlock.block.height
-		const { privateKey } = loadWallet(walletName)
+		const { privateKey } = loadWallet()!
 
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')
@@ -173,12 +173,15 @@ export class BlockChains {
 	 * @param reward - The amount of reward to be given.
 	 */
 	private async giveReward(address: string, reward: number) {
-		const oldBalance = await getBalance(address)
+		const oldBalance = await getBalance(address).catch(() => null)
 		if (!oldBalance) {
 			putBalance(address, {
 				address,
 				balance: reward,
 				timesTransaction: 0,
+				isContract: false,
+				lastTransactionDate: null,
+				nonce: 0,
 			})
 			return
 		}
@@ -187,7 +190,10 @@ export class BlockChains {
 		putBalance(address, {
 			address,
 			balance: newBalance,
-			timesTransaction: oldBalance.timesTransaction,
+			timesTransaction: oldBalance.timesTransaction + 1,
+			isContract: false,
+			lastTransactionDate: generateTimestampz(),
+			nonce: 0,
 		})
 	}
 

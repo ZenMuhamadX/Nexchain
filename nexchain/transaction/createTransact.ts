@@ -1,9 +1,9 @@
-import { loadKeyPair } from 'nexchain/account/utils/loadKeyPair'
 import { createSignature } from 'nexchain/lib/block/createSignature'
 import { createTxnHash } from 'nexchain/lib/hash/createTxHash'
 import { comTxInterface } from 'interface/commonTxInterface'
 import { MemPool } from 'nexchain/model/memPool/memPool'
 import { TxInterface } from 'interface/Nexcoin.inf'
+import { loadWallet } from 'nexchain/account/utils/loadWallet'
 
 export const createTransact = async (transaction: comTxInterface) => {
 	const x = new MemPool()
@@ -20,7 +20,7 @@ export const createTransact = async (transaction: comTxInterface) => {
 		),
 		status: 'pending',
 	}
-	const { privateKey } = loadKeyPair()
+	const { privateKey } = loadWallet()!
 	convertTx.signature = createSignature(convertTx, privateKey).signature
 	convertTx.txHash = createTxnHash(convertTx)
 	const added = await x.addTransaction(convertTx)

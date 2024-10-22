@@ -1,6 +1,7 @@
 import { structBalance } from 'nexchain/transaction/struct/structBalance'
 import { getBalance } from 'nexchain/account/balance/getBalance'
 import { putBalance } from 'nexchain/account/balance/putBalance'
+import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 
 export const processReciever = async (
 	recieverAddress: string,
@@ -13,6 +14,9 @@ export const processReciever = async (
 			address: recieverAddress,
 			balance: transferAmount,
 			timesTransaction: 1,
+			isContract: false,
+			lastTransactionDate: generateTimestampz(),
+			nonce: 1,
 		}
 		putBalance(recieverAddress, newData)
 		return
@@ -23,6 +27,9 @@ export const processReciever = async (
 		address: recieverAddress,
 		balance: calculateBalance,
 		timesTransaction: oldData?.timesTransaction! + 1, // Mengupdate timesTransaction
+		isContract: false,
+		lastTransactionDate: generateTimestampz(),
+		nonce: oldData.nonce + 1,
 	}
 	putBalance(recieverAddress, newData)
 }
