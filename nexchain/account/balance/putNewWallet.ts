@@ -20,6 +20,9 @@ export const putNewWallet = (address: string): void => {
 			address: address,
 			balance: 0,
 			timesTransaction: 0,
+			isContract: false,
+			nonce: 0,
+			lastTransactionDate: null,
 		}
 		leveldbState.put(address, JSON.stringify(initBalance), {
 			sync: true,

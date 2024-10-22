@@ -22,15 +22,15 @@ export const processSender = async (
 		})
 		return
 	}
-	const transferAmount = amount
 	const oldData = await getBalance(senderAddress)
-	const newTimesTransaction = oldData?.timesTransaction! + 1
-	const oldBalance = oldData?.balance as number
-	const calculateBalance = oldBalance - transferAmount - fee!
+	const calculateBalance = oldData?.balance! - amount - fee!
 	const newData: structBalance = {
 		address: senderAddress,
 		balance: calculateBalance,
-		timesTransaction: newTimesTransaction,
+		timesTransaction: oldData?.timesTransaction! + 1,
+		isContract: false,
+		lastTransactionDate: generateTimestampz(),
+		nonce: oldData!.nonce + 1,
 	}
 	putBalance(senderAddress, newData)
 }
