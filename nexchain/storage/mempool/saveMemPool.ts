@@ -1,4 +1,4 @@
-import { TxInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/structTx'
 import { leveldbMempool } from 'nexchain/leveldb/memPool'
 
 export const saveMempool = async (transaction: TxInterface) => {

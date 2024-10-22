@@ -1,5 +1,5 @@
 /** @format */
-import { blockStruct } from '../../../interface/blockStruct.inf'
+import { blockStruct } from '../../../interface/structBlock'
 
 // models/Block.ts
 // This class represents a block in the blockchain

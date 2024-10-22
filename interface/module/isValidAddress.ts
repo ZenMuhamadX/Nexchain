@@ -1,6 +1,6 @@
-import { TxInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/structTx'
 import { validateField } from './validateField'
-import { isValidAddress } from 'nexchain/transaction/validate/isValidAddress'
+import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
 
 export const validateAddresses = (transaction: TxInterface): boolean => {
 	return (

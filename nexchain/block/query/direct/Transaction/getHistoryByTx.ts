@@ -1,5 +1,5 @@
 import { leveldbHistory } from 'nexchain/leveldb/history'
-import { TxInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/structTx'
 
 export const getHistoryByTxHash = async (
 	txHash: string,

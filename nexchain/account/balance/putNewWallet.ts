@@ -1,5 +1,5 @@
 import { loggingErr } from 'logging/errorLog'
-import { structBalance } from 'nexchain/transaction/struct/structBalance'
+import { structBalance } from 'interface/structBalance'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 import { leveldbState } from 'nexchain/leveldb/state'
 
@@ -20,6 +20,9 @@ export const putNewWallet = (address: string): void => {
 			address: address,
 			balance: 0,
 			timesTransaction: 0,
+			isContract: false,
+			nonce: 0,
+			lastTransactionDate: null,
 		}
 		leveldbState.put(address, JSON.stringify(initBalance), {
 			sync: true,

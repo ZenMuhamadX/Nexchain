@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { leveldbHistory } from 'nexchain/leveldb/history'
 import { getHistoryByTxHash } from './getHistoryByTx'
-import { TxInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/structTx'
 
 export const getHistoryByAddress = async (
 	address: string,

@@ -1,6 +1,6 @@
 import { ec as EC } from 'elliptic'
 import { Block } from '../../model/block/block'
-import { TxInterface } from '../../../interface/Nexcoin.inf'
+import { TxInterface } from '../../../interface/structTx'
 
 const ec = new EC('secp256k1')
 
