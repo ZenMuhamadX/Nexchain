@@ -3,6 +3,7 @@ import { verifyPow } from './module/verifyPow'
 import { verifyHashLength } from './module/verifyHashLength'
 import { verifyBlockHash } from './module/verifyBlockHash'
 import { getBlockByHeight } from 'nexchain/block/query/direct/block/getBlockByHeight'
+// import { verifyMerkleRoot } from './module/verifyMerkleRoot'
 
 // Function to verify the integrity of the blockchain
 export const verifyChainIntegrity = async (): Promise<boolean> => {

@@ -1,41 +1,37 @@
-import _ from 'lodash'
-import { sha256 } from 'nexchain/lib/hash/hash'
 import { TxInterface } from 'interface/structTx'
+import { sha256 } from 'nexchain/lib/hash/hash'
+import { txToString } from 'nexchain/lib/hex/txToString'
 
-// Fungsi untuk menghitung Merkle Root
-export const calculateMerkleRoot = (transactions: TxInterface[]): string => {
+// Fungsi untuk menghitung Merkle Root dari transaksi
+export const createMerkleRoot = (transactions: TxInterface[]): string => {
 	if (transactions.length === 0) {
-		return '' // Jika tidak ada transaksi, kembalikan string kosong
+		return sha256('')
 	}
 
-	// Hash semua transaksi untuk mendapatkan hash awal
-	let hashedTransactions = _.map(transactions, (tx) =>
-		sha256(JSON.stringify(tx)),
+	if (transactions.length === 1) {
+		return sha256(txToString(transactions[0]))
+	}
+
+	let transactionHashes: string[] = transactions.map((tx) =>
+		sha256(txToString(tx)),
 	)
 
-	// Proses untuk menggabungkan hash sampai tersisa satu hash (Merkle Root)
-	while (hashedTransactions.length > 1) {
-		let tempHashArray: string[] = []
+	while (transactionHashes.length > 1) {
+		const tempHashes: string[] = []
 
-		// Iterasi dua per dua, dan gabungkan hash mereka
-		for (let i = 0; i < hashedTransactions.length; i += 2) {
-			if (i + 1 < hashedTransactions.length) {
-				// Jika pasangan ada, gabungkan dan hash
-				tempHashArray.push(
-					sha256(hashedTransactions[i] + hashedTransactions[i + 1]),
-				)
-			} else {
-				// Jika jumlah ganjil, hash ulang hash terakhir sendiri
-				tempHashArray.push(
-					sha256(hashedTransactions[i] + hashedTransactions[i]),
-				)
-			}
+		if (transactionHashes.length % 2 !== 0) {
+			transactionHashes.push(transactionHashes[transactionHashes.length - 1])
 		}
 
-		// Update hashedTransactions dengan tempHashArray yang baru
-		hashedTransactions = tempHashArray
+		for (let i = 0; i < transactionHashes.length; i += 2) {
+			const combinedHash = sha256(
+				transactionHashes[i] + transactionHashes[i + 1],
+			)
+			tempHashes.push(combinedHash)
+		}
+
+		transactionHashes = tempHashes
 	}
 
-	// Hash terakhir yang tersisa adalah Merkle Root
-	return hashedTransactions[0]
+	return transactionHashes[0]
 }

@@ -13,6 +13,8 @@ import { getNetworkId } from 'Network(Development)/utils/getNetId'
 import { getBlockByHeight } from './query/direct/block/getBlockByHeight'
 import { countHashDifficulty } from 'nexchain/lib/hash/countHashDifficulty'
 import { loadWallet } from 'nexchain/account/utils/loadWallet'
+import { stringToHex } from 'nexchain/lib/hex/stringToHex'
+import { toNexu } from 'nexchain/lib/nexucoin/toNexu'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0)
@@ -35,6 +37,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			},
 			blockReward: 500,
 			totalTransactionFees: 0,
+			totalReward: 500,
 			height: 0,
 			merkleRoot:
 				'0000000000000000000000000000000000000000000000000000000000000000',
@@ -44,19 +47,16 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			status: 'confirmed',
 			coinbaseTransaction: {
 				amount: 500,
-				to: 'NxCbe89049c9b139f69e6828d2bec981a16322b3e39',
-			},
-			validator: {
-				rewardAddress: 'NxCbe89049c9b139f69e6828d2bec981a16322b3e39',
-				stakeAmount: 0,
-				validationTime: generateTimestampz(),
+				receiver: 'NxCbe89049c9b139f69e6828d2bec981a16322b3e39',
+				extraData: stringToHex('Genesis Block Reward'),
 			},
 			metadata: {
 				gasPrice: 0,
 				created_at: generateTimestampz(),
 				txCount: 0,
-				notes:
+				extraData: stringToHex(
 					'Hassan Nasrallah Killed by Israel,Hezbollah Promises to Continue the War 29/9/2024',
+				),
 			},
 			transactions: [],
 		})
@@ -72,13 +72,16 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		genesisBlock.block.header.hash = validHash.hash
 		genesisBlock.block.header.nonce = validHash.nonce
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
-		putBalance(genesisBlock.block.coinbaseTransaction.to, {
-			address: genesisBlock.block.coinbaseTransaction.to,
-			balance: genesisBlock.block.coinbaseTransaction.amount,
+		putBalance(genesisBlock.block.coinbaseTransaction.receiver, {
+			address: genesisBlock.block.coinbaseTransaction.receiver,
+			balance: toNexu(genesisBlock.block.coinbaseTransaction.amount),
 			timesTransaction: 1,
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
 			nonce: 0,
+			decimal: 18,
+			notes: '1^18 nexu = 1 NXC',
+			symbol: 'nexu',
 		})
 		saveBlock(genesisBlock)
 		return genesisBlock

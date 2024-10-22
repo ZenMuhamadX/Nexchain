@@ -1,11 +1,11 @@
 import { loggingErr } from 'logging/errorLog'
 import { TxInterface } from 'interface/structTx'
 import { processSender } from './sender/processSender'
-import { processReciever } from './reciever/processReciever'
 import { removeMemPool } from 'nexchain/storage/mempool/removeMempool'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 import { saveTxAddress } from './saveTxAddress'
 import { saveTxHistory } from './saveTxHistory'
+import { processReceiver } from './receiver/processReceiver'
 
 export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 	if (txData.length === 0) {
@@ -23,7 +23,7 @@ export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 	for (const tx of txData) {
 		try {
 			await processSender(tx.sender, tx.amount, tx.fee!)
-			await processReciever(tx.receiver, tx.amount)
+			await processReceiver(tx.receiver, tx.amount)
 			await saveTxAddress(tx.sender, tx.receiver, tx.txHash!)
 			await saveTxHistory(tx.txHash!, tx)
 			await removeMemPool(tx.txHash!)

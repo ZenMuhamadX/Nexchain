@@ -2,6 +2,7 @@ import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 import { leveldbState } from 'nexchain/leveldb/state'
+import { toNexu } from 'nexchain/lib/nexucoin/toNexu'
 
 export const putNewWallet = (address: string): void => {
 	try {
@@ -18,11 +19,14 @@ export const putNewWallet = (address: string): void => {
 		}
 		const initBalance: structBalance = {
 			address: address,
-			balance: 0,
+			balance: toNexu(0),
 			timesTransaction: 0,
 			isContract: false,
 			nonce: 0,
 			lastTransactionDate: null,
+			decimal: 18,
+			notes: '1^18 nexu = 1 NXC',
+			symbol: 'nexu',
 		}
 		leveldbState.put(address, JSON.stringify(initBalance), {
 			sync: true,

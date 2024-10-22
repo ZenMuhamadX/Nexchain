@@ -22,10 +22,10 @@ export class Block {
 			merkleRoot: blockData.merkleRoot,
 			networkId: blockData.networkId,
 			blockReward: blockData.blockReward,
+			totalReward: blockData.totalReward,
 			status: blockData.status,
 			totalTransactionFees: blockData.totalTransactionFees!,
 			coinbaseTransaction: blockData.coinbaseTransaction,
-			validator: blockData.validator,
 			metadata: blockData.metadata!,
 			transactions: blockData.transactions,
 		}

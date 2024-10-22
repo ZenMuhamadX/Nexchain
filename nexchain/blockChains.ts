@@ -16,15 +16,18 @@ import { getBalance } from './account/balance/getBalance'
 import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
-import { calculateMerkleRoot } from './transaction/utils/createMerkleRoot'
 import { getNetworkId } from '../Network(Development)/utils/getNetId'
 import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
 import { loadWallet } from './account/utils/loadWallet'
+import { stringToHex } from './lib/hex/stringToHex'
+import { toNexu } from './lib/nexucoin/toNexu'
+import { createMerkleRoot } from './transaction/utils/createMerkleRoot'
+import { verifyMerkleRoot } from './miner/verify/module/verifyMerkleRoot'
+import { setBlockReward } from './lib/block/dynamicReward'
 
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
-		console.log('Chains called.')
 		console.log('Chains called.')
 	}
 
@@ -39,22 +42,33 @@ export class BlockChains {
 		walletMiner: string,
 	): Promise<boolean> {
 		try {
-			if (!validTransaction.length) {
-				throw new Error('No valid transactions provided')
+			const newBlock = await this.createBlock(validTransaction, walletMiner)
+
+			// Verifikasi Merkle Root sebelum menyimpan blok
+			const isValidMerkleRoot = verifyMerkleRoot(
+				newBlock.block.transactions,
+				newBlock.block.merkleRoot,
+			)
+			if (!isValidMerkleRoot) {
+				throw new Error('Merkle root verification failed.')
 			}
 
-			// Create a new block and process the transactions.
-			const newBlock = await this.createBlock(validTransaction, walletMiner)
-			await this.giveReward(walletMiner, newBlock.block.blockReward)
+			await this.giveReward(
+				newBlock.block.coinbaseTransaction.receiver,
+				newBlock.block.totalReward,
+			)
 
 			try {
-				saveBlock(newBlock)
+				saveBlock(newBlock) // Simpan blok ke chain
 			} catch (saveError) {
-				throw new Error('Failed to save block: ' + saveError!)
+				throw new Error('Failed to save block: ' + saveError)
 			}
-			await processTransact(validTransaction)
 
-			// Log the success of adding the block.
+			if (validTransaction.length > 0) {
+				await processTransact(validTransaction)
+			}
+
+			// Log success
 			successLog({
 				hash: newBlock.block.header.hash,
 				height: newBlock.block.height,
@@ -67,7 +81,7 @@ export class BlockChains {
 
 			return true
 		} catch (error) {
-			// Log the error if adding the block fails.
+			// Log failure
 			loggingErr({
 				error: error instanceof Error ? error.message : 'Unknown error',
 				context: 'BlockChains',
@@ -98,10 +112,6 @@ export class BlockChains {
 			throw new Error('Latest block is undefined.')
 		}
 
-		if (!transactions || transactions.length === 0) {
-			throw new Error('No transactions provided for the new block.')
-		}
-
 		// Create a new block with specified parameters.
 		const newBlock = new Block({
 			header: {
@@ -109,50 +119,49 @@ export class BlockChains {
 				hash: '',
 				nonce: 0,
 				previousBlockHash: '',
-				timestamp: 0,
+				timestamp: generateTimestampz(),
 				version: '1.0.0',
 				hashingAlgorithm: 'SHA256',
 			},
 			totalTransactionFees: 0,
 			height: currentHeight + 1,
-			merkleRoot: calculateMerkleRoot(transactions),
+			merkleRoot: createMerkleRoot(transactions),
 			networkId: getNetworkId(),
 			signature: '',
 			size: 0,
 			status: 'confirmed',
-			blockReward: 50,
+			blockReward: 0,
+			totalReward: 0,
 			coinbaseTransaction: {
-				amount: 50,
-				to: walletMiner,
-			},
-			validator: {
-				validationTime: generateTimestampz(),
-				stakeAmount: 0,
-				rewardAddress: walletMiner,
+				amount: 0,
+				receiver: walletMiner,
+				extraData: stringToHex('Block reward'),
 			},
 			metadata: {
-				notes: `BlockChains by NexChain`,
-				gasPrice: ((50 / 500) * 2) / 5,
+				extraData: stringToHex('BlockChains by NexChain'),
+				gasPrice: 0.00002678,
 				txCount: transactions.length,
 				created_at: generateTimestampz(),
 			},
 			transactions: transactions,
 		})
 
+		newBlock.block.blockReward = setBlockReward(newBlock.block.height)
+
 		// Calculate fees and rewards for the new block.
 		newBlock.block.totalTransactionFees = calculateTotalFees(
 			newBlock.block.transactions,
 		)
 
-		newBlock.block.blockReward = calculateTotalBlockReward(
+		newBlock.block.totalReward = calculateTotalBlockReward(
 			newBlock.block.blockReward,
 			newBlock.block.metadata?.gasPrice!,
 			newBlock.block.totalTransactionFees,
 		)
 
-		newBlock.block.header.previousBlockHash = latestBlock.block.header.hash
+		newBlock.block.coinbaseTransaction.amount = newBlock.block.totalReward
 
-		newBlock.block.header.timestamp = generateTimestampz()
+		newBlock.block.header.previousBlockHash = latestBlock.block.header.hash
 
 		// Perform proof of work and finalize the new block.
 		const { hash, nonce } = proofOfWork(newBlock)
@@ -174,27 +183,35 @@ export class BlockChains {
 	 * @param reward - The amount of reward to be given.
 	 */
 	private async giveReward(address: string, reward: number) {
-		const oldBalance = await getBalance(address).catch(() => null)
-		if (!oldBalance) {
+		const oldData = await getBalance(address).catch(() => null)
+		const nexuReward = toNexu(reward)
+		console.log(nexuReward)
+		const oldNexuBalance = oldData?.balance
+
+		if (!oldNexuBalance) {
 			putBalance(address, {
 				address,
-				balance: reward,
+				balance: toNexu(reward),
 				timesTransaction: 0,
 				isContract: false,
 				lastTransactionDate: null,
 				nonce: 0,
+				decimal: 18,
+				notes: '1^18 nexu = 1 NXC',
+				symbol: 'nexu',
 			})
 			return
 		}
-		const newBalance = oldBalance.balance + reward
-
 		putBalance(address, {
 			address,
-			balance: newBalance,
-			timesTransaction: oldBalance.timesTransaction + 1,
+			balance: oldNexuBalance + nexuReward,
+			timesTransaction: oldData.timesTransaction + 1,
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
 			nonce: 0,
+			decimal: 18,
+			notes: '1^18 nexu = 1 NXC',
+			symbol: 'nexu',
 		})
 	}
 
