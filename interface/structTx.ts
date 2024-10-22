@@ -1,4 +1,4 @@
-import { comTxInterface } from './commonTxInterface'
+import { comTxInterface } from './structComTx'
 /**
  * Represents a transaction in the memory pool.
  */

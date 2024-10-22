@@ -1,5 +1,5 @@
 import { loggingErr } from 'logging/errorLog'
-import { TxInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/structTx'
 import { processSender } from './sender/processSender'
 import { processReciever } from './reciever/processReciever'
 import { removeMemPool } from 'nexchain/storage/mempool/removeMempool'

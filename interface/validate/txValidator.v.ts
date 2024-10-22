@@ -7,7 +7,7 @@ import { validateTransactionSenderReceiver } from 'interface/module/isValidTxSen
 import { validateTransactionFees } from 'interface/module/isValidTxFee'
 import { validateAddresses } from 'interface/module/isValidAddress'
 import { validateAddressLengths } from 'interface/module/isValidAddressLength'
-import { TxInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/structTx'
 
 export const transactionValidator = async (
 	transaction: TxInterface,

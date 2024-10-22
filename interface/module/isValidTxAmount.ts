@@ -1,4 +1,4 @@
-import { TxInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/structTx'
 import { validateField } from './validateField'
 
 export const validateTransactionAmount = (

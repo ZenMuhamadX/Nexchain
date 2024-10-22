@@ -7,9 +7,9 @@
 		"test": "jest",
 		"build": "bun run initial && tsc",
 		"format": "prettier --write .",
-		"check": "bun run initial && bunx tsc && rm -r dist",
+		"check": "bun initial && bunx tsc && rm -r dist",
+		"initial": "bun run ./nexchain/init.ts",
 		"pre": "npx tsc && rm -r dist",
-		"initial": "bun run ./nexchain/init/init.ts ",
 		"prepare": "husky"
 	},
 	"repository": {
@@ -46,6 +46,7 @@
 		"typescript-eslint": "^8.8.1"
 	},
 	"dependencies": {
+		"bip32": "^5.0.0-rc.0",
 		"bip39": "^3.1.0",
 		"bs58": "^6.0.0",
 		"bs64": "^0.1.0",
@@ -56,6 +57,7 @@
 		"figlet": "^1.8.0",
 		"husky": "^9.1.6",
 		"joi": "^17.13.3",
+		"js-sha3": "^0.9.3",
 		"level": "^8.0.1",
 		"libp2p": "^2.1.9",
 		"lodash": "^4.17.21",
@@ -67,6 +69,7 @@
 		"pino-multi-stream": "^6.0.0",
 		"prettier": "^3.3.3",
 		"secp256k1": "^5.0.1",
+		"tiny-secp256k1": "^2.2.3",
 		"ts-node": "^10.9.2",
 		"uuid": "^10.0.0",
 		"winston": "^3.15.0",

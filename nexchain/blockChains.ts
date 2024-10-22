@@ -10,21 +10,20 @@ import { createSignature } from './lib/block/createSignature'
 import { proofOfWork } from './miner/Pow'
 import { calculateSize } from './lib/utils/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
-import { TxInterface } from '../interface/Nexcoin.inf'
+import { TxInterface } from '../interface/structTx'
 import { putBalance } from './account/balance/putBalance'
 import { getBalance } from './account/balance/getBalance'
 import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
 import { calculateMerkleRoot } from './transaction/utils/createMerkleRoot'
-import { getNetworkId } from '../Network/utils/getNetId'
+import { getNetworkId } from '../Network(Development)/utils/getNetId'
 import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
-import { loadKeyPair } from './account/utils/loadKeyPair'
+import { loadWallet } from './account/utils/loadWallet'
 
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
-		console.log('Chains called.')
 		console.log('Chains called.')
 	}
 
@@ -92,7 +91,7 @@ export class BlockChains {
 	): Promise<Block> {
 		const latestBlock: Block = await getCurrentBlock()
 		const currentHeight = latestBlock.block.height
-		const { privateKey } = loadKeyPair()
+		const { privateKey } = loadWallet()!
 
 		if (!latestBlock) {
 			throw new Error('Latest block is undefined.')
@@ -174,12 +173,15 @@ export class BlockChains {
 	 * @param reward - The amount of reward to be given.
 	 */
 	private async giveReward(address: string, reward: number) {
-		const oldBalance = await getBalance(address)
+		const oldBalance = await getBalance(address).catch(() => null)
 		if (!oldBalance) {
 			putBalance(address, {
 				address,
 				balance: reward,
 				timesTransaction: 0,
+				isContract: false,
+				lastTransactionDate: null,
+				nonce: 0,
 			})
 			return
 		}
@@ -188,7 +190,10 @@ export class BlockChains {
 		putBalance(address, {
 			address,
 			balance: newBalance,
-			timesTransaction: oldBalance.timesTransaction,
+			timesTransaction: oldBalance.timesTransaction + 1,
+			isContract: false,
+			lastTransactionDate: generateTimestampz(),
+			nonce: 0,
 		})
 	}
 

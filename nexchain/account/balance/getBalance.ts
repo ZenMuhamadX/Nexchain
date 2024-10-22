@@ -1,7 +1,7 @@
 import { leveldbState } from 'nexchain/leveldb/state'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
-import { structBalance } from 'nexchain/transaction/struct/structBalance'
+import { structBalance } from 'interface/structBalance'
 
 export const getBalance = async (
 	address: string,

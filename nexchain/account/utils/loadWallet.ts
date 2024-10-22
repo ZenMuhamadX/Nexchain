@@ -1,32 +1,22 @@
 import path from 'path'
-import fs from 'node:fs'
-import msg from 'msgpack-lite'
-import { structWalletToSave } from 'interface/walletStructinf'
+import fs from 'fs'
+import { structWalletToSave } from 'interface/structWalletToSave'
+import { loadWalletConfig } from '../loadWalletConf'
 
+// Fungsi untuk memuat kunci dari file atau menghasilkan kunci baru jika belum ada
 export const loadWallet = (): structWalletToSave | undefined => {
-	const dirPath = path.join(__dirname, '../../../myWallet')
-	const filePath = path.join(dirPath, 'MainWallet.bin')
-
-	try {
-		// Check if the file exists
-		if (!fs.existsSync(filePath) || !fs.existsSync(dirPath)) {
-			console.error('File MainWallet.bin not found.')
-			return undefined
-		}
-
-		// Read file if it exists
-		const fileData = fs.readFileSync(filePath)
-		const walletData: structWalletToSave = msg.decode(fileData)
-
-		// Check if wallet data is valid
-		if (!walletData || !walletData.data) {
-			console.error('Invalid wallet data.')
-			return undefined
-		}
-
-		return walletData
-	} catch (error) {
-		console.error('Error loading wallet:', error)
-		return undefined
+	const walletName = loadWalletConfig()?.primaryWalletName
+	// Tentukan path file kunci
+	const walletPath = path.join(__dirname, `../../../wallet/${walletName}.json`)
+	if (!fs.existsSync(walletPath)) {
+		console.info(
+			'Wallet not found please configure your primary wallet in config/wallet.conf.json',
+		)
+		console.info('if you have no wallet please create')
+		return
 	}
+	// Membaca kunci dari file
+	const walletData = fs.readFileSync(walletPath, 'utf8')
+	const structWallet: structWalletToSave = JSON.parse(walletData)
+	return structWallet
 }

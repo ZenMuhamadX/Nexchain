@@ -1,4 +1,4 @@
-import { TxInterface } from 'interface/Nexcoin.inf'
+import { TxInterface } from 'interface/structTx'
 import { leveldbHistory } from 'nexchain/leveldb/history'
 
 interface savedHistory extends TxInterface {

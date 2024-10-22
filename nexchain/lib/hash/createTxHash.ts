@@ -1,7 +1,7 @@
 /** @format */
 
-import { comTxInterface } from 'interface/commonTxInterface'
-import { TxInterface } from '../../../interface/Nexcoin.inf'
+import { comTxInterface } from 'interface/structComTx'
+import { TxInterface } from '../../../interface/structTx'
 import { sha256 } from './hash'
 
 // Membuat hash dari data transaksi dengan nonce yang diberikan.
