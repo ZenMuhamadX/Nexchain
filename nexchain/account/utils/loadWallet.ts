@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs'
-import { structWalletToSave } from 'interface/walletStructinf'
+import { structWalletToSave } from 'interface/structWalletToSave'
 import { loadWalletConfig } from '../loadWalletConf'
 
 // Fungsi untuk memuat kunci dari file atau menghasilkan kunci baru jika belum ada

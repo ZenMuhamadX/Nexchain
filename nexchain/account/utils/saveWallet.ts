@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
-import { structWalletToSave } from 'interface/walletStructinf'
+import { structWalletToSave } from 'interface/structWalletToSave'
 import path from 'path'
 import readline from 'readline'
 

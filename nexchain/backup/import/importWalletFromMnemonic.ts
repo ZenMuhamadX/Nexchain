@@ -3,7 +3,7 @@ import { generateKeysFromMnemonic } from 'nexchain/lib/keyPair/genKeyFromMnemoni
 import bip39 from 'bip39'
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import path from 'path'
-import { structWalletToSave } from 'interface/walletStructinf'
+import { structWalletToSave } from 'interface/structWalletToSave'
 
 // Fungsi utama untuk mengimpor dompet dari mnemonic
 export const importWalletFromMnemonic = (

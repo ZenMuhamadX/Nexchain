@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs'
-import { structWalletToSave } from 'interface/walletStructinf'
+import { structWalletToSave } from 'interface/structWalletToSave'
 import path from 'path'
 
 export const getMnemonicFromWallet = (walletName: string) => {
