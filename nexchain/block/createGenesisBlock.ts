@@ -14,7 +14,7 @@ import { getBlockByHeight } from './query/direct/block/getBlockByHeight'
 import { countHashDifficulty } from 'nexchain/lib/hash/countHashDifficulty'
 import { loadWallet } from 'nexchain/account/utils/loadWallet'
 import { stringToHex } from 'nexchain/lib/hex/stringToHex'
-import { toNexu } from 'nexchain/lib/nexucoin/toNexu'
+import { toNexu } from 'nexchain/nexucoin/toNexu'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0)
