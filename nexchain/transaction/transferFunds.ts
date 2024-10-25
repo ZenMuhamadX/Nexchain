@@ -5,8 +5,8 @@ import { MemPool } from 'nexchain/model/memPool/memPool'
 import { TxInterface } from 'interface/structTx'
 import { loadWallet } from 'nexchain/account/utils/loadWallet'
 import { stringToHex } from 'nexchain/lib/hex/stringToHex'
-import { toNexu } from 'nexchain/lib/nexucoin/toNexu'
-import { toNxc } from 'nexchain/lib/nexucoin/toNxc'
+import { toNexu } from 'nexchain/nexucoin/toNexu'
+import { toNxc } from 'nexchain/nexucoin/toNxc'
 
 export const transferFunds = async (transaction: comTxInterface) => {
 	const memPool = new MemPool()
