@@ -1,15 +1,12 @@
+import { coinBaseTx } from './structCoinBaseTx'
+import { header } from './structHeader'
+import { metadata } from './structMetadata'
 import { TxInterface } from './structTx'
 
+export type HexString = `0x${string}`
+
 export interface blockStruct {
-	header: {
-		previousBlockHash: string
-		timestamp: number // Changed to number for better efficiency (UNIX timestamp)
-		hash: string
-		nonce: number
-		version: string
-		difficulty: number
-		hashingAlgorithm: string // Optional, in case you want flexibility in hashing algorithms
-	}
+	header: header
 	height: number
 	signature: string
 	size: number
@@ -18,20 +15,8 @@ export interface blockStruct {
 	networkId: string
 	status: 'confirmed' | 'pending'
 	blockReward: number
-	coinbaseTransaction: {
-		to: string
-		amount: number
-	}
-	validator: {
-		rewardAddress: string
-		stakeAmount: number // Optional, if you're planning to implement a proof-of-stake system
-		validationTime: number // Optional, for storing the time taken to validate the block
-	}
-	metadata?: {
-		txCount: number
-		gasPrice: number
-		created_at: number // Changed to number (UNIX timestamp) for consistency
-		notes: any
-	}
+	totalReward: number
+	coinbaseTransaction: coinBaseTx
+	metadata?: metadata
 	transactions: TxInterface[]
 }

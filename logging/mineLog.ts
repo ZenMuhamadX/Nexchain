@@ -31,7 +31,7 @@ export const mineLog = (status: Status): void => {
 		mined_at: status.mined_at,
 		hash: status.hash,
 		miner: status.miner,
-		difficulty: status.difficulty,
+		difficulty: 5,
 		nonce: status.nonce,
 	}
 

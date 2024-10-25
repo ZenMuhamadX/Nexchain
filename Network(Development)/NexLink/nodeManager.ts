@@ -7,9 +7,9 @@ import { miningBlock } from 'nexchain/miner/mining'
 import { validateMessageInterface } from './validateInf'
 import { generateMessageId } from '../utils/getMessageId'
 import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
-import { createTransact } from 'nexchain/transaction/createTransact'
 import _ from 'lodash'
 import { leveldbState } from 'nexchain/leveldb/state'
+import { transferFunds } from 'nexchain/transaction/transferFunds'
 
 // Logger configuration
 const logger = winston.createLogger({
@@ -226,7 +226,7 @@ export class Node {
 
 	// Handle transaction creation
 	private handleCreateTransaction(data: COM) {
-		createTransact(data.payload.data)
+		transferFunds(data.payload.data)
 			.then(() => {
 				logger.info(`Transaction processed: ${data.payload.data}`)
 			})

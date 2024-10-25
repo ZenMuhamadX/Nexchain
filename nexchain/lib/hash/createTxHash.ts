@@ -10,8 +10,9 @@ export const createTxnHash = (data: TxInterface): string => {
 		sender: data.sender,
 		receiver: data.receiver,
 		amount: data.amount,
-		message: data.message,
+		extraData: data.extraData,
 		timestamp: data.timestamp,
+		format: 'nexu',
 	}
 	const stringData = JSON.stringify(txData)
 	const hash = sha256(stringData)

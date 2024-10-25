@@ -10,33 +10,31 @@ import { TxInterface } from 'interface/structTx'
 import { getCurrentBlock } from 'nexchain/block/query/direct/block/getCurrentBlock'
 import _ from 'lodash'
 import { isChainsValid } from 'nexchain/block/isChainValid'
+import { getBlockByHeight } from 'nexchain/block/query/direct/block/getBlockByHeight'
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {
+	const isGenesisBlock = await getBlockByHeight(0).catch(() => null)
+	if (!isGenesisBlock) {
+		console.error('Genesis block not found')
+		return
+	}
 	// Initialize blockchain and memory pool instances
 	const pool = new MemPool()
 	const transactions: TxInterface[] = await pool.getValidTransactions()
 
 	try {
-		// Check if there are pending transactions to mine
+		// Jika tidak ada transaksi yang pending, info dan lanjutkan proses
 		if (transactions.length === 0) {
-			loggingErr({
-				error: 'No pending transactions to mine',
-				context: 'miningBlock',
-				hint: 'No transactions to mine',
-				time: generateTimestampz(),
-				warning: null,
-				stack: new Error().stack,
+			console.info('Block mined with 0 transactions')
+		} else {
+			// Loop hanya jika ada transaksi
+			transactions.forEach((tx) => {
+				tx.isValid = true
+				tx.isPending = false
+				tx.status = 'confirmed'
 			})
-			return
 		}
-
-		// Mark transactions as validated and confirmed
-		transactions.forEach((tx) => {
-			tx.isValid = true
-			tx.isPending = false
-			tx.status = 'confirmed'
-		})
 
 		const isAllBlockValid = await isChainsValid()
 		if (!isAllBlockValid) {

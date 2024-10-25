@@ -17,6 +17,20 @@ const handleExit = () => {
 
 process.on('SIGINT', handleExit)
 
+const askYesNo = (question: string, callback: CallableFunction) => {
+	rl.question(question, (answer) => {
+		answer = answer.toLowerCase()
+		if (answer === 'yes') {
+			callback(true)
+		} else if (answer === 'no') {
+			callback(false)
+		} else {
+			console.log('Say what? Please answer with yes or no.')
+			askYesNo(question, callback) // Rekursi untuk mengulangi pertanyaan
+		}
+	})
+}
+
 export const saveWallet = (data: structWalletToSave, fileName: string) => {
 	const dirPath = path.join(__dirname, '../../../wallet/')
 	const filePath = path.join(dirPath, `${fileName}.json`)
@@ -27,10 +41,10 @@ export const saveWallet = (data: structWalletToSave, fileName: string) => {
 		}
 
 		if (existsSync(filePath)) {
-			rl.question(
+			askYesNo(
 				'Wallet already exists. Do you want to overwrite it? (yes/no) ',
-				(answer) => {
-					if (answer.toLowerCase() === 'yes') {
+				(overwrite: string) => {
+					if (overwrite) {
 						writeFileSync(filePath, JSON.stringify(data, null, 2))
 						console.log(`Wallet saved to ${filePath}`)
 					} else {
@@ -40,10 +54,10 @@ export const saveWallet = (data: structWalletToSave, fileName: string) => {
 				},
 			)
 		} else {
-			rl.question(
+			askYesNo(
 				`Wallet does not exist. Do you want to create a new wallet with the name "${fileName}"? (yes/no) `,
-				(answer) => {
-					if (answer.toLowerCase() === 'yes') {
+				(create: string) => {
+					if (create) {
 						writeFileSync(filePath, JSON.stringify(data, null, 2))
 						console.log(`Wallet created and saved to ${filePath}`)
 					} else {
