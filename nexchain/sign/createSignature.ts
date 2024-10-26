@@ -8,7 +8,6 @@ export const createSignature = (
 	data: string,
 	privateKey: string,
 ): { v: number; r: string; s: string } => {
-	
 	const dataHash = hashMessage(data)
 
 	// Mendapatkan pasangan kunci

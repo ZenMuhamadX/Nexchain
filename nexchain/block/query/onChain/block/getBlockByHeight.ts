@@ -1,19 +1,18 @@
 import { Block } from 'nexchain/model/block/block'
 import { getBlockByHash } from './getBlockByHash'
 import { leveldbState } from 'nexchain/leveldb/state'
+import { HexString } from 'interface/structBlock'
 
 export const getBlockByHeight = async (
 	height: number,
-): Promise<Block | undefined> => {
+	enc: 'json' | 'hex',
+): Promise<Block | undefined | HexString> => {
 	try {
 		const blockHash = await leveldbState.get(`blockHeight:${height}`, {
 			fillCache: true,
-			keyEncoding: 'utf-8',
-			valueEncoding: 'utf-8',
 		})
 		if (!blockHash) return undefined
-		const data = await getBlockByHash(blockHash)
-		return data
+		return await getBlockByHash(blockHash, enc)
 	} catch (error) {
 		return undefined
 	}

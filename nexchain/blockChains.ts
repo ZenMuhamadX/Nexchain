@@ -16,7 +16,7 @@ import { getBalance } from './account/balance/getBalance'
 import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
-import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
+import { getCurrentBlock } from './block/query/onChain/block/getCurrentBlock'
 import { loadWallet } from './account/utils/loadWallet'
 import { stringToHex } from './hex/stringToHex'
 import { toNexu } from './nexucoin/toNexu'
@@ -103,7 +103,7 @@ export class BlockChains {
 		transactions: TxInterface[],
 		walletMiner: string,
 	): Promise<Block> {
-		const latestBlock: Block = await getCurrentBlock()
+		const latestBlock: Block = (await getCurrentBlock('json')) as Block
 		const currentHeight = latestBlock.block.height
 		const { privateKey } = loadWallet()!
 

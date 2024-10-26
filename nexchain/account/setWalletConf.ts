@@ -10,6 +10,9 @@ export const setWalletConfig = () => {
 	if (!existsSync(dirPath)) {
 		mkdirSync(dirPath, { recursive: true })
 	}
+	if (existsSync(filePath)) {
+		return
+	}
 	const defaultData: WalletConfig = {
 		createdAt: convertTimestampToDate(generateTimestampz()),
 		isBackup: false,
