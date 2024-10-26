@@ -1,10 +1,16 @@
+import { HexString } from 'interface/structBlock'
 import { leveldb } from 'nexchain/leveldb/block'
+import { hexToString } from 'nexchain/lib/hex/hexToString'
+import { Block } from 'nexchain/model/block/block'
 
-export const getBlockByHash = async (hash: string) => {
-	const block = await leveldb.get(`blockHash:${hash}`, {
+export const getBlockByHash = async (
+	hash: string,
+	enc: 'hex' | 'json',
+): Promise<Block | HexString> => {
+	const block: HexString = await leveldb.get(`blockHash:${hash}`, {
 		fillCache: true,
-		valueEncoding: 'json',
-		keyEncoding: 'utf-8',
 	})
+	const decodedBlock = hexToString(block)
+	if (enc === 'json') return JSON.parse(decodedBlock)
 	return block
 }

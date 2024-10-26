@@ -24,7 +24,5 @@ export const setBlockState = (block: Block) => {
 	}
 	leveldbState.put(`blockState`, blockState, {
 		sync: true,
-		keyEncoding: 'utf8',
-		valueEncoding: 'json',
 	})
 }

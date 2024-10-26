@@ -6,7 +6,7 @@ initFile()
 const dirPath = path.join(__dirname, '../../base')
 
 export const leveldb = new Level<string, any>(dirPath, {
-	valueEncoding: 'json', // Store values in JSON format
+	valueEncoding: 'utf-8', // Store values in JSON format
 	keyEncoding: 'utf-8', // Use UTF-8 encoding for keys
 	cacheSize: 8 * 1024 * 1024, // 8 MB cache to improve data access speed
 	writeBufferSize: 16 * 1024 * 1024, // 16 MB write buffer for efficient batch writes
