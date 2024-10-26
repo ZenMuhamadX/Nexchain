@@ -14,7 +14,7 @@ import { getBlockByHeight } from 'nexchain/block/query/direct/block/getBlockByHe
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {
-	const isGenesisBlock = await getBlockByHeight(0).catch(() => null)
+	const isGenesisBlock = await getBlockByHeight(0, 'json').catch(() => null)
 	if (!isGenesisBlock) {
 		console.error('Genesis block not found')
 		return
@@ -53,7 +53,7 @@ export const miningBlock = async (address: string): Promise<void> => {
 		const successMine = await chains.addBlockToChain(transactions, address)
 		if (successMine) {
 			// Log mining details if successful
-			const lastBlock: Block = await getCurrentBlock()
+			const lastBlock: Block = (await getCurrentBlock('json')) as Block
 			mineLog({
 				difficulty: 3, // Consider making this dynamic or configurable
 				hash: lastBlock?.block.header.hash || 'N/A',

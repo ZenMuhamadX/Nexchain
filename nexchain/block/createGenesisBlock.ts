@@ -17,7 +17,7 @@ import { stringToHex } from 'nexchain/lib/hex/stringToHex'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
-	const block = await getBlockByHeight(0)
+	const block = await getBlockByHeight(0, 'json')
 	if (block) {
 		console.log('Genesis block already exists.')
 		return undefined

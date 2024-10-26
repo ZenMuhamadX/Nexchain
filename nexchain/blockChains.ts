@@ -104,7 +104,7 @@ export class BlockChains {
 		transactions: TxInterface[],
 		walletMiner: string,
 	): Promise<Block> {
-		const latestBlock: Block = await getCurrentBlock()
+		const latestBlock: Block = (await getCurrentBlock('json')) as Block
 		const currentHeight = latestBlock.block.height
 		const { privateKey } = loadWallet()!
 
