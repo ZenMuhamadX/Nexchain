@@ -1,5 +1,5 @@
 import { Block } from 'nexchain/model/block/block'
-import { generateTimestampz } from '../../../lib/timestamp/generateTimestampz'
+import { generateTimestampz } from '../../../lib/generateTimestampz'
 import { loggingErr } from '../../../../logging/errorLog'
 import Joi from 'joi'
 import _ from 'lodash'
@@ -14,7 +14,11 @@ export const verifyStruct = async (chains: Block) => {
 		amount: Joi.number().required().unsafe(),
 		txHash: Joi.string().required(),
 		timestamp: Joi.number().required(),
-		signature: Joi.string().required(),
+		sign: Joi.object({
+			r: Joi.string().required(),
+			s: Joi.string().required(),
+			v: Joi.number().required(),
+		}).required(),
 		extraData: Joi.any().optional(),
 		fee: Joi.number().required().unsafe(),
 		status: Joi.string().required(),
@@ -50,11 +54,16 @@ export const verifyStruct = async (chains: Block) => {
 			hashingAlgorithm: Joi.string().optional(),
 		}).required(),
 		height: Joi.number().required(),
-		signature: Joi.string().required(),
+		sign: Joi.object({
+			r: Joi.string().required(),
+			s: Joi.string().required(),
+			v: Joi.number().required(),
+		}).required(),
+		chainId: Joi.number().required(),
 		size: Joi.number().required(),
 		totalTransactionFees: Joi.any().optional(),
 		merkleRoot: Joi.string().required(),
-		networkId: Joi.string().required(),
+		minerId: Joi.string().required(),
 		totalReward: Joi.number().required().unsafe(true),
 		status: Joi.valid('confirmed', 'pending').required(),
 		blockReward: Joi.any().required(),

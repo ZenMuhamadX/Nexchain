@@ -15,7 +15,11 @@ export const txInterfaceValidator = Joi.object({
 	format: Joi.string().valid('nexu').required(),
 	sender: Joi.string().required(),
 	receiver: Joi.string().required(),
-	signature: Joi.string().required(),
+	sign: Joi.object({
+		r: Joi.string().required(),
+		s: Joi.string().required(),
+		v: Joi.number().required(),
+	}).required(),
 	timestamp: Joi.number().required(),
 	txHash: Joi.string().required(),
 	message: Joi.any().optional(),

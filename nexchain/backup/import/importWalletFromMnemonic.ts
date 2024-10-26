@@ -1,5 +1,5 @@
-import { generateAddressFromPublicKey } from 'nexchain/lib/keyPair/genAddrFromPubKey'
-import { generateKeysFromMnemonic } from 'nexchain/lib/keyPair/genKeyFromMnemonic'
+import { generateAddressFromPublicKey } from 'nexchain/keyPair/genAddrFromPubKey'
+import { generateKeysFromMnemonic } from 'nexchain/keyPair/genKeyFromMnemonic'
 import bip39 from 'bip39'
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import path from 'path'
@@ -8,7 +8,7 @@ import { structWalletToSave } from 'interface/structWalletToSave'
 // Fungsi utama untuk mengimpor dompet dari mnemonic
 export const importWalletFromMnemonic = (
 	mnemonic: string,
-	saveToFile?: boolean,
+	saveToFile: boolean,
 ) => {
 	const isValidMnemonic = bip39.validateMnemonic(mnemonic)
 

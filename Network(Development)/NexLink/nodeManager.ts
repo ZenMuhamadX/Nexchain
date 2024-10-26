@@ -1,15 +1,15 @@
 import WebSocket, { WebSocketServer } from 'ws'
 import winston from 'winston'
 import * as path from 'path'
-import { getNetworkId } from '../utils/getNetId'
 import { COM } from '../interface/COM'
 import { miningBlock } from 'nexchain/miner/mining'
 import { validateMessageInterface } from './validateInf'
 import { generateMessageId } from '../utils/getMessageId'
-import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
+import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import _ from 'lodash'
 import { leveldbState } from 'nexchain/leveldb/state'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
+import { getMinerId } from 'Network(Development)/utils/getMinerId'
 
 // Logger configuration
 const logger = winston.createLogger({
@@ -36,7 +36,7 @@ export class Node {
 
 	constructor(port: number) {
 		this.port = port
-		this.id = getNetworkId() // Generate a unique ID for the node
+		this.id = getMinerId() // Generate a unique ID for the node
 		this.server = new WebSocketServer({ port: this.port })
 		this.initServer()
 		this.loadPeerList() // Load peer list on initialization

@@ -3,18 +3,18 @@
 import { loggingErr } from '../../logging/errorLog'
 import { proofOfWork } from '../miner/Pow'
 import { Block } from '../model/block/block'
-import { createSignature } from '../lib/block/createSignature'
-import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
-import { calculateSize } from '../lib/utils/calculateSize'
+import { createSignature } from '../sign/createSignature'
+import { generateTimestampz } from '../lib/generateTimestampz'
+import { calculateSize } from '../lib/calculateSize'
 import { putBalance } from 'nexchain/account/balance/putBalance'
 import { calculateTotalFees } from 'nexchain/transaction/utils/totalFees'
 import { saveBlock } from 'nexchain/storage/block/saveBlock'
-import { getNetworkId } from 'Network(Development)/utils/getNetId'
 import { getBlockByHeight } from './query/direct/block/getBlockByHeight'
-import { countHashDifficulty } from 'nexchain/lib/hash/countHashDifficulty'
+import { countHashDifficulty } from 'nexchain/block/countHashDifficulty'
 import { loadWallet } from 'nexchain/account/utils/loadWallet'
-import { stringToHex } from 'nexchain/lib/hex/stringToHex'
+import { stringToHex } from 'nexchain/hex/stringToHex'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
+import { getMinerId } from 'Network(Development)/utils/getMinerId'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0)
@@ -41,13 +41,17 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			height: 0,
 			merkleRoot:
 				'0000000000000000000000000000000000000000000000000000000000000000',
-			networkId: getNetworkId(),
-			signature: '',
+			minerId: getMinerId(),
 			size: 0,
+			sign: {
+				r: '',
+				s: '',
+				v: 0,
+			},
 			status: 'confirmed',
 			coinbaseTransaction: {
 				amount: 500,
-				receiver: 'NxCbe89049c9b139f69e6828d2bec981a16322b3e39',
+				receiver: 'NxCfd6d6abbe808536f1aea206388fbfd0449f1ae55',
 				extraData: stringToHex('Genesis Block Reward'),
 			},
 			metadata: {
@@ -63,14 +67,17 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		genesisBlock.block.totalTransactionFees = calculateTotalFees(
 			genesisBlock.block.transactions,
 		)
-		genesisBlock.block.signature = createSignature(
-			genesisBlock.block.header.hash,
-			privateKey,
-		).signature
+
 		const validHash = proofOfWork(genesisBlock)
 		genesisBlock.block.header.difficulty = countHashDifficulty(validHash.hash)
 		genesisBlock.block.header.hash = validHash.hash
 		genesisBlock.block.header.nonce = validHash.nonce
+
+		genesisBlock.block.sign = createSignature(
+			genesisBlock.block.header.hash,
+			privateKey,
+		)
+
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
 		putBalance(genesisBlock.block.coinbaseTransaction.receiver, {
 			address: genesisBlock.block.coinbaseTransaction.receiver,

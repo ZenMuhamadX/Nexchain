@@ -1,6 +1,5 @@
 import figlet from 'figlet'
 
-export const textCli = () => {
-	console.log(figlet.textSync('NexChains', { font: 'Sub-Zero' }))
-	console.log('A Next Generation Decentralized Blockchain')
+export const textCli = (text: string) => {
+	console.log(figlet.textSync(text, { font: 'Sub-Zero' }))
 }
