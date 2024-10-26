@@ -5,6 +5,7 @@ import { TxInterface } from 'interface/structTx'
 
 export const getHistoryByAddress = async (
 	address: string,
+	enc: 'json' | 'hex',
 ): Promise<{ history: TxInterface[]; count: number }> => {
 	try {
 		const txHashes = await leveldbHistory
@@ -17,7 +18,7 @@ export const getHistoryByAddress = async (
 		const parseTxHash = JSON.parse(txHashes)
 
 		const histories = await Promise.all(
-			parseTxHash.map((txHash: string) => getHistoryByTxHash(txHash)),
+			parseTxHash.map((txHash: string) => getHistoryByTxHash(txHash, enc)),
 		)
 
 		// Filter out undefined histories

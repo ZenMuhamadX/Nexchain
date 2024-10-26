@@ -5,12 +5,12 @@ export const txInterfaceValidator = Joi.object({
 	amount: Joi.number()
 		.required()
 		.positive() // Memastikan nilai positif
-		.min(20) // Memastikan minimal 20 Nexu
+		.min(0.999) // Memastikan minimal 1 Nexu
 		.unsafe(true)
 		.messages({
 			'number.base': '"amount" must be a number',
 			'number.positive': '"amount" must be a positive number',
-			'number.min': '"amount" must be at least 20',
+			'number.min': '"amount" must be at least 1 nexu',
 		}),
 	format: Joi.string().valid('nexu').required(),
 	sender: Joi.string().required(),

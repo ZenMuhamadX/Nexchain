@@ -18,7 +18,7 @@ export const transferFunds = async (transaction: comTxInterface) => {
 	}
 
 	// Cek apakah jumlah minimal terpenuhi
-	const minAmount = toNexu(2) // Minimum 2 NXC
+	const minAmount = toNexu(1) // Minimum 1 nexu
 	if (convertedAmount < minAmount) {
 		console.log('Transaction amount must be at least 2 NXC.')
 		return // Hentikan eksekusi jika tidak memenuhi syarat

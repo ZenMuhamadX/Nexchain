@@ -9,15 +9,16 @@ import { calculateSize } from '../lib/calculateSize'
 import { putBalance } from 'nexchain/account/balance/putBalance'
 import { calculateTotalFees } from 'nexchain/transaction/utils/totalFees'
 import { saveBlock } from 'nexchain/storage/block/saveBlock'
-import { getBlockByHeight } from './query/direct/block/getBlockByHeight'
-import { countHashDifficulty } from 'nexchain/block/countHashDifficulty'
 import { loadWallet } from 'nexchain/account/utils/loadWallet'
 import { stringToHex } from 'nexchain/hex/stringToHex'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { getMinerId } from 'Network(Development)/utils/getMinerId'
+import { countHashDifficulty } from './countHashDifficulty'
+import { getBlockByHeight } from './query/onChain/block/getBlockByHeight'
+import { myWalletAddress } from 'nexchain/account/myWalletAddress'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
-	const block = await getBlockByHeight(0)
+	const block = await getBlockByHeight(0, 'json')
 	if (block) {
 		console.log('Genesis block already exists.')
 		return undefined
@@ -51,7 +52,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			status: 'confirmed',
 			coinbaseTransaction: {
 				amount: 500,
-				receiver: 'NxCfd6d6abbe808536f1aea206388fbfd0449f1ae55',
+				receiver: myWalletAddress(),
 				extraData: stringToHex('Genesis Block Reward'),
 			},
 			metadata: {

@@ -16,15 +16,14 @@ import { getBalance } from './account/balance/getBalance'
 import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
-import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
+import { getCurrentBlock } from './block/query/onChain/block/getCurrentBlock'
 import { loadWallet } from './account/utils/loadWallet'
 import { stringToHex } from './hex/stringToHex'
 import { toNexu } from './nexucoin/toNexu'
 import { createMerkleRoot } from './transaction/utils/createMerkleRoot'
 import { verifyMerkleRoot } from './miner/verify/module/verifyMerkleRoot'
-import { setBlockReward } from './block/dynamicReward'
+import { setBlockReward } from './block/cutReward'
 import { getMinerId } from 'Network(Development)/utils/getMinerId'
-
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
@@ -63,7 +62,6 @@ export class BlockChains {
 			} catch (saveError) {
 				throw new Error('Failed to save block: ' + saveError)
 			}
-
 			if (validTransaction.length > 0) {
 				await processTransact(validTransaction)
 			}
@@ -103,7 +101,7 @@ export class BlockChains {
 		transactions: TxInterface[],
 		walletMiner: string,
 	): Promise<Block> {
-		const latestBlock: Block = await getCurrentBlock()
+		const latestBlock: Block = (await getCurrentBlock('json')) as Block
 		const currentHeight = latestBlock.block.height
 		const { privateKey } = loadWallet()!
 
