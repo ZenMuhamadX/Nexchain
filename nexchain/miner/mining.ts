@@ -1,7 +1,7 @@
 /** @format */
 
 import { MemPool } from '../model/memPool/memPool'
-import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
+import { generateTimestampz } from '../lib/generateTimestampz'
 import { loggingErr } from '../../logging/errorLog'
 import { mineLog } from '../../logging/mineLog'
 import { chains } from 'nexchain/block/initBlock'

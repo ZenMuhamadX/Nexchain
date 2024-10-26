@@ -12,7 +12,6 @@ import { isNexu } from 'nexchain/nexucoin/isNexu'
 
 export const transactionValidator = async (
 	transaction: TxInterface,
-	publicKey: string,
 ): Promise<boolean> => {
 	const { error } = txInterfaceValidator.validate(transaction)
 
@@ -23,7 +22,7 @@ export const transactionValidator = async (
 			error?.message || 'Invalid transaction amount',
 		)
 	}
-	if (!validateTransactionSignature(transaction, publicKey)) return false
+	if (!validateTransactionSignature(transaction)) return false
 
 	if (!validateTransactionSenderReceiver(transaction)) return false
 

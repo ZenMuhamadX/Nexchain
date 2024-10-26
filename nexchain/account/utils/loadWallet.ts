@@ -17,6 +17,11 @@ export const loadWallet = (): structWalletToSave | undefined => {
 	}
 	// Membaca kunci dari file
 	const walletData = fs.readFileSync(walletPath, 'utf8')
-	const structWallet: structWalletToSave = JSON.parse(walletData)
-	return structWallet
+	const data: structWalletToSave = JSON.parse(walletData)
+	return {
+		mnemonic: data.mnemonic,
+		privateKey: data.privateKey.slice(2),
+		publicKey: data.publicKey.slice(2),
+		walletAddress: data.walletAddress,
+	}
 }

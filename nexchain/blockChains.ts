@@ -1,14 +1,14 @@
 /** @format */
 
 // BlockChains.ts
-import { generateTimestampz } from './lib/timestamp/generateTimestampz'
+import { generateTimestampz } from './lib/generateTimestampz'
 import { Block } from './model/block/block'
 import { saveBlock } from './storage/block/saveBlock'
 import { loggingErr } from '../logging/errorLog'
 import { successLog } from '../logging/succesLog'
-import { createSignature } from './lib/block/createSignature'
+import { createSignature } from './sign/createSignature'
 import { proofOfWork } from './miner/Pow'
-import { calculateSize } from './lib/utils/calculateSize'
+import { calculateSize } from './lib/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { TxInterface } from '../interface/structTx'
 import { putBalance } from './account/balance/putBalance'
@@ -16,14 +16,14 @@ import { getBalance } from './account/balance/getBalance'
 import { processTransact } from './transaction/processTransact'
 import { calculateTotalFees } from './transaction/utils/totalFees'
 import { calculateTotalBlockReward } from './miner/calculateReward'
-import { getNetworkId } from '../Network(Development)/utils/getNetId'
 import { getCurrentBlock } from './block/query/direct/block/getCurrentBlock'
 import { loadWallet } from './account/utils/loadWallet'
-import { stringToHex } from './lib/hex/stringToHex'
+import { stringToHex } from './hex/stringToHex'
 import { toNexu } from './nexucoin/toNexu'
 import { createMerkleRoot } from './transaction/utils/createMerkleRoot'
 import { verifyMerkleRoot } from './miner/verify/module/verifyMerkleRoot'
-import { setBlockReward } from './lib/block/dynamicReward'
+import { setBlockReward } from './block/dynamicReward'
+import { getMinerId } from 'Network(Development)/utils/getMinerId'
 
 // Manages the blockchain and its operations
 export class BlockChains {
@@ -73,7 +73,6 @@ export class BlockChains {
 				hash: newBlock.block.header.hash,
 				height: newBlock.block.height,
 				previousHash: newBlock.block.header.previousBlockHash,
-				signature: newBlock.block.signature,
 				message: 'Block added to the chain',
 				timestamp: generateTimestampz().toString(),
 				nonce: newBlock.block.header.nonce,
@@ -126,9 +125,13 @@ export class BlockChains {
 			totalTransactionFees: 0,
 			height: currentHeight + 1,
 			merkleRoot: createMerkleRoot(transactions),
-			networkId: getNetworkId(),
-			signature: '',
+			minerId: getMinerId(),
 			size: 0,
+			sign: {
+				r: '',
+				s: '',
+				v: 0,
+			},
 			status: 'confirmed',
 			blockReward: 0,
 			totalReward: 0,
@@ -169,10 +172,10 @@ export class BlockChains {
 		newBlock.block.header.hash = hash
 		newBlock.block.size = calculateSize(newBlock).KB
 
-		newBlock.block.signature = createSignature(
+		newBlock.block.sign = createSignature(
 			newBlock.block.header.hash,
 			privateKey,
-		).signature
+		)
 
 		return newBlock
 	}
@@ -185,7 +188,6 @@ export class BlockChains {
 	private async giveReward(address: string, reward: number) {
 		const oldData = await getBalance(address).catch(() => null)
 		const nexuReward = toNexu(reward)
-		console.log(nexuReward)
 		const oldNexuBalance = oldData?.balance
 
 		if (!oldNexuBalance) {

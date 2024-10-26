@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
+import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
 
 // Process public key to create a wallet address

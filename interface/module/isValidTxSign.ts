@@ -1,13 +1,16 @@
-import { verifySignature } from 'nexchain/lib/block/verifySIgnature'
+import { verifySignature } from 'nexchain/sign/verifySIgnature'
 import { validateField } from './validateField'
 import { TxInterface } from 'interface/structTx'
 
 export const validateTransactionSignature = (
 	transaction: TxInterface,
-	publicKey: string,
 ): boolean => {
 	return validateField(
-		!verifySignature(transaction, transaction.signature!, publicKey).status,
+		!verifySignature(transaction.txHash!, {
+			r: transaction.sign.r,
+			s: transaction.sign.s,
+			v: transaction.sign.v,
+		}),
 		'transactionValidator',
 		'Invalid signature',
 	)

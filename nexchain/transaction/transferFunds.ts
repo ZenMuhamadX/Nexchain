@@ -1,12 +1,12 @@
-import { createSignature } from 'nexchain/lib/block/createSignature'
-import { createTxnHash } from 'nexchain/lib/hash/createTxHash'
+import { createTxnHash } from 'nexchain/transaction/createTxHash'
 import { comTxInterface } from 'interface/structComTx'
 import { MemPool } from 'nexchain/model/memPool/memPool'
 import { TxInterface } from 'interface/structTx'
 import { loadWallet } from 'nexchain/account/utils/loadWallet'
-import { stringToHex } from 'nexchain/lib/hex/stringToHex'
+import { stringToHex } from 'nexchain/hex/stringToHex'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { toNxc } from 'nexchain/nexucoin/toNxc'
+import { createSignature } from 'nexchain/sign/createSignature'
 
 export const transferFunds = async (transaction: comTxInterface) => {
 	const memPool = new MemPool()
@@ -46,11 +46,16 @@ export const transferFunds = async (transaction: comTxInterface) => {
 				'NexChains A Next Generation Blockchain for Everyone',
 		),
 		status: 'pending',
+		sign: {
+			r: '',
+			s: '',
+			v: 0,
+		},
 	}
 	// Ambil privateKey dari wallet
 	const { privateKey } = loadWallet()!
-	convertedTx.signature = createSignature(convertedTx, privateKey).signature
 	convertedTx.txHash = createTxnHash(convertedTx)
+	convertedTx.sign = createSignature(convertedTx.txHash!, privateKey)
 	const hexInput = stringToHex(
 		JSON.stringify({
 			format: convertedTx.format,
