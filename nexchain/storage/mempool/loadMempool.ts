@@ -11,8 +11,6 @@ export const loadMempool = async (): Promise<TxInterface[]> => {
 		fillCache: true,
 		reverse: false,
 		keys: true,
-		keyEncoding: 'utf-8',
-		valueEncoding: 'json',
 	})) {
 		if (key.length === 69) {
 			loadedPool.push(value)

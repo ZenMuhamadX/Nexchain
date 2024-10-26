@@ -1,5 +1,5 @@
 import { createHash } from 'crypto'
-import { prepareBlockForHashing } from 'nexchain/lib/block/prepareBlock'
+import { prepareBlockForHashing } from 'nexchain/block/prepareBlock'
 import { Block } from 'nexchain/model/block/block'
 
 const DIFFICULTY_PREFIX = '0000' // Kriteria kesulitan

@@ -1,5 +1,5 @@
+import { stringToHex } from 'nexchain/hex/stringToHex'
 import { leveldb } from 'nexchain/leveldb/block'
-import { stringToHex } from 'nexchain/lib/hex/stringToHex'
 import { Block } from 'nexchain/model/block/block'
 
 export const writeBlockHash = (blockHash: string, blockData: Block): void => {

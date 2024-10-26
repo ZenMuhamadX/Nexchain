@@ -1,6 +1,7 @@
 import { HexString } from 'interface/structBlock'
 
 export const stringToHex = (input: string): HexString => {
-	const buffer = Buffer.from(input, 'utf-8')
-	return `0x${buffer.toString('hex')}`
+	return `0x${Array.from(input)
+		.map((char) => char.charCodeAt(0).toString(16).padStart(2, '0'))
+		.join('')}`
 }

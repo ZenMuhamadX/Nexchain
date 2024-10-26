@@ -1,6 +1,6 @@
 import { HexString } from 'interface/structBlock'
+import { hexToString } from 'nexchain/hex/hexToString'
 import { leveldb } from 'nexchain/leveldb/block'
-import { hexToString } from 'nexchain/lib/hex/hexToString'
 import { Block } from 'nexchain/model/block/block'
 
 export const getBlockByHash = async (
@@ -11,6 +11,8 @@ export const getBlockByHash = async (
 		fillCache: true,
 	})
 	const decodedBlock = hexToString(block)
-	if (enc === 'json') return JSON.parse(decodedBlock)
+	if (enc === 'json') {
+		return JSON.parse(decodedBlock)
+	}
 	return block
 }

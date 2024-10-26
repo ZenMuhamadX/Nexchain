@@ -1,4 +1,4 @@
-import { Block } from '../../model/block/block'
+import { Block } from '../model/block/block'
 
 export const prepareBlockForHashing = ({ block }: Block): string => {
 	const newBlockStruct = {
@@ -8,7 +8,7 @@ export const prepareBlockForHashing = ({ block }: Block): string => {
 		hashingAlgorithm: block.header.hashingAlgorithm,
 		height: block.height,
 		merkleRoot: block.merkleRoot,
-		networkId: block.networkId,
+		chainId: block.chainId,
 		status: block.status,
 		blockReward: block.blockReward,
 		transactions: block.transactions,

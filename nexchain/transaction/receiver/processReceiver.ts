@@ -1,7 +1,7 @@
 import { structBalance } from 'interface/structBalance'
 import { getBalance } from 'nexchain/account/balance/getBalance'
 import { putBalance } from 'nexchain/account/balance/putBalance'
-import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
+import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 
 export const processReceiver = async (
 	recieverAddress: string,

@@ -1,6 +1,6 @@
 import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
-import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
+import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { leveldbState } from 'nexchain/leveldb/state'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 

@@ -1,19 +1,19 @@
 import { TxInterface } from 'interface/structTx'
-import { sha256 } from 'nexchain/lib/hash/hash'
-import { txToString } from 'nexchain/lib/hex/txToString'
+import { sha256 } from 'nexchain/block/sha256'
+import { txToString } from 'nexchain/hex/txToString'
 
 // Fungsi untuk menghitung Merkle Root dari transaksi
 export const createMerkleRoot = (transactions: TxInterface[]): string => {
 	if (transactions.length === 0) {
-		return sha256('')
+		return sha256('', 'hex') as string
 	}
 
 	if (transactions.length === 1) {
-		return sha256(txToString(transactions[0]))
+		return sha256(txToString(transactions[0]), 'hex') as string
 	}
 
-	let transactionHashes: string[] = transactions.map((tx) =>
-		sha256(txToString(tx)),
+	let transactionHashes: string[] = transactions.map(
+		(tx) => sha256(txToString(tx), 'hex') as string,
 	)
 
 	while (transactionHashes.length > 1) {
@@ -24,9 +24,10 @@ export const createMerkleRoot = (transactions: TxInterface[]): string => {
 		}
 
 		for (let i = 0; i < transactionHashes.length; i += 2) {
-			const combinedHash = sha256(
+			const combinedHash: string = sha256(
 				transactionHashes[i] + transactionHashes[i + 1],
-			)
+				'hex',
+			) as string
 			tempHashes.push(combinedHash)
 		}
 

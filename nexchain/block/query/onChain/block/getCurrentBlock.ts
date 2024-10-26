@@ -1,7 +1,7 @@
 import { Block } from 'nexchain/model/block/block'
-import { getBlockByHeight } from './getBlockByHeight'
 import { getBlockState } from 'nexchain/storage/block/getState'
 import { HexString } from 'interface/structBlock'
+import { getBlockByHash } from './getBlockByHash'
 
 export const getCurrentBlock = async (
 	enc: 'json' | 'hex',
@@ -10,10 +10,7 @@ export const getCurrentBlock = async (
 	if (!stateData) {
 		throw new Error('Block state not found')
 	}
-	const latestBlock = await getBlockByHeight(
-		stateData?.currentBlockHeight!,
-		enc,
-	)
+	const latestBlock = await getBlockByHash(stateData?.currentBlockHash, enc)
 	if (!latestBlock) {
 		throw new Error('Block not found')
 	}

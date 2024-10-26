@@ -2,7 +2,7 @@ import { verifyStruct } from './module/verifyStruct'
 import { verifyPow } from './module/verifyPow'
 import { verifyHashLength } from './module/verifyHashLength'
 import { verifyBlockHash } from './module/verifyBlockHash'
-import { getBlockByHeight } from 'nexchain/block/query/direct/block/getBlockByHeight'
+import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByHeight'
 import { Block } from 'nexchain/model/block/block'
 // import { verifyMerkleRoot } from './module/verifyMerkleRoot'
 

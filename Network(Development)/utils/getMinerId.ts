@@ -1,7 +1,7 @@
-import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
+import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { getIpV4 } from './getIpV4'
 
-export const getNetworkId = (): string => {
+export const getMinerId = (): string => {
 	const ipAddress = getIpV4() as string
 	const timestamp = generateTimestampz()
 	const data = `${ipAddress}${timestamp}`

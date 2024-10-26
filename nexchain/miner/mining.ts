@@ -1,16 +1,16 @@
 /** @format */
 
 import { MemPool } from '../model/memPool/memPool'
-import { generateTimestampz } from '../lib/timestamp/generateTimestampz'
+import { generateTimestampz } from '../lib/generateTimestampz'
 import { loggingErr } from '../../logging/errorLog'
 import { mineLog } from '../../logging/mineLog'
 import { chains } from 'nexchain/block/initBlock'
 import { Block } from 'nexchain/model/block/block'
 import { TxInterface } from 'interface/structTx'
-import { getCurrentBlock } from 'nexchain/block/query/direct/block/getCurrentBlock'
+import { getCurrentBlock } from 'nexchain/block/query/onChain/block/getCurrentBlock'
 import _ from 'lodash'
 import { isChainsValid } from 'nexchain/block/isChainValid'
-import { getBlockByHeight } from 'nexchain/block/query/direct/block/getBlockByHeight'
+import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByHeight'
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {

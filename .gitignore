@@ -15,4 +15,3 @@ test.ts
 package-lock.json
 wallet
 *.txt
-config
