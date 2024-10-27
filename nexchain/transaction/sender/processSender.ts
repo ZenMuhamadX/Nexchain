@@ -35,5 +35,5 @@ export const processSender = async (
 		notes: '1^18 nexu = 1 NXC',
 		symbol: 'nexu',
 	}
-	putBalance(senderAddress, newData)
+	await putBalance(senderAddress, newData)
 }

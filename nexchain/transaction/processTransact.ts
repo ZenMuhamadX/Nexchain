@@ -26,7 +26,7 @@ export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 			await processReceiver(tx.receiver, tx.amount)
 			await saveTxAddress(tx.sender, tx.receiver, tx.txHash!)
 			await saveTxHistory(tx.txHash!, tx)
-			await removeMemPool(tx.txHash!)
+			removeMemPool(tx.txHash!)
 		} catch (error) {
 			loggingErr({
 				error: error instanceof Error ? error.message : 'Unknown error',
