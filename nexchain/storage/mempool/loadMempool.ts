@@ -1,20 +1,29 @@
-import { leveldbMempool } from 'nexchain/leveldb/memPool'
 import { TxInterface } from 'interface/structTx'
+import { rocksMempool } from 'nexchain/rocksdb/memPool'
 
-export const loadMempool = async (): Promise<TxInterface[]> => {
-	const loadedPool: TxInterface[] = []
+export const loadMempool = (): Promise<TxInterface[]> => {
+	return new Promise((resolve, reject) => {
+		const transactions: TxInterface[] = [] // Array untuk menyimpan transaksi
 
-	for await (const [key, value] of leveldbMempool.iterator({
-		gte: '0x',
-		lt: '0y',
-		values: true,
-		fillCache: true,
-		reverse: false,
-		keys: true,
-	})) {
-		if (key.length === 69) {
-			loadedPool.push(value)
-		}
-	}
-	return loadedPool
+		const readStream = rocksMempool.createReadStream({
+			valueAsBuffer: false,
+			gte: '0x',
+			lt: '0y',
+			values: true,
+			keys: false,
+			limit: 100, // Membatasi jumlah item menjadi 100
+		})
+
+		readStream.on('data', (data) => {
+			transactions.push(JSON.parse(data))
+		})
+
+		readStream.on('end', () => {
+			resolve(transactions) // Kembalikan array transaksi
+		})
+
+		readStream.on('error', (err) => {
+			reject(err)
+		})
+	})
 }

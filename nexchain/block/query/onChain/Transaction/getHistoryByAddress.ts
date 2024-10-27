@@ -1,21 +1,22 @@
 import _ from 'lodash'
-import { leveldbHistory } from 'nexchain/leveldb/history'
 import { getHistoryByTxHash } from './getHistoryByTx'
 import { TxInterface } from 'interface/structTx'
+import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
+import { rocksHistory } from 'nexchain/rocksdb/history'
 
 export const getHistoryByAddress = async (
 	address: string,
 	enc: 'json' | 'hex',
 ): Promise<{ history: TxInterface[]; count: number }> => {
 	try {
-		const txHashes = await leveldbHistory
-			.get(`address:${address}`, { fillCache: true })
-			.catch(() => null)
+		const txHashes: Buffer = (await rocksHistory
+			.get(`address:${address}`, { fillCache: true, asBuffer: true })
+			.catch(() => null)) as Buffer
 
 		// Jika tidak ada txHashes, kembalikan array kosong
 		if (!txHashes) return { count: 0, history: [] }
 
-		const parseTxHash = JSON.parse(txHashes)
+		const parseTxHash = JSON.parse(decodeFromBytes(txHashes))
 
 		const histories = await Promise.all(
 			parseTxHash.map((txHash: string) => getHistoryByTxHash(txHash, enc)),

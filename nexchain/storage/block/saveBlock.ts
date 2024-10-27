@@ -12,7 +12,7 @@ export const saveBlock = (blockData: Block): boolean => {
 		writeBlockHash(blockHash, blockData)
 		writeBlockHeight(blockHeight, blockHash)
 		setBlockState(blockData)
-		console.info(`Block ${blockHash} successfully created.`)
+		console.info(`Block ${blockHash} successfully mined.`)
 		return true
 	} catch (error) {
 		// Tangani error jika proses penyimpanan gagal

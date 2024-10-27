@@ -7,7 +7,7 @@ export const processReceiver = async (
 	recieverAddress: string,
 	amount: number,
 ) => {
-	const oldData = await getBalance(recieverAddress).catch(() => null)
+	const oldData = await getBalance(recieverAddress).catch()
 	if (!oldData) {
 		const newData: structBalance = {
 			address: recieverAddress,

@@ -12,33 +12,37 @@ export const transferFunds = async (transaction: comTxInterface) => {
 	const memPool = new MemPool()
 	let convertedAmount = transaction.amount
 
-	// Jika format adalah NXC, konversi amount menggunakan toNexu
+	// Konversi amount ke Nexu jika formatnya adalah NXC
 	if (transaction.format === 'NXC') {
 		convertedAmount = toNexu(transaction.amount)
 	}
 
-	// Cek apakah jumlah minimal terpenuhi
-	const minAmount = toNexu(1) // Minimum 1 nexu
+	// Cek apakah jumlah minimal 1 Nexu terpenuhi
+	const minAmount = 1 // Minimum 1 Nexu
 	if (convertedAmount < minAmount) {
-		console.log('Transaction amount must be at least 2 NXC.')
+		console.log('Transaction amount must be at least 1 nexu.')
 		return // Hentikan eksekusi jika tidak memenuhi syarat
 	}
 
-	// Hitung fee 0.01%
-	const feePercentage = 0.0001
-	const fee = convertedAmount * feePercentage
+	// Hitung fee hanya jika jumlah yang ditransfer lebih dari atau sama dengan 1 NXC (10^18 Nexu)
+	let fee = 0
+	let amountAfterFee = convertedAmount
 
-	// Hitung jumlah yang akan ditransfer setelah dikurangi fee
-	const amountAfterFee = convertedAmount - fee
+	if (convertedAmount >= Math.pow(10, 18)) {
+		// Batas untuk 1 NXC
+		const feePercentage = 0.0001
+		fee = convertedAmount * feePercentage
+		amountAfterFee = convertedAmount - fee
+	}
 
 	// Buat objek transaksi
 	const convertedTx: TxInterface = {
 		format: 'nexu',
-		amount: amountAfterFee, // Amount setelah dikurangi fee
+		amount: amountAfterFee,
 		receiver: transaction.receiver,
 		sender: transaction.sender,
 		timestamp: transaction.timestamp,
-		fee: toNxc(fee), // Menyimpan fee sebagai bagian dari transaksi
+		fee: toNxc(fee),
 		isPending: true,
 		isValid: false,
 		extraData: stringToHex(
@@ -46,16 +50,14 @@ export const transferFunds = async (transaction: comTxInterface) => {
 				'NexChains A Next Generation Blockchain for Everyone',
 		),
 		status: 'pending',
-		sign: {
-			r: '',
-			s: '',
-			v: 0,
-		},
+		sign: { r: '', s: '', v: 0 },
 	}
+
 	// Ambil privateKey dari wallet
 	const { privateKey } = loadWallet()!
 	convertedTx.txHash = createTxnHash(convertedTx)
 	convertedTx.sign = createSignature(convertedTx.txHash!, privateKey)
+
 	const hexInput = stringToHex(
 		JSON.stringify({
 			format: convertedTx.format,
@@ -66,6 +68,7 @@ export const transferFunds = async (transaction: comTxInterface) => {
 		}),
 	)
 	convertedTx.hexInput = hexInput
+
 	// Tambahkan transaksi ke mempool
 	const added = await memPool.addTransaction(convertedTx)
 	console.log(

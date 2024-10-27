@@ -1,6 +1,7 @@
-import { leveldbState } from 'nexchain/leveldb/state'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { Block } from 'nexchain/model/block/block'
+import { encodeToBytes } from 'nexchain/hex/encodeToBytes'
+import { rocksState } from 'nexchain/rocksdb/state'
 
 export interface blockState {
 	currentBlockHeight: number
@@ -22,7 +23,8 @@ export const setBlockState = (block: Block) => {
 		lastUpdated: generateTimestampz(),
 		blockReward: block.block.blockReward,
 	}
-	leveldbState.put(`blockState`, blockState, {
+	const parseState = encodeToBytes(JSON.stringify(blockState))
+	rocksState.put(`blockState`, parseState, {
 		sync: true,
 	})
 }

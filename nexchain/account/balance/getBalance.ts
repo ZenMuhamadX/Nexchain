@@ -1,7 +1,8 @@
-import { leveldbState } from 'nexchain/leveldb/state'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
+import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
+import { rocksState } from 'nexchain/rocksdb/state'
 
 export const getBalance = async (
 	address: string,
@@ -11,11 +12,10 @@ export const getBalance = async (
 			console.info('address not provided')
 			return
 		}
-		const balance = await leveldbState.get(address, {
-			keyEncoding: 'buffer',
-			valueEncoding: 'json',
+		const balance: Buffer = (await rocksState.get(address, {
 			fillCache: true,
-		})
+			asBuffer: true,
+		})) as Buffer
 		if (!balance) {
 			loggingErr({
 				error: 'data not found',
@@ -27,7 +27,7 @@ export const getBalance = async (
 			})
 			return
 		}
-		return balance
+		return JSON.parse(decodeFromBytes(balance))
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error('Error getting data:', error.message)

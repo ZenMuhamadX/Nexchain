@@ -1,28 +1,17 @@
 import chalk from 'chalk'
+import bip39 from 'bip39'
+import path from 'path'
 import { generateAddressFromPublicKey } from 'nexchain/keyPair/genAddrFromPubKey'
 import { generateKeysFromMnemonic } from 'nexchain/keyPair/genKeyFromMnemonic'
-import bip39 from 'bip39'
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
-import path from 'path'
 import { structWalletToSave } from 'interface/structWalletToSave'
-import { showHeader } from 'cli(Development)/figlet/header'
+import { writeFile } from 'fs/promises'
+import { existsSync, mkdirSync } from 'fs'
 import { askQuestion } from 'cli(Development)/question/askQuestion'
 
 // Fungsi utama untuk mengimpor dompet dari mnemonic
-export const importWalletFromMnemonic = async () => {
-	showHeader('NexCLI Recovery')
-
-	console.log(
-		chalk.greenBright("Welcome! Let's start the wallet import process."),
-	)
-
-	// Meminta mnemonic dari pengguna dengan instruksi tambahan
-	const mnemonic = await askQuestion({
-		type: 'input',
-		name: 'mnemonic',
-		message: 'Enter your mnemonic phrase (separated by spaces):',
-	})
-
+export const importWalletFromMnemonic = async (
+	mnemonic: string,
+): Promise<{ privateKey: string; publicKey: string; address: string }> => {
 	const isValidMnemonic = bip39.validateMnemonic(mnemonic)
 
 	if (!isValidMnemonic) {
@@ -41,49 +30,48 @@ export const importWalletFromMnemonic = async () => {
 		walletAddress: address,
 	}
 
-	// Meminta konfirmasi penyimpanan ke file
+	// Menanyakan apakah pengguna ingin menyimpan wallet ke file
 	const saveToFile = await askQuestion({
+		message: 'Do you want to save the wallet to a file?',
 		type: 'confirm',
 		name: 'saveToFile',
-		message: 'Would you like to save the wallet to a file?',
 		default: true,
 	})
 
-	// Jika pengguna memilih untuk menyimpan, minta nama file
 	if (saveToFile) {
+		// Meminta nama file jika pengguna memilih untuk menyimpan
 		const fileName = await askQuestion({
+			message: 'Enter the filename to save your wallet:',
 			type: 'input',
 			name: 'fileName',
-			message: 'Enter file name (without extension):',
-			default: 'importedWallet',
+			default: 'wallet',
 		})
 
 		const dirPath = path.join(__dirname, '../../../wallet/')
 		const filePath = path.join(dirPath, `${fileName}.json`)
 
-		// Cek apakah direktori ada, jika tidak, buat direktori
+		// Membuat direktori jika belum ada
 		if (!existsSync(dirPath)) {
 			mkdirSync(dirPath, { recursive: true })
 		}
 
-		// Cek apakah file sudah ada
+		// Jika file sudah ada, menanyakan apakah ingin menimpa
 		if (existsSync(filePath)) {
 			const overwrite = await askQuestion({
+				message: `File ${fileName}.json already exists. Do you want to overwrite it?`,
 				type: 'confirm',
 				name: 'overwrite',
-				message: `File ${fileName}.json already exists. Overwrite?`,
 				default: false,
 			})
 
-			// Jika pengguna tidak mengizinkan overwrite, batalkan proses
 			if (!overwrite) {
-				console.log(chalk.yellow('File saving canceled.'))
+				console.info(chalk.yellow('Wallet not saved.'))
 				return { privateKey, publicKey, address }
 			}
 		}
 
 		// Menyimpan data wallet ke file
-		writeFileSync(filePath, JSON.stringify(data, null, 2))
+		await writeFile(filePath, JSON.stringify(data, null, 2))
 		console.info(chalk.green(`Wallet successfully saved to ${filePath}`))
 	}
 

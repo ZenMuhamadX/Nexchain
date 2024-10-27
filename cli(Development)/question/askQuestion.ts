@@ -6,15 +6,17 @@ interface choice {
 	value: any
 }
 
-// Fungsi untuk menanyakan pertanyaan dengan tema dan deskripsi khusus
-export const askQuestion = async (question: {
-	type: 'input' | 'confirm' | 'list'
+interface question {
+	type: 'input' | 'confirm' | 'list' | 'password' | 'number' | 'checkbox'
 	name: string
 	message: string
 	description?: string // Deskripsi tambahan untuk ditampilkan sebelum pertanyaan
 	choices?: choice[] // Hanya untuk tipe 'list'
 	default?: any
-}) => {
+}
+
+// Fungsi untuk menanyakan pertanyaan dengan tema dan deskripsi khusus
+export const askQuestion = async (question: question) => {
 	// Menampilkan deskripsi jika ada
 	if (question.description) {
 		console.log(chalk.yellowBright(question.description))

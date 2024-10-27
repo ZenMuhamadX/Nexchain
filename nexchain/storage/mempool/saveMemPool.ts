@@ -1,5 +1,5 @@
 import { TxInterface } from 'interface/structTx'
-import { leveldbMempool } from 'nexchain/leveldb/memPool'
+import { rocksMempool } from 'nexchain/rocksdb/memPool'
 
 export const saveMempool = async (transaction: TxInterface): Promise<void> => {
 	if (!transaction) {
@@ -7,7 +7,6 @@ export const saveMempool = async (transaction: TxInterface): Promise<void> => {
 		return
 	}
 	// 1. Simpan transaksi ke LevelDB
-	await leveldbMempool.put(`0x${transaction.txHash}`, transaction, {
-		sync: false,
-	})
+	const parseMempool = JSON.stringify(transaction)
+	await rocksMempool.put(`0x${transaction.txHash}`, parseMempool)
 }

@@ -18,7 +18,10 @@ export class MemPool {
 		transaction: TxInterface,
 	): Promise<boolean | TxInterface> {
 		const isValidTx = await transactionValidator(transaction)
-		if (!isValidTx) return false
+		if (!isValidTx) {
+			console.log(isValidTx)
+			return false
+		}
 		// Save the transaction
 		await saveMempool(transaction)
 		await saveTxHistory(transaction.txHash!, transaction)

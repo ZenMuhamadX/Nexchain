@@ -1,5 +1,4 @@
 import { ec as EC } from 'elliptic'
-import { generateAddressFromPublicKey } from 'nexchain/keyPair/genAddrFromPubKey'
 import { hashMessage } from './hashMessage'
 
 const ec = new EC('secp256k1')
@@ -14,7 +13,7 @@ export interface sign {
 export const recoverPublicKey = (
 	data: string,
 	sign: sign,
-): { publicKey: string; address: string } => {
+): { publicKey: string } => {
 	const dataHash = hashMessage(data)
 
 	const recoveryParam = sign.v - 26
@@ -25,8 +24,5 @@ export const recoverPublicKey = (
 		.recoverPubKey(dataHash, signature, recoveryParam)
 		.encode('hex', true)
 
-	// Konversi public key menjadi address
-	const address = generateAddressFromPublicKey(publicKey)
-
-	return { address, publicKey }
+	return { publicKey }
 }

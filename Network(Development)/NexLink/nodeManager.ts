@@ -7,9 +7,9 @@ import { validateMessageInterface } from './validateInf'
 import { generateMessageId } from '../utils/getMessageId'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import _ from 'lodash'
-import { leveldbState } from 'nexchain/leveldb/state'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { getMinerId } from 'Network(Development)/utils/getMinerId'
+import { rocksState } from 'nexchain/rocksdb/state'
 
 // Logger configuration
 const logger = winston.createLogger({
@@ -110,9 +110,9 @@ export class Node {
 	// Load peer list from LevelDB
 	private async loadPeerList() {
 		try {
-			const peers = await leveldbState.get('peerList')
+			const peers = await rocksState.get('peerList')
 			if (peers) {
-				const ids = JSON.parse(peers)
+				const ids = JSON.parse(peers.toString())
 				for (const id of ids) {
 					this.connectToPeer(Number(id))
 				}
@@ -125,10 +125,7 @@ export class Node {
 	// Save peer list to LevelDB
 	private async savePeerList() {
 		try {
-			await leveldbState.put(
-				'peerList',
-				JSON.stringify(Array.from(this.peerIds)),
-			)
+			await rocksState.put('peerList', JSON.stringify(Array.from(this.peerIds)))
 		} catch (err) {
 			logger.error(`Error saving peer list: ${err}`)
 		}
