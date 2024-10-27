@@ -35,5 +35,6 @@ export class MemPool {
 	public async getValidTransactions(): Promise<TxInterface[]> {
 		const data = await loadMempool()
 		return data as TxInterface[]
+		return data as TxInterface[]
 	}
 }
