@@ -1,5 +1,5 @@
 import { Block } from 'nexchain/model/block/block'
-import { getBlockState } from 'nexchain/storage/block/getState'
+import { getBlockState } from 'nexchain/storage/state/getState'
 import { HexString } from 'interface/structBlock'
 import { getBlockByHash } from './getBlockByHash'
 
