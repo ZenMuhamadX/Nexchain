@@ -58,7 +58,7 @@ export class BlockChains {
 			)
 
 			try {
-				saveBlock(newBlock) // Simpan blok ke chain
+				await saveBlock(newBlock) // Simpan blok ke chain
 			} catch (saveError) {
 				throw new Error('Failed to save block: ' + saveError)
 			}
@@ -189,7 +189,7 @@ export class BlockChains {
 		const oldNexuBalance = oldData?.balance
 
 		if (!oldNexuBalance) {
-			putBalance(address, {
+			await putBalance(address, {
 				address,
 				balance: toNexu(reward),
 				timesTransaction: 0,
@@ -202,7 +202,7 @@ export class BlockChains {
 			})
 			return
 		}
-		putBalance(address, {
+		await putBalance(address, {
 			address,
 			balance: oldNexuBalance + nexuReward,
 			timesTransaction: oldData.timesTransaction + 1,

@@ -80,7 +80,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		)
 
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
-		putBalance(genesisBlock.block.coinbaseTransaction.receiver, {
+		await putBalance(genesisBlock.block.coinbaseTransaction.receiver, {
 			address: genesisBlock.block.coinbaseTransaction.receiver,
 			balance: toNexu(genesisBlock.block.coinbaseTransaction.amount),
 			timesTransaction: 1,
@@ -91,7 +91,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			notes: '1^18 nexu = 1 NXC',
 			symbol: 'nexu',
 		})
-		saveBlock(genesisBlock)
+		await saveBlock(genesisBlock)
 		return genesisBlock
 	} catch (error) {
 		loggingErr({

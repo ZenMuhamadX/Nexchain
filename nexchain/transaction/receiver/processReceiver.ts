@@ -20,7 +20,7 @@ export const processReceiver = async (
 			notes: '1^18 nexu = 1 NXC',
 			symbol: 'nexu',
 		}
-		putBalance(recieverAddress, newData)
+		await putBalance(recieverAddress, newData)
 		return
 	}
 	const oldBalance = oldData?.balance as number
@@ -35,5 +35,5 @@ export const processReceiver = async (
 		notes: '1^18 nexu = 1 NXC',
 		symbol: 'nexu',
 	}
-	putBalance(recieverAddress, newData)
+	await putBalance(recieverAddress, newData)
 }
