@@ -1,4 +1,8 @@
 # Auto detect text files and perform LF normalization
 
 * text=auto
-rocksdb/deps/rocksdb/rocksdb/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/db/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/file/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/memory/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/util/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/utilities/* linguist-vendored
