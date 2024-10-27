@@ -4,7 +4,7 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { rocksState } from 'nexchain/rocksdb/state'
 
-export const putNewWallet = async(address: string): Promise<void> => {
+export const putNewWallet = async (address: string): Promise<void> => {
 	try {
 		if (!address) {
 			loggingErr({
