@@ -1,8 +1,8 @@
 /** @format */
 import { Block } from '../../model/block/block'
-import { setBlockState } from './setState'
+import { setBlockState } from '../state/setState'
 import { writeBlockHash } from './writeBlockData'
-import { writeBlockHeight } from './indexing'
+import { writeBlockHeight } from '../state/indexing'
 
 // Fungsi untuk menyimpan Block ke dalam file
 export const saveBlock = (blockData: Block): boolean => {
@@ -12,7 +12,7 @@ export const saveBlock = (blockData: Block): boolean => {
 		writeBlockHash(blockHash, blockData)
 		writeBlockHeight(blockHeight, blockHash)
 		setBlockState(blockData)
-		console.info(`Block ${blockHash} successfully created.`)
+		console.info(`Block ${blockHash} successfully mined.`)
 		return true
 	} catch (error) {
 		// Tangani error jika proses penyimpanan gagal

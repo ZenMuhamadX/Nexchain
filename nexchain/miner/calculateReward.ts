@@ -3,5 +3,5 @@ export const calculateTotalBlockReward = (
 	gasPrice: number,
 	totalTxFees: number,
 ) => {
-	return reward + gasPrice + totalTxFees * 0.000002
+	return reward + gasPrice + totalTxFees
 }

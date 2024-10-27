@@ -1,5 +1,5 @@
 import { Block } from 'nexchain/model/block/block'
-import { generateTimestampz } from '../../../lib/timestamp/generateTimestampz'
+import { generateTimestampz } from '../../../lib/generateTimestampz'
 import { loggingErr } from '../../../../logging/errorLog'
 import Joi from 'joi'
 import _ from 'lodash'
@@ -7,31 +7,31 @@ import _ from 'lodash'
 // Function to verify the structure of a block using Joi schema validation
 export const verifyStruct = async (chains: Block) => {
 	// Define the schema for the MemPoolInterface
-	const memPoolInterfaceSchema = Joi.object({
-		to: Joi.string().required(),
-		from: Joi.string().required(),
-		amount: Joi.number().required(),
+	const txInterface = Joi.object({
+		format: Joi.string().required(),
+		sender: Joi.string().required(),
+		receiver: Joi.string().required(),
+		amount: Joi.number().required().unsafe(),
 		txHash: Joi.string().required(),
 		timestamp: Joi.number().required(),
-		signature: Joi.string().required(),
-		message: Joi.any().optional(),
-		fee: Joi.number().required(),
+		sign: Joi.object({
+			r: Joi.string().required(),
+			s: Joi.string().required(),
+			v: Joi.number().required(),
+		}).required(),
+		extraData: Joi.any().optional(),
+		fee: Joi.number().required().unsafe(),
 		status: Joi.string().required(),
 		isPending: Joi.boolean().required(),
-		isValidate: Joi.boolean().required(),
+		isValid: Joi.boolean().required(),
+		hexInput: Joi.string().required(),
 	})
 
 	// Define the schema for the coinbaseTransaction object
 	const coinbaseTransactionSchema = Joi.object({
-		to: Joi.string().required(),
+		receiver: Joi.string().required(),
 		amount: Joi.number().required(),
-	})
-
-	// Define the schema for the validator object
-	const validatorSchema = Joi.object({
-		rewardAddress: Joi.string().required(),
-		stakeAmount: Joi.number().optional(),
-		validationTime: Joi.number().optional(),
+		extraData: Joi.any().optional(),
 	})
 
 	// Define the schema for the metadata object
@@ -39,7 +39,7 @@ export const verifyStruct = async (chains: Block) => {
 		txCount: Joi.number().required(),
 		gasPrice: Joi.number().required(),
 		created_at: Joi.number().required(),
-		notes: Joi.any().optional(), // Use .optional() if it's not required
+		extraData: Joi.any().optional(), // Use .optional() if it's not required
 	})
 
 	// Define the schema for the blockStruct interface
@@ -54,17 +54,22 @@ export const verifyStruct = async (chains: Block) => {
 			hashingAlgorithm: Joi.string().optional(),
 		}).required(),
 		height: Joi.number().required(),
-		signature: Joi.string().required(),
+		sign: Joi.object({
+			r: Joi.string().required(),
+			s: Joi.string().required(),
+			v: Joi.number().required(),
+		}).required(),
+		chainId: Joi.number().required(),
 		size: Joi.number().required(),
 		totalTransactionFees: Joi.any().optional(),
 		merkleRoot: Joi.string().required(),
-		networkId: Joi.string().required(),
+		minerId: Joi.string().required(),
+		totalReward: Joi.number().required().unsafe(true),
 		status: Joi.valid('confirmed', 'pending').required(),
 		blockReward: Joi.any().required(),
 		coinbaseTransaction: coinbaseTransactionSchema.required(),
-		validator: validatorSchema.required(),
 		metadata: metadataSchema.optional(), // Use .optional() if metadata is not required
-		transactions: Joi.array().items(memPoolInterfaceSchema).required(),
+		transactions: Joi.array().items(txInterface).required(),
 	})
 	// Validate the block structure against the schema
 	const { error, warning } = blockStructSchema.validate(chains.block)

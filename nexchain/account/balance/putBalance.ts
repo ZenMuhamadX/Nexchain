@@ -1,7 +1,8 @@
 import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
-import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
-import { leveldbState } from 'nexchain/leveldb/state'
+import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { rocksState } from 'nexchain/rocksdb/state'
+import { encodeToBytes } from '../../hex/encodeToBytes'
 
 export const putBalance = (address: string, balance: structBalance): void => {
 	try {
@@ -19,11 +20,11 @@ export const putBalance = (address: string, balance: structBalance): void => {
 		if (balance.timesTransaction === undefined) {
 			balance.timesTransaction = 0
 		}
-		leveldbState.put(address, balance, {
-			sync: true,
-			keyEncoding: 'buffer',
-			valueEncoding: 'json',
-		})
+		const encodedBalance = encodeToBytes(JSON.stringify(balance))
+		rocksState.put(address, encodedBalance),
+			{
+				sync: true,
+			}
 	} catch (error) {
 		loggingErr({
 			error: 'Error putting data',

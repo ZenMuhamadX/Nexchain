@@ -1,5 +1,5 @@
 import { loggingErr } from 'logging/errorLog'
-import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
+import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 
 export const logError = (
 	context: string,

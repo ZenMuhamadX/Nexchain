@@ -1,5 +1,6 @@
 import { TxInterface } from 'interface/structTx'
-import { leveldbHistory } from 'nexchain/leveldb/history'
+import { stringToHex } from 'nexchain/hex/stringToHex'
+import { rocksHistory } from 'nexchain/rocksdb/history'
 
 interface savedHistory extends TxInterface {
 	metadata?: {
@@ -11,9 +12,9 @@ interface savedHistory extends TxInterface {
 }
 
 export const saveTxHistory = async (txHash: string, txData: savedHistory) => {
-	await leveldbHistory.put(`txnHash:${txHash}`, txData, {
+	const stringData = JSON.stringify(txData)
+	const encodedData = stringToHex(stringData)
+	await rocksHistory.put(`txnHash:${txHash}`, encodedData, {
 		sync: false,
-		keyEncoding: 'utf-8',
-		valueEncoding: 'json',
 	})
 }

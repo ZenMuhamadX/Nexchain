@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { WalletConfig } from 'interface/walletConfig'
-import { convertTimestampToDate } from 'nexchain/lib/timestamp/convertTimestamp'
-import { generateTimestampz } from 'nexchain/lib/timestamp/generateTimestampz'
+import { convertTimestampToDate } from 'nexchain/lib/convertTimestamp'
+import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import path from 'path'
 
 export const setWalletConfig = () => {
@@ -9,6 +9,9 @@ export const setWalletConfig = () => {
 	const filePath = path.join(dirPath, 'wallet.conf.json')
 	if (!existsSync(dirPath)) {
 		mkdirSync(dirPath, { recursive: true })
+	}
+	if (existsSync(filePath)) {
+		return
 	}
 	const defaultData: WalletConfig = {
 		createdAt: convertTimestampToDate(generateTimestampz()),
