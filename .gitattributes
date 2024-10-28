@@ -4,6 +4,12 @@
 rocksdb/deps/rocksdb/rocksdb/db/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/file/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/memory/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/include/rocksdb/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/microbench/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/trace_replay/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/trace_util/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/port/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/plugin/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/util/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/utilities/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/docs/* linguist-vendored
@@ -17,10 +23,15 @@ rocksdb/deps/rocksdb/rocksdb/table/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/third-party/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/tools/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/logging/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/cache/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/buckifier/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/cmake/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/coverage/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/db_stress_tool/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/examples/* linguist-vendored
 
 
-
-*.py linguist-vendored
-*.c linguist-vendored
-*.sh linguist-vendored
-*.proto linguist-vendored
+rocksdb/**/*.py linguist-vendored
+rocksdb/**/*.c linguist-vendored
+rocksdb/**/*.sh linguist-vendored
+rocksdb/**/*.proto linguist-vendored
