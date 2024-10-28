@@ -29,6 +29,7 @@ rocksdb/deps/rocksdb/rocksdb/cmake/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/coverage/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/db_stress_tool/* linguist-vendored
 rocksdb/deps/rocksdb/rocksdb/examples/* linguist-vendored
+rocksdb/deps/rocksdb/** linguist-vendored
 
 
 rocksdb/**/*.py linguist-vendored
