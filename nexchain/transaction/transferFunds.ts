@@ -71,9 +71,6 @@ export const transferFunds = async (transaction: comTxInterface) => {
 
 	// Tambahkan transaksi ke mempool
 	const added = await memPool.addTransaction(convertedTx)
-	console.log(
-		added
-			? 'Transaction added successfully, waiting for confirmation.'
-			: 'Failed to add transaction.',
-	)
+	if (!added) return
+	console.log('Transaction added to mempool waiting for mined')
 }

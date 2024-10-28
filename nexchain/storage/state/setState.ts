@@ -13,7 +13,7 @@ export interface blockState {
 	currentBlockSize: number
 }
 
-export const setBlockState = (block: Block) => {
+export const setBlockState = async (block: Block) => {
 	const blockState: blockState = {
 		currentBlockSize: block.block.size,
 		prevBlockHash: block.block.header.previousBlockHash,
@@ -24,7 +24,7 @@ export const setBlockState = (block: Block) => {
 		blockReward: block.block.blockReward,
 	}
 	const parseState = encodeToBytes(JSON.stringify(blockState))
-	rocksState.put(`blockState`, parseState, {
+	await rocksState.put(`blockState`, parseState, {
 		sync: true,
 	})
 }

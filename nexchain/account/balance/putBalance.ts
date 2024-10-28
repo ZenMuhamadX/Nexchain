@@ -4,7 +4,10 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { rocksState } from 'nexchain/rocksdb/state'
 import { encodeToBytes } from '../../hex/encodeToBytes'
 
-export const putBalance = (address: string, balance: structBalance): void => {
+export const putBalance = async (
+	address: string,
+	balance: structBalance,
+): Promise<void> => {
 	try {
 		if (!address || !balance) {
 			loggingErr({
@@ -21,9 +24,9 @@ export const putBalance = (address: string, balance: structBalance): void => {
 			balance.timesTransaction = 0
 		}
 		const encodedBalance = encodeToBytes(JSON.stringify(balance))
-		rocksState.put(address, encodedBalance),
+		await rocksState.put(address, encodedBalance),
 			{
-				sync: true,
+				sync: false,
 			}
 	} catch (error) {
 		loggingErr({

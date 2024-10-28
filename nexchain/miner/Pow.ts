@@ -2,7 +2,7 @@ import { createHash } from 'crypto'
 import { prepareBlockForHashing } from 'nexchain/block/prepareBlock'
 import { Block } from 'nexchain/model/block/block'
 
-const DIFFICULTY_PREFIX = '0000' // Kriteria kesulitan
+const DIFFICULTY_PREFIX = '00000' // Kriteria kesulitan
 
 export const proofOfWork = (block: Block): { nonce: number; hash: string } => {
 	let nonce = 0

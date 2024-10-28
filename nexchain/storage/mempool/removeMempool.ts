@@ -1,9 +1,9 @@
 import { rocksMempool } from 'nexchain/rocksdb/memPool'
 
-export const removeMemPool = async (txHash: string) => {
+export const removeMemPool = (txHash: string) => {
 	try {
-		await rocksMempool.del(`0x${txHash}`, {
-			sync: false,
+		rocksMempool.del(`0x${txHash}`, {
+			sync: true,
 		})
 	} catch (error) {
 		console.error('Error removing transaction:', error)

@@ -1,3 +1,26 @@
 # Auto detect text files and perform LF normalization
 
 * text=auto
+rocksdb/deps/rocksdb/rocksdb/db/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/file/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/memory/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/util/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/utilities/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/docs/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/env/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/fuzz/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/hdfs/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/memtable/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/monitoring/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/options/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/table/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/third-party/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/tools/* linguist-vendored
+rocksdb/deps/rocksdb/rocksdb/logging/* linguist-vendored
+
+
+
+*.py linguist-vendored
+*.c linguist-vendored
+*.sh linguist-vendored
+*.proto linguist-vendored
