@@ -2,8 +2,5 @@
 
 * text=auto
 rocksdb/deps/** linguist-vendored
-
-rocksdb/**/*.py linguist-vendored
-rocksdb/**/*.c linguist-vendored
-rocksdb/**/*.sh linguist-vendored
-rocksdb/**/*.proto linguist-vendored
+rocksdb/test/ linguist-vendored
+rocksdb/test/*.js linguist-vendored
