@@ -50,6 +50,5 @@ export const transactionValidator = async (
 
 	transaction.status = 'pending'
 	transaction.isValid = transaction.isPending = true
-	console.log(`TxnHash: ${transaction.txHash}`)
 	return true
 }
