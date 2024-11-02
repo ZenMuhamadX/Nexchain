@@ -1,3 +1,1 @@
-class SmartContract {
-    
-}
+class SmartContract {}
