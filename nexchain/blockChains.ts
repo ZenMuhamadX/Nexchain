@@ -24,6 +24,8 @@ import { createMerkleRoot } from './transaction/utils/createMerkleRoot'
 import { verifyMerkleRoot } from './miner/verify/module/verifyMerkleRoot'
 import { setBlockReward } from './block/cutReward'
 import { getMinerId } from 'Network(Development)/utils/getMinerId'
+import { contract } from 'interface/structContract'
+import { saveContracts } from './smartContracts/saveContract'
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
@@ -38,10 +40,15 @@ export class BlockChains {
 	 */
 	public async addBlockToChain(
 		validTransaction: TxInterface[],
+		validContract: contract[],
 		walletMiner: string,
 	): Promise<boolean> {
 		try {
-			const newBlock = await this.createBlock(validTransaction, walletMiner)
+			const newBlock = await this.createBlock(
+				validTransaction,
+				walletMiner,
+				validContract,
+			)
 
 			// Verifikasi Merkle Root sebelum menyimpan blok
 			const isValidMerkleRoot = verifyMerkleRoot(
@@ -64,6 +71,7 @@ export class BlockChains {
 			}
 			if (validTransaction.length > 0) {
 				await processTransact(validTransaction)
+				this.deployContract(validContract)
 			}
 
 			// Log success
@@ -100,6 +108,7 @@ export class BlockChains {
 	private async createBlock(
 		transactions: TxInterface[],
 		walletMiner: string,
+		validContract: contract[],
 	): Promise<Block> {
 		const latestBlock: Block = (await getCurrentBlock('json')) as Block
 		const currentHeight = latestBlock.block.height
@@ -145,6 +154,8 @@ export class BlockChains {
 				created_at: generateTimestampz(),
 			},
 			transactions: transactions,
+			contract: validContract,
+			chainId: 26,
 		})
 
 		newBlock.block.blockReward = setBlockReward(newBlock.block.height)
@@ -221,5 +232,9 @@ export class BlockChains {
 	 */
 	public async verify(): Promise<boolean> {
 		return await verifyChainIntegrity()!
+	}
+
+	public async deployContract(contract: contract[]): Promise<void> {
+		await saveContracts(contract)
 	}
 }

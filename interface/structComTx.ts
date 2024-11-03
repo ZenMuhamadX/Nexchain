@@ -9,4 +9,5 @@ export interface comTxInterface {
 	amount: number // The amount of cryptocurrency being transferred
 	timestamp: number // The timestamp of when the transaction was created
 	extraData?: string // An optional message included with the transaction
+	fee?: number // The fee associated with the transaction
 }

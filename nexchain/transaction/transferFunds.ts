@@ -5,10 +5,12 @@ import { TxInterface } from 'interface/structTx'
 import { loadWallet } from 'nexchain/account/utils/loadWallet'
 import { stringToHex } from 'nexchain/hex/stringToHex'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
-import { toNxc } from 'nexchain/nexucoin/toNxc'
 import { createSignature } from 'nexchain/sign/createSignature'
+import { isContract } from 'nexchain/lib/isContract'
 
-export const transferFunds = async (transaction: comTxInterface) => {
+export const transferFunds = async (
+	transaction: comTxInterface,
+): Promise<string | undefined> => {
 	const memPool = new MemPool()
 	let convertedAmount = transaction.amount
 
@@ -24,16 +26,18 @@ export const transferFunds = async (transaction: comTxInterface) => {
 		return // Hentikan eksekusi jika tidak memenuhi syarat
 	}
 
-	// Hitung fee hanya jika jumlah yang ditransfer lebih dari atau sama dengan 1 NXC (10^18 Nexu)
-	let fee = 0
-	let amountAfterFee = convertedAmount
+	// Mengambil fee dari transaction
+	let fee = transaction.fee || 0 // Menggunakan fee dari transaction jika tersedia
+	let amountAfterFee = convertedAmount - fee
 
-	if (convertedAmount >= Math.pow(10, 18)) {
-		// Batas untuk 1 NXC
-		const feePercentage = 0.0001
-		fee = convertedAmount * feePercentage
-		amountAfterFee = convertedAmount - fee
+	// Memastikan bahwa jumlah setelah dipotong biaya tidak kurang dari minimal
+	if (amountAfterFee < minAmount) {
+		console.log('Amount after fee must be at least 1 nexu.')
+		return
 	}
+
+	const isReceiverContract = isContract(transaction.receiver)
+	const isSenderContract = isContract(transaction.sender)
 
 	// Buat objek transaksi
 	const convertedTx: TxInterface = {
@@ -42,7 +46,7 @@ export const transferFunds = async (transaction: comTxInterface) => {
 		receiver: transaction.receiver,
 		sender: transaction.sender,
 		timestamp: transaction.timestamp,
-		fee: toNxc(fee),
+		fee: fee, // Menggunakan fee yang ditentukan
 		isPending: true,
 		isValid: false,
 		extraData: stringToHex(
@@ -50,6 +54,7 @@ export const transferFunds = async (transaction: comTxInterface) => {
 				'NexChains A Next Generation Blockchain for Everyone',
 		),
 		status: 'pending',
+		isContractTx: isSenderContract || isReceiverContract,
 		sign: { r: '', s: '', v: 0 },
 	}
 
@@ -65,6 +70,7 @@ export const transferFunds = async (transaction: comTxInterface) => {
 			receiver: convertedTx.receiver,
 			sender: convertedTx.sender,
 			timestamp: convertedTx.timestamp,
+			isContractTx: convertedTx.isContractTx,
 		}),
 	)
 	convertedTx.hexInput = hexInput
@@ -73,4 +79,5 @@ export const transferFunds = async (transaction: comTxInterface) => {
 	const added = await memPool.addTransaction(convertedTx)
 	if (!added) return
 	console.log('Transaction added to mempool waiting for mined')
+	return convertedTx.txHash
 }

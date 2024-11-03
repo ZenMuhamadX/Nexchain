@@ -17,6 +17,7 @@ export interface TxInterface extends comTxInterface {
 	isValid: boolean // Menunjukkan apakah transaksi valid
 	isPending: boolean // Menunjukkan apakah transaksi masih pending
 	hexInput?: HexString
+	isContractTx: boolean
 	sign: {
 		v: number
 		r: string

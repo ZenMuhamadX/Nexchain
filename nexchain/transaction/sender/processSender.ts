@@ -6,6 +6,7 @@ import { putBalance } from 'nexchain/account/balance/putBalance'
 import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
 import { getPendingBalance } from '../getPendingBalance'
 import { setPendingBalance } from '../setPendingBalancet'
+import { burnNexu } from '../burnNexu'
 
 export const processSender = async (
 	senderAddress: string,
@@ -27,7 +28,7 @@ export const processSender = async (
 
 	// Ambil data saldo saat ini
 	const oldData = await getBalance(senderAddress)
-	const calculateBalance = oldData?.balance! - amount - fee
+	const calculateBalance = oldData?.balance! - amount
 	const newData: structBalance = {
 		address: senderAddress,
 		balance: calculateBalance,
@@ -40,7 +41,7 @@ export const processSender = async (
 		symbol: 'nexu',
 	}
 	await putBalance(senderAddress, newData)
-
+	await burnNexu(senderAddress, fee)
 	// Ambil dan perbarui pending balance
 	const pendingBalance = await getPendingBalance(senderAddress)
 	const updatedPendingAmount =

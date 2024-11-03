@@ -1,4 +1,5 @@
 export const isValidAddress = (address: string): boolean => {
-	const prefix = 'NxC'
-	return address.startsWith(prefix) && address.length === 43
+	if (address.startsWith('NxS') && address.length === 43) return true
+	if (address.startsWith('NxC') && address.length === 43) return true
+	return false
 }
