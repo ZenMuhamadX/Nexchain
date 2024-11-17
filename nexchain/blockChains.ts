@@ -14,7 +14,7 @@ import { processTransact } from './transaction/processTransact'
 
 import { verifyMerkleRoot } from './miner/verify/module/verifyMerkleRoot'
 import { contract } from 'interface/structContract'
-import { saveContracts } from './smartContracts/saveContract'
+import { saveContracts } from './contract/saveContract'
 import { removeContractMemPool } from './storage/mempool/removeContractMempool'
 import _ from 'lodash'
 import { createNewBlock } from './block/createNewBlock'

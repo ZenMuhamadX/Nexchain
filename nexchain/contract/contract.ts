@@ -5,7 +5,7 @@ import { withdrawFromContract } from '../transaction/contract/withdrawFromContra
 import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 
-export class SmartContract {
+export class ManageContract {
 	contractAddress: string
 	constructor(contractAddr: string) {
 		this.contractAddress = contractAddr
