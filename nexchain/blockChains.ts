@@ -59,8 +59,8 @@ export class BlockChains {
 			try {
 				await saveBlock(newBlock) // Simpan blok ke chain
 				if (newBlock.block.contract) {
+					this.deployContract(validContract)
 					_.forEach(newBlock.block.contract, (contract) => {
-						this.deployContract([contract])
 						removeContractMemPool(contract.contractCodeHash!)
 					})
 				}

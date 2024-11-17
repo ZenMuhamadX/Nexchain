@@ -13,23 +13,23 @@ const mempool = new MemPool()
 
 export const createContract = async (
 	owner: string,
-): Promise<contract | undefined> => {
+): Promise<{ status: boolean; contract?: contract | undefined }> => {
 	const initialAmount = toNexu(0.01)
 	let totalGas = 10000
 	const isValidAddres = isValidAddress(owner)
 	if (!isValidAddres) {
 		console.error(`Invalid owner address`)
-		return
+		return { status: false, contract: undefined }
 	}
 	const userBalance = await getBalance(owner).catch(() => null)
 	if (userBalance!.balance < totalGas) {
 		console.error(`Insufficient balance to deploy contract.`)
-		return
+		return { status: false, contract: undefined }
 	}
 	await burnNexu(owner, (totalGas -= 5000))
 	const nonce = await getOwnerNonce(owner)
 	const contractAddress = createContractAdrress(owner, nonce)
-	const txHash = await transferFunds({
+	const transferStatus = await transferFunds({
 		amount: initialAmount,
 		receiver: contractAddress,
 		sender: owner,
@@ -42,7 +42,7 @@ export const createContract = async (
 		balance: initialAmount,
 		contractAddress: createContractAdrress(owner, nonce),
 		contractCodeHash: '',
-		deploymentTransactionHash: txHash!,
+		deploymentTransactionHash: transferStatus.txHash!,
 		deployedAt: generateTimestampz(),
 		owner: owner,
 		metadata: {
@@ -56,6 +56,10 @@ export const createContract = async (
 		JSON.stringify(newContract),
 		'hex',
 	) as string
+	if (!transferStatus.status) return { status: false, contract: undefined }
 	await mempool.addContract(newContract)
-	return newContract
+	console.info(
+		`Your contract created waiting for mined. contract address : ${newContract.contractAddress} `,
+	)
+	return { status: true, contract: newContract }
 }

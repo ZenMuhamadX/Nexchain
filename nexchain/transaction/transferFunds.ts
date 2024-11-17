@@ -10,7 +10,7 @@ import { isContract } from 'nexchain/lib/isContract'
 
 export const transferFunds = async (
 	transaction: comTxInterface,
-): Promise<string | undefined> => {
+): Promise<{ status: boolean; txHash?: string | undefined }> => {
 	const memPool = new MemPool()
 	let convertedAmount = transaction.amount
 
@@ -23,7 +23,7 @@ export const transferFunds = async (
 	const minAmount = 1 // Minimum 1 Nexu
 	if (convertedAmount < minAmount) {
 		console.log('Transaction amount must be at least 1 nexu.')
-		return // Hentikan eksekusi jika tidak memenuhi syarat
+		return { status: false, txHash: undefined } // Hentikan eksekusi jika tidak memenuhi syarat
 	}
 	const fee: number = transaction.fee!
 	const amountAfterFee = convertedAmount - fee! // Menghitung biaya transaksi
@@ -67,7 +67,7 @@ export const transferFunds = async (
 
 	// Tambahkan transaksi ke mempool
 	const added = await memPool.addTransaction(convertedTx)
-	if (!added) return
+	if (!added) return { status: false, txHash: undefined }
 	console.log('Transaction added to mempool waiting for mined')
-	return convertedTx.txHash
+	return { status: true, txHash: convertedTx.txHash }
 }
