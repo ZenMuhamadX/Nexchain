@@ -1,14 +1,17 @@
-export const setBlockReward = (currentHeight: number): number => {
-	let reward = 50 // Reward awal
+import { toNexu } from 'nexchain/nexucoin/toNexu'
 
-	// Hitung jumlah potongan yang sudah dilakukan
+export const cutBlockReward = (currentHeight: number): number => {
+	const initialReward = toNexu(50) // Reward awal dalam Nexu
+	const minReward = toNexu(0.001) // Reward minimum
+	const reductionPer20Blocks = toNexu(0.00099998) // Pengurangan per 20 blok
+
+	// Hitung jumlah pengurangan berdasarkan blok ke-20
 	const reductions = Math.floor(currentHeight / 20)
+	let reward = initialReward - reductions * reductionPer20Blocks
 
-	// Kurangi reward berdasarkan jumlah potongan
-	reward -= reductions * 0.001
-
-	if (reward < 0) {
-		reward = 0.0000001
+	// Batasi reward ke minimum 0.001 Nexu
+	if (reward < minReward) {
+		reward = minReward
 	}
 
 	return reward

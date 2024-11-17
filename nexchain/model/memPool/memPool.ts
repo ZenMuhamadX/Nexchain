@@ -6,6 +6,10 @@ import { TxInterface } from 'interface/structTx'
 import { getBalance } from 'nexchain/account/balance/getBalance'
 import { getPendingBalance } from 'nexchain/transaction/getPendingBalance'
 import { setPendingBalance } from 'nexchain/transaction/setPendingBalancet'
+import { contract } from 'interface/structContract'
+import { saveContractMempool } from 'nexchain/storage/mempool/saveContractMempool'
+import { isContract } from 'nexchain/lib/isContract'
+import { loadContractMempool } from 'nexchain/storage/mempool/loadContractMempool'
 
 export class MemPool {
 	constructor() {
@@ -31,7 +35,7 @@ export class MemPool {
 		const pendingBalance = await getPendingBalance(transaction.sender) // Ambil pending balance
 
 		if (!balance) {
-			console.log('Insufficient balance')
+			console.error('Insufficient balance')
 			return false
 		}
 
@@ -57,8 +61,21 @@ export class MemPool {
 		// Simpan transaksi ke mempool dan riwayat transaksi
 		await saveMempool(transaction)
 		await saveTxHistory(transaction.txHash!, transaction)
-		console.log(`TxnHash: ${transaction.txHash}`)
+		console.info(`TxnHash: ${transaction.txHash}`)
 		return transaction
+	}
+
+	public async addContract(contract: contract) {
+		const isContractAddr = isContract(contract.contractAddress)
+		if (!isContractAddr) {
+			console.error('Invalid contract address')
+			return
+		}
+		await saveContractMempool(contract)
+	}
+
+	public async getContractPool(): Promise<contract[]> {
+		return await loadContractMempool()
 	}
 
 	/**

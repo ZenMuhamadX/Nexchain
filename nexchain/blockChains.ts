@@ -6,24 +6,18 @@ import { Block } from './model/block/block'
 import { saveBlock } from './storage/block/saveBlock'
 import { loggingErr } from '../logging/errorLog'
 import { successLog } from '../logging/succesLog'
-import { createSignature } from './sign/createSignature'
-import { proofOfWork } from './miner/Pow'
-import { calculateSize } from './lib/calculateSize'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { TxInterface } from '../interface/structTx'
 import { putBalance } from './account/balance/putBalance'
 import { getBalance } from './account/balance/getBalance'
 import { processTransact } from './transaction/processTransact'
-import { calculateTotalFees } from './transaction/utils/totalFees'
-import { calculateTotalBlockReward } from './miner/calculateReward'
-import { getCurrentBlock } from './block/query/onChain/block/getCurrentBlock'
-import { loadWallet } from './account/utils/loadWallet'
-import { stringToHex } from './hex/stringToHex'
-import { toNexu } from './nexucoin/toNexu'
-import { createMerkleRoot } from './transaction/utils/createMerkleRoot'
+
 import { verifyMerkleRoot } from './miner/verify/module/verifyMerkleRoot'
-import { setBlockReward } from './block/cutReward'
-import { getMinerId } from 'Network(Development)/utils/getMinerId'
+import { contract } from 'interface/structContract'
+import { saveContracts } from './smartContracts/saveContract'
+import { removeContractMemPool } from './storage/mempool/removeContractMempool'
+import _ from 'lodash'
+import { createNewBlock } from './block/createNewBlock'
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
@@ -38,10 +32,15 @@ export class BlockChains {
 	 */
 	public async addBlockToChain(
 		validTransaction: TxInterface[],
+		validContract: contract[],
 		walletMiner: string,
 	): Promise<boolean> {
 		try {
-			const newBlock = await this.createBlock(validTransaction, walletMiner)
+			const newBlock = await this.createBlock(
+				validTransaction,
+				walletMiner,
+				validContract,
+			)
 
 			// Verifikasi Merkle Root sebelum menyimpan blok
 			const isValidMerkleRoot = verifyMerkleRoot(
@@ -59,6 +58,12 @@ export class BlockChains {
 
 			try {
 				await saveBlock(newBlock) // Simpan blok ke chain
+				if (newBlock.block.contract) {
+					this.deployContract(validContract)
+					_.forEach(newBlock.block.contract, (contract) => {
+						removeContractMemPool(contract.contractCodeHash!)
+					})
+				}
 			} catch (saveError) {
 				throw new Error('Failed to save block: ' + saveError)
 			}
@@ -100,82 +105,9 @@ export class BlockChains {
 	private async createBlock(
 		transactions: TxInterface[],
 		walletMiner: string,
+		validContract: contract[],
 	): Promise<Block> {
-		const latestBlock: Block = (await getCurrentBlock('json')) as Block
-		const currentHeight = latestBlock.block.height
-		const { privateKey } = loadWallet()!
-
-		if (!latestBlock) {
-			throw new Error('Latest block is undefined.')
-		}
-
-		// Create a new block with specified parameters.
-		const newBlock = new Block({
-			header: {
-				difficulty: 5,
-				hash: '',
-				nonce: 0,
-				previousBlockHash: '',
-				timestamp: generateTimestampz(),
-				version: '1.0.0',
-				hashingAlgorithm: 'SHA256',
-			},
-			totalTransactionFees: 0,
-			height: currentHeight + 1,
-			merkleRoot: createMerkleRoot(transactions),
-			minerId: getMinerId(),
-			size: 0,
-			sign: {
-				r: '',
-				s: '',
-				v: 0,
-			},
-			status: 'confirmed',
-			blockReward: 0,
-			totalReward: 0,
-			coinbaseTransaction: {
-				amount: 0,
-				receiver: walletMiner,
-				extraData: stringToHex('Block reward'),
-			},
-			metadata: {
-				extraData: stringToHex('BlockChains by NexChain'),
-				gasPrice: 0.00002678,
-				txCount: transactions.length,
-				created_at: generateTimestampz(),
-			},
-			transactions: transactions,
-		})
-
-		newBlock.block.blockReward = setBlockReward(newBlock.block.height)
-
-		// Calculate fees and rewards for the new block.
-		newBlock.block.totalTransactionFees = calculateTotalFees(
-			newBlock.block.transactions,
-		)
-
-		newBlock.block.totalReward = calculateTotalBlockReward(
-			newBlock.block.blockReward,
-			newBlock.block.metadata?.gasPrice!,
-			newBlock.block.totalTransactionFees,
-		)
-
-		newBlock.block.coinbaseTransaction.amount = newBlock.block.totalReward
-
-		newBlock.block.header.previousBlockHash = latestBlock.block.header.hash
-
-		// Perform proof of work and finalize the new block.
-		const { hash, nonce } = proofOfWork(newBlock)
-		newBlock.block.header.nonce = nonce
-		newBlock.block.header.hash = hash
-		newBlock.block.size = calculateSize(newBlock).KB
-
-		newBlock.block.sign = createSignature(
-			newBlock.block.header.hash,
-			privateKey,
-		)
-
-		return newBlock
+		return await createNewBlock(transactions, walletMiner, validContract)
 	}
 
 	/**
@@ -185,13 +117,12 @@ export class BlockChains {
 	 */
 	private async giveReward(address: string, reward: number) {
 		const oldData = await getBalance(address).catch(() => null)
-		const nexuReward = toNexu(reward)
 		const oldNexuBalance = oldData?.balance
 
 		if (!oldNexuBalance) {
 			await putBalance(address, {
 				address,
-				balance: toNexu(reward),
+				balance: reward,
 				timesTransaction: 0,
 				isContract: false,
 				lastTransactionDate: null,
@@ -204,7 +135,7 @@ export class BlockChains {
 		}
 		await putBalance(address, {
 			address,
-			balance: oldNexuBalance + nexuReward,
+			balance: oldNexuBalance + reward,
 			timesTransaction: oldData.timesTransaction + 1,
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
@@ -221,5 +152,9 @@ export class BlockChains {
 	 */
 	public async verify(): Promise<boolean> {
 		return await verifyChainIntegrity()!
+	}
+
+	public async deployContract(contract: contract[]): Promise<void> {
+		await saveContracts(contract)
 	}
 }

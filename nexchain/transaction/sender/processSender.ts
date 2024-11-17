@@ -27,7 +27,7 @@ export const processSender = async (
 
 	// Ambil data saldo saat ini
 	const oldData = await getBalance(senderAddress)
-	const calculateBalance = oldData?.balance! - amount - fee
+	const calculateBalance = oldData?.balance! - amount
 	const newData: structBalance = {
 		address: senderAddress,
 		balance: calculateBalance,
@@ -40,7 +40,6 @@ export const processSender = async (
 		symbol: 'nexu',
 	}
 	await putBalance(senderAddress, newData)
-
 	// Ambil dan perbarui pending balance
 	const pendingBalance = await getPendingBalance(senderAddress)
 	const updatedPendingAmount =

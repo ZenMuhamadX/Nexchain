@@ -11,6 +11,7 @@ import { getCurrentBlock } from 'nexchain/block/query/onChain/block/getCurrentBl
 import _ from 'lodash'
 import { isChainsValid } from 'nexchain/block/isChainValid'
 import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByHeight'
+import { contract } from 'interface/structContract'
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {
@@ -22,6 +23,7 @@ export const miningBlock = async (address: string): Promise<void> => {
 	// Initialize blockchain and memory pool instances
 	const pool = new MemPool()
 	const transactions: TxInterface[] = await pool.getValidTransactions()
+	const contractPool: contract[] = await pool.getContractPool()
 
 	try {
 		// Jika tidak ada transaksi yang pending, info dan lanjutkan proses
@@ -29,7 +31,7 @@ export const miningBlock = async (address: string): Promise<void> => {
 			console.info('Block mined with 0 transactions')
 		} else {
 			// Loop hanya jika ada transaksi
-			transactions.forEach((tx) => {
+			_.forEach(transactions, (tx) => {
 				tx.isValid = true
 				tx.isPending = false
 				tx.status = 'confirmed'
@@ -50,7 +52,11 @@ export const miningBlock = async (address: string): Promise<void> => {
 		}
 
 		// Attempt to add a new block to the blockchain
-		const successMine = await chains.addBlockToChain(transactions, address)
+		const successMine = await chains.addBlockToChain(
+			transactions,
+			contractPool,
+			address,
+		)
 		if (successMine) {
 			// Log mining details if successful
 			const lastBlock: Block = (await getCurrentBlock('json')) as Block

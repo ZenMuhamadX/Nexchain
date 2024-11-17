@@ -29,6 +29,7 @@ export class Block {
 			coinbaseTransaction: blockData.coinbaseTransaction,
 			metadata: blockData.metadata!,
 			transactions: blockData.transactions,
+			contract: blockData.contract!,
 		}
 	}
 }
