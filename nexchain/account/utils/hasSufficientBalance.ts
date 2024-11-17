@@ -15,14 +15,13 @@ export const hasSufficientBalance = async (
 	try {
 		const balance = await getBalance(address)
 		if (!balance) {
-			console.info('insufficient balance')
+			console.error('Balance not found')
 			return false
 		}
-
 		if (balance.balance >= amount + fee) {
 			return true
 		} else {
-			console.info('Insufficient balance')
+			console.error('Insufficient balance')
 			return false
 		}
 	} catch (error) {

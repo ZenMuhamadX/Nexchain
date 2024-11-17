@@ -6,6 +6,7 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { saveTxAddress } from './saveTxAddress'
 import { saveTxHistory } from './saveTxHistory'
 import { processReceiver } from './receiver/processReceiver'
+import { transferToContract } from './contract/transferToContract'
 
 export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 	if (txData.length === 0) {
@@ -21,6 +22,31 @@ export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 	}
 
 	for (const tx of txData) {
+		if (tx.isReceiverContract) {
+			try {
+				await transferToContract({
+					amount: tx.amount,
+					contractAddress: tx.receiver,
+					fee: tx.fee!,
+					sender: tx.sender,
+				})
+				await saveTxAddress(tx.sender, tx.receiver, tx.txHash!)
+				await saveTxHistory(tx.txHash!, tx)
+				removeMemPool(tx.txHash!)
+			} catch (error) {
+				loggingErr({
+					error: error instanceof Error ? error.message : 'Unknown error',
+					stack: new Error().stack,
+					hint: 'Error processing transfer to contract',
+					time: generateTimestampz(),
+					warning: null,
+					context: 'transferToContract',
+				})
+			}
+			// Lanjutkan ke transaksi berikutnya
+			continue
+		}
+
 		try {
 			await processSender(tx.sender, tx.amount, tx.fee!)
 			await processReceiver(tx.receiver, tx.amount)

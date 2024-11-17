@@ -2,28 +2,40 @@ import { showHeader } from 'cli(Development)/figlet/header'
 import { askQuestion } from 'cli(Development)/question/askQuestion'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
+import fs from 'fs'
+import path from 'path'
+import { structWalletToSave } from 'interface/structWalletToSave'
+
+// Fungsi untuk membaca nama file wallet dari direktori
+const getWalletFiles = (directory: string) => {
+	const files = fs.readdirSync(directory)
+	return files.filter((file) => file.endsWith('.json')) // Misalnya, file wallet dalam format JSON
+}
+
+const readWalletData = (filePath: string): structWalletToSave => {
+	const data = fs.readFileSync(filePath, 'utf8')
+	return JSON.parse(data) as structWalletToSave // Pastikan data di dalam file wallet valid JSON
+}
 
 export const CLITransfer = async () => {
 	showHeader('NexTransfer')
 	console.log('Enter transaction details:')
-	const receiver = await askQuestion({
-		type: 'input',
-		name: 'receiver',
-		description: 'Receiver address',
-		message: 'Enter receiver address',
-	})
-	const sender = await askQuestion({
-		type: 'input',
-		name: 'sender',
-		description: 'Enter sender address',
-		message: 'Enter sender address',
-	})
-	const amount = await askQuestion({
-		type: 'input',
-		name: 'amount',
-		description: 'Enter amount to transfer',
-		message: 'Enter amount',
-	})
+
+	// Ambil wallet dari direktori ../wallet
+	const walletDirectory = path.join(__dirname, '../../wallet')
+	const walletFiles = getWalletFiles(walletDirectory)
+
+	if (walletFiles.length === 0) {
+		console.log('No wallet files found in the directory.')
+		process.exit(1)
+	}
+
+	// Membuat pilihan wallet dengan format { name, value }
+	const walletChoices = walletFiles.map((file) => ({
+		name: file, // Nama file sebagai pilihan
+		value: file, // Nilai untuk dipilih
+	}))
+
 	const format = await askQuestion({
 		type: 'list',
 		name: 'format',
@@ -35,12 +47,48 @@ export const CLITransfer = async () => {
 		message: 'Choice your currency format',
 		default: 'nexu',
 	})
+
+	const selectedWalletFile = await askQuestion({
+		type: 'list', // Menggunakan tipe 'list' untuk memilih wallet
+		name: 'wallet',
+		description: 'Choose your wallet',
+		message: 'Select a wallet file:',
+		choices: walletChoices, // Menggunakan pilihan yang telah dibuat
+	})
+
+	const walletData = readWalletData(
+		path.join(walletDirectory, selectedWalletFile),
+	)
+	const sender = walletData.walletAddress // Mengambil address dari walletData
+
+	const receiver = await askQuestion({
+		type: 'input',
+		name: 'receiver',
+		description: 'Receiver address',
+		message: 'Enter receiver address',
+	})
+
+	const amount = await askQuestion({
+		type: 'input',
+		name: 'amount',
+		description: 'Enter amount to transfer',
+		message: 'Enter amount',
+	})
+
+	const fee = await askQuestion({
+		type: 'input',
+		name: 'fee',
+		description: 'Enter fee for transaction in nexu format',
+		message: 'Enter fee',
+		default: 5000,
+	})
+
 	const extraData = await askQuestion({
 		type: 'input',
 		name: 'extraData',
 		description: 'Extra message for receiver optional',
 		message: 'Enter extra message for receiver',
-		default: '',
+		default: 'Nexchain transfer',
 	})
 
 	// Menampilkan detail transaksi untuk konfirmasi
@@ -48,6 +96,7 @@ export const CLITransfer = async () => {
 	console.log(`- Sender: ${sender}`)
 	console.log(`- Receiver: ${receiver}`)
 	console.log(`- Amount: ${amount} ${format}`)
+	console.log(`- Fee: ${fee} nexu`)
 	console.log(`- Extra Message: ${extraData || 'N/A'}`)
 
 	const confirm = await askQuestion({
@@ -68,6 +117,7 @@ export const CLITransfer = async () => {
 			sender,
 			timestamp,
 			extraData,
+			fee,
 		})
 		console.log('Transaction successfully processed!')
 	} else {

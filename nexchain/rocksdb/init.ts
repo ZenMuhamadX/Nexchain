@@ -10,6 +10,7 @@ const createDirectoryIfNotExists = (dirPath: string) => {
 export const initFile = () => {
 	const baseDir = path.join(__dirname, '../../base')
 	const storeData = path.join(baseDir, 'storeData')
+	const contract = path.join(baseDir, 'contract')
 	const block = path.join(baseDir, 'block')
 	const memPool = path.join(baseDir, 'memPool')
 	const history = path.join(baseDir, 'history')
@@ -17,6 +18,7 @@ export const initFile = () => {
 
 	// Membuat direktori jika belum ada
 	createDirectoryIfNotExists(baseDir)
+	createDirectoryIfNotExists(contract)
 	createDirectoryIfNotExists(storeData)
 	createDirectoryIfNotExists(block)
 	createDirectoryIfNotExists(memPool)

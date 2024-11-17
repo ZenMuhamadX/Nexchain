@@ -11,12 +11,14 @@ export interface TxInterface extends comTxInterface {
 	amount: number // Jumlah cryptocurrency yang ditransfer
 	timestamp: number // Waktu transaksi dibuat
 	txHash?: string // Hash transaksi (opsional)
-	extraData: HexString // Pesan opsional yang disertakan dalam transaksi
+	extraData: string // Pesan opsional yang disertakan dalam transaksi
 	fee?: number // Biaya terkait transaksi (opsional)
 	status: 'pending' | 'confirmed' | 'rejected' // Status transaksi
 	isValid: boolean // Menunjukkan apakah transaksi valid
 	isPending: boolean // Menunjukkan apakah transaksi masih pending
 	hexInput?: HexString
+	isSenderContract: boolean
+	isReceiverContract: boolean
 	sign: {
 		v: number
 		r: string
