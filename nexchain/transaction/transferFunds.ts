@@ -12,6 +12,7 @@ export const transferFunds = async (
 	transaction: comTxInterface,
 ): Promise<{ status: boolean; txHash?: string | undefined }> => {
 	const memPool = new MemPool()
+
 	let convertedAmount = transaction.amount
 
 	// Konversi amount ke Nexu jika formatnya adalah NXC
@@ -26,8 +27,11 @@ export const transferFunds = async (
 		return { status: false, txHash: undefined } // Hentikan eksekusi jika tidak memenuhi syarat
 	}
 	const fee: number = transaction.fee!
+
 	const amountAfterFee = convertedAmount - fee! // Menghitung biaya transaksi
+
 	const isReceiverContract = isContract(transaction.receiver)
+
 	const isSenderContract = isContract(transaction.sender)
 
 	// Buat objek transaksi
@@ -44,7 +48,8 @@ export const transferFunds = async (
 			transaction.extraData ||
 			'NexChains A Next Generation Blockchain for Everyone',
 		status: 'pending',
-		isContractTx: isSenderContract || isReceiverContract,
+		isReceiverContract,
+		isSenderContract,
 		sign: { r: '', s: '', v: 0 },
 	}
 
@@ -53,17 +58,15 @@ export const transferFunds = async (
 	convertedTx.txHash = createTxnHash(convertedTx)
 	convertedTx.sign = createSignature(convertedTx.txHash!, privateKey)
 
-	const hexInput = stringToHex(
+	convertedTx.hexInput = stringToHex(
 		JSON.stringify({
 			format: convertedTx.format,
 			amount: convertedTx.amount,
 			receiver: convertedTx.receiver,
 			sender: convertedTx.sender,
 			timestamp: convertedTx.timestamp,
-			isContractTx: convertedTx.isContractTx,
 		}),
 	)
-	convertedTx.hexInput = hexInput
 
 	// Tambahkan transaksi ke mempool
 	const added = await memPool.addTransaction(convertedTx)

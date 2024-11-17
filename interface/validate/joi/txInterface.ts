@@ -15,7 +15,8 @@ export const txInterfaceValidator = Joi.object({
 	format: Joi.string().valid('nexu').required(),
 	sender: Joi.string().required(),
 	receiver: Joi.string().required(),
-	isContractTx: Joi.boolean().required(),
+	isSenderContract: Joi.boolean().required(),
+	isReceiverContract: Joi.boolean().required(),
 	sign: Joi.object({
 		r: Joi.string().required(),
 		s: Joi.string().required(),

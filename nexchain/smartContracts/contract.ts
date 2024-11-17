@@ -1,8 +1,9 @@
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { NXC, contract } from 'interface/structContract'
 import { getContract } from './utils/getContract'
-import { transferToContract } from './utils/transferToContract'
-import { withdrawFromContract } from './utils/withdrawFromContract'
+import { withdrawFromContract } from '../transaction/contract/withdrawFromContract'
+import { transferFunds } from 'nexchain/transaction/transferFunds'
+import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 
 export class SmartContract {
 	contractAddress: string
@@ -25,30 +26,31 @@ export class SmartContract {
 		amount: NXC,
 		sender: string,
 	): Promise<boolean> {
-		console.info('Transferring to contract...')
-		const success = await transferToContract({
+		const success = await transferFunds({
 			amount,
-			contractAddress: this.contractAddress,
+			format: 'NXC',
+			receiver: this.contractAddress,
 			sender,
+			timestamp: generateTimestampz(),
+			extraData: 'Transfer to contract',
+			fee: 5000,
 		})
 		if (!success) {
 			console.info('Transfer failed')
 			return false
 		}
-		console.info('Transfer success')
 		return true
 	}
 
 	public async withdrawFromContract(
-		contractAddress: string,
 		amount: NXC,
 		receiver: string,
 	): Promise<void> {
 		await withdrawFromContract(
-			contractAddress,
+			this.contractAddress,
 			toNexu(amount),
 			receiver,
-			toNexu(0.05),
+			5000,
 		)
 	}
 }

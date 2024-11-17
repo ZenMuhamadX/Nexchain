@@ -1,26 +1,28 @@
 import { contract } from 'interface/structContract'
-import { getContract } from './getContract'
+import { getContract } from '../../smartContracts/utils/getContract'
 import { processSender } from 'nexchain/transaction/sender/processSender'
-import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
-import { saveContracts } from '../saveContract'
+import { saveContracts } from '../../smartContracts/saveContract'
 
 interface contractTransfer {
 	contractAddress: string
 	amount: number
 	sender: string
+	fee: number
 }
+
 export const transferToContract = async (
 	data: contractTransfer,
-): Promise<boolean> => {
-	await processSender(data.sender, data.amount, toNexu(0.05))
+): Promise<{ success: boolean }> => {
+	console.info('Transferring to contract...')
+	await processSender(data.sender, data.amount, data.fee)
 	const hasSufficient = await hasSufficientBalance(
 		data.sender,
 		data.amount,
-		toNexu(0.05),
+		data.fee,
 	)
 	if (!hasSufficient) {
-		return false
+		return { success: false }
 	}
 	const oldContract = await getContract(data.contractAddress)
 	const newContractData: contract = {
@@ -28,5 +30,5 @@ export const transferToContract = async (
 		balance: oldContract.balance + data.amount,
 	}
 	saveContracts(newContractData)
-	return true
+	return { success: true }
 }

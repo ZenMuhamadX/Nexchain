@@ -39,7 +39,7 @@ export const createContract = async (
 		extraData: 'Contract deploy',
 	})
 	const newContract: contract = {
-		balance: initialAmount,
+		balance: 0,
 		contractAddress: createContractAdrress(owner, nonce),
 		contractCodeHash: '',
 		deploymentTransactionHash: transferStatus.txHash!,

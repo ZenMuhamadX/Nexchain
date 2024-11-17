@@ -1,7 +1,7 @@
 import { NXC } from 'interface/structContract'
 import { processReceiver } from 'nexchain/transaction/receiver/processReceiver'
-import { getContract } from './getContract'
-import { saveContracts } from '../saveContract'
+import { getContract } from '../../smartContracts/utils/getContract'
+import { saveContracts } from '../../smartContracts/saveContract'
 
 export const withdrawFromContract = async (
 	contractAddress: string,

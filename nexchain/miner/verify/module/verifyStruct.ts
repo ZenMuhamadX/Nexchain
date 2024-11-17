@@ -24,7 +24,8 @@ export const verifyStruct = async (chains: Block) => {
 		status: Joi.string().required(),
 		isPending: Joi.boolean().required(),
 		isValid: Joi.boolean().required(),
-		isContractTx: Joi.boolean().required(),
+		isReceiverContract: Joi.boolean().required(),
+		isSenderContract: Joi.boolean().required(),
 		hexInput: Joi.string().required(),
 	})
 
