@@ -45,6 +45,7 @@
 		"@types/levelup": "^5.1.5"
 	},
 	"dependencies": {
+		"@msgpack/msgpack": "^3.0.0-beta2",
 		"bip32": "^5.0.0-rc.0",
 		"bip39": "^3.1.0",
 		"bs58": "^6.0.0",
@@ -57,7 +58,6 @@
 		"figlet": "^1.8.0",
 		"husky": "^9.1.6",
 		"inquirer": "^12.0.1",
-		"rocksdb": "./rocksdb",
 		"joi": "^17.13.3",
 		"js-sha3": "^0.9.3",
 		"levelup": "^5.1.1",
@@ -67,6 +67,7 @@
 		"pino": "^9.4.0",
 		"pino-multi-stream": "^6.0.0",
 		"prettier": "^3.3.3",
+		"rocksdb": "./rocksdb",
 		"secp256k1": "^5.0.1",
 		"tiny-secp256k1": "^2.2.3",
 		"ts-node": "^10.9.2",
