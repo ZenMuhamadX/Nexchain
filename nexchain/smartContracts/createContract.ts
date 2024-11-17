@@ -1,4 +1,4 @@
-import { NXC, contract } from 'interface/structContract'
+import { contract } from 'interface/structContract'
 import { createContractAdrress } from 'nexchain/lib/createContractAddress'
 import { getOwnerNonce } from './utils/getOwnerNonce'
 import { sha256 } from 'nexchain/block/sha256'
@@ -13,33 +13,33 @@ const mempool = new MemPool()
 
 export const createContract = async (
 	owner: string,
-	initialBalance: NXC,
 ): Promise<contract | undefined> => {
-	const gas = toNexu(0.1)
+	const initialAmount = toNexu(0.01)
+	let totalGas = 10000
 	const isValidAddres = isValidAddress(owner)
 	if (!isValidAddres) {
 		console.error(`Invalid owner address`)
 		return
 	}
 	const userBalance = await getBalance(owner).catch(() => null)
-	if (userBalance!.balance < gas) {
+	if (userBalance!.balance < totalGas) {
 		console.error(`Insufficient balance to deploy contract.`)
 		return
 	}
-	await burnNexu(owner, gas)
+	await burnNexu(owner, (totalGas -= 5000))
 	const nonce = await getOwnerNonce(owner)
 	const contractAddress = createContractAdrress(owner, nonce)
 	const txHash = await transferFunds({
-		amount: initialBalance,
+		amount: initialAmount,
 		receiver: contractAddress,
 		sender: owner,
-		format: 'NXC',
+		format: 'nexu',
 		timestamp: generateTimestampz(),
-		fee: toNexu(0.05),
-		extraData: 'Deploy contract',
+		fee: totalGas,
+		extraData: 'Contract deploy',
 	})
 	const newContract: contract = {
-		balance: initialBalance,
+		balance: initialAmount,
 		contractAddress: createContractAdrress(owner, nonce),
 		contractCodeHash: '',
 		deploymentTransactionHash: txHash!,
@@ -50,6 +50,7 @@ export const createContract = async (
 			version: '0.1.0',
 		},
 		status: 'active',
+		currency: 'nexu',
 	}
 	newContract.contractCodeHash = sha256(
 		JSON.stringify(newContract),

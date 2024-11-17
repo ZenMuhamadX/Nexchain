@@ -13,4 +13,5 @@ export interface contract {
 		name: string
 		version: string
 	}
+	currency: 'nexu'
 }

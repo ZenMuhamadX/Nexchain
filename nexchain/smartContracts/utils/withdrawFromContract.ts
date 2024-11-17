@@ -1,7 +1,6 @@
 import { NXC } from 'interface/structContract'
 import { processReceiver } from 'nexchain/transaction/receiver/processReceiver'
 import { getContract } from './getContract'
-import { burnNexu } from 'nexchain/transaction/burnNexu'
 import { saveContracts } from '../saveContract'
 
 export const withdrawFromContract = async (
@@ -18,7 +17,6 @@ export const withdrawFromContract = async (
 			'Contract balance is not enough for the requested amount and gas fee.',
 		)
 	}
-	await burnNexu(contractAddress, fee)
 	await processReceiver(receiver, amount)
 
 	// Kurangi balance kontrak dengan totalAmount
@@ -29,5 +27,6 @@ export const withdrawFromContract = async (
 		deploymentTransactionHash: contract.deploymentTransactionHash,
 		status: contract.status,
 		balance: contract.balance - totalAmount,
+		currency: 'nexu',
 	})
 }

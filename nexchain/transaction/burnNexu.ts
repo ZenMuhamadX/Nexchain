@@ -1,62 +1,27 @@
-import { contract } from 'interface/structContract'
 import { getBalance } from 'nexchain/account/balance/getBalance'
 import { putBalance } from 'nexchain/account/balance/putBalance'
 import { isContract } from 'nexchain/lib/isContract'
-import { saveContracts } from 'nexchain/smartContracts/saveContract'
-import { getContract } from 'nexchain/smartContracts/utils/getContract'
 
 export const burnNexu = async (fromAddress: string, amount: number) => {
 	const burnAddress = 'NxCdead00000000000000000000000000000000dead'
-	const oldBurnBalance = await getBalance(burnAddress) // Ambil saldo lama pembakaran
-	const newBurnBalance = oldBurnBalance?.balance! + amount // Tambahkan jumlah yang dibakar
-	const contract = isContract(fromAddress)
-	if (contract) {
-		const oldBalance: contract = await getContract(fromAddress)
 
-		if (!oldBalance) {
-			throw new Error('contract not found.') // Menangani jika alamat tidak ditemukan
-		}
-
-		if (oldBalance!.balance < amount) {
-			throw new Error('Insufficient balance for gas fee.') // Menangani jika saldo tidak mencukupi
-		}
-
-		const newBalance = oldBalance!.balance - amount
-
-		await saveContracts({
-			balance: newBalance,
-			contractAddress: fromAddress,
-			deployedAt: oldBalance!.deployedAt,
-			owner: oldBalance!.owner,
-			status: oldBalance!.status,
-			deploymentTransactionHash: oldBalance!.deploymentTransactionHash,
-		})
-
-		// Perbarui saldo di alamat burn
-		await putBalance(burnAddress, {
-			address: burnAddress,
-			balance: newBurnBalance,
-			decimal: 18,
-			isContract: false,
-			lastTransactionDate: null,
-			nonce: oldBurnBalance!.nonce + 1, // Menjaga nonce yang benar untuk burn address
-			notes: 'Burned by burnNexu function',
-			symbol: 'nexu',
-			timesTransaction: oldBurnBalance!.timesTransaction + 1,
-		})
-		return
+	// Cek apakah alamat pengirim adalah kontrak
+	if (isContract(fromAddress)) {
+		throw new Error('Burn function is not allowed for contracts.')
 	}
+
+	// Ambil saldo pengirim
 	const oldBalance = await getBalance(fromAddress).catch(() => null)
-
 	if (!oldBalance) {
-		throw new Error('Address not found.') // Menangani jika alamat tidak ditemukan
+		throw new Error('Address not found.')
 	}
 
-	if (oldBalance!.balance < amount) {
-		throw new Error('Insufficient balance for gas fee.') // Menangani jika saldo tidak mencukupi
+	// Pastikan saldo cukup untuk pembakaran
+	if (oldBalance.balance < amount) {
+		throw new Error('Insufficient balance for burning.')
 	}
 
-	const newBalance = oldBalance!.balance - amount
+	const newBalance = oldBalance.balance - amount
 
 	// Perbarui saldo pengirim
 	await putBalance(fromAddress, {
@@ -65,11 +30,26 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 		decimal: 18,
 		isContract: false,
 		lastTransactionDate: null,
-		nonce: oldBalance!.nonce + 1, // Meningkatkan nonce untuk transaksi
+		nonce: oldBalance.nonce + 1,
 		notes: '1^18 nexu = 1 NXC',
 		symbol: 'nexu',
-		timesTransaction: oldBalance!.timesTransaction,
+		timesTransaction: oldBalance.timesTransaction + 1,
 	})
+
+	// Ambil saldo lama dari alamat burn
+	const oldBurnBalance = await getBalance(burnAddress).catch(() => ({
+		address: burnAddress,
+		balance: 0,
+		decimal: 18,
+		isContract: false,
+		lastTransactionDate: null,
+		nonce: 0,
+		notes: '',
+		symbol: 'nexu',
+		timesTransaction: 0,
+	}))
+
+	const newBurnBalance = oldBurnBalance!.balance + amount
 
 	// Perbarui saldo di alamat burn
 	await putBalance(burnAddress, {
@@ -78,9 +58,9 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 		decimal: 18,
 		isContract: false,
 		lastTransactionDate: null,
-		nonce: oldBalance!.nonce + 1, // Menjaga nonce yang benar untuk burn address
+		nonce: oldBurnBalance!.nonce + 1,
 		notes: 'Burned by burnNexu function',
 		symbol: 'nexu',
-		timesTransaction: oldBalance!.timesTransaction + 1,
+		timesTransaction: oldBurnBalance!.timesTransaction + 1,
 	})
 }

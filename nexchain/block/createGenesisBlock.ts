@@ -36,9 +36,9 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 				version: '1.0.0',
 				hashingAlgorithm: 'SHA256',
 			},
-			blockReward: 500,
+			blockReward: toNexu(500),
 			totalTransactionFees: 0,
-			totalReward: 500,
+			totalReward: toNexu(500),
 			height: 0,
 			merkleRoot:
 				'0000000000000000000000000000000000000000000000000000000000000000',
@@ -51,7 +51,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			},
 			status: 'confirmed',
 			coinbaseTransaction: {
-				amount: 500,
+				amount: toNexu(500),
 				receiver: myWalletAddress(),
 				extraData: stringToHex('Genesis Block Reward'),
 			},
@@ -82,7 +82,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
 		await putBalance(genesisBlock.block.coinbaseTransaction.receiver, {
 			address: genesisBlock.block.coinbaseTransaction.receiver,
-			balance: toNexu(genesisBlock.block.coinbaseTransaction.amount),
+			balance: genesisBlock.block.coinbaseTransaction.amount as number,
 			timesTransaction: 1,
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),

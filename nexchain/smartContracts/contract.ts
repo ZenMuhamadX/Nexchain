@@ -22,13 +22,13 @@ export class SmartContract {
 	}
 
 	public async transferToContract(
-		contractAddress: string,
 		amount: NXC,
 		sender: string,
 	): Promise<boolean> {
+		console.info('Transferring to contract...')
 		const success = await transferToContract({
-			amount: toNexu(amount),
-			contractAddress,
+			amount,
+			contractAddress: this.contractAddress,
 			sender,
 		})
 		if (!success) {

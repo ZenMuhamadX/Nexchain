@@ -25,17 +25,8 @@ export const transferFunds = async (
 		console.log('Transaction amount must be at least 1 nexu.')
 		return // Hentikan eksekusi jika tidak memenuhi syarat
 	}
-
-	// Mengambil fee dari transaction
-	let fee = transaction.fee || 0 // Menggunakan fee dari transaction jika tersedia
-	let amountAfterFee = convertedAmount - fee
-
-	// Memastikan bahwa jumlah setelah dipotong biaya tidak kurang dari minimal
-	if (amountAfterFee < minAmount) {
-		console.log('Amount after fee must be at least 1 nexu.')
-		return
-	}
-
+	const fee: number = transaction.fee!
+	const amountAfterFee = convertedAmount - fee! // Menghitung biaya transaksi
 	const isReceiverContract = isContract(transaction.receiver)
 	const isSenderContract = isContract(transaction.sender)
 
@@ -46,13 +37,12 @@ export const transferFunds = async (
 		receiver: transaction.receiver,
 		sender: transaction.sender,
 		timestamp: transaction.timestamp,
-		fee: fee, // Menggunakan fee yang ditentukan
+		fee: transaction.fee!,
 		isPending: true,
 		isValid: false,
-		extraData: stringToHex(
+		extraData:
 			transaction.extraData ||
-				'NexChains A Next Generation Blockchain for Everyone',
-		),
+			'NexChains A Next Generation Blockchain for Everyone',
 		status: 'pending',
 		isContractTx: isSenderContract || isReceiverContract,
 		sign: { r: '', s: '', v: 0 },

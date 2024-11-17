@@ -24,13 +24,14 @@ export const verifyStruct = async (chains: Block) => {
 		status: Joi.string().required(),
 		isPending: Joi.boolean().required(),
 		isValid: Joi.boolean().required(),
+		isContractTx: Joi.boolean().required(),
 		hexInput: Joi.string().required(),
 	})
 
 	// Define the schema for the coinbaseTransaction object
 	const coinbaseTransactionSchema = Joi.object({
 		receiver: Joi.string().required(),
-		amount: Joi.number().required(),
+		amount: Joi.number().required().unsafe(),
 		extraData: Joi.any().optional(),
 	})
 
@@ -70,6 +71,7 @@ export const verifyStruct = async (chains: Block) => {
 		coinbaseTransaction: coinbaseTransactionSchema.required(),
 		metadata: metadataSchema.optional(), // Use .optional() if metadata is not required
 		transactions: Joi.array().items(txInterface).required(),
+		contract: Joi.any(),
 	})
 	// Validate the block structure against the schema
 	const { error, warning } = blockStructSchema.validate(chains.block)
