@@ -6,14 +6,15 @@
 
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    pkgs.sudo
     pkgs.nodejs_20
     pkgs.jre
     pkgs.python3
     pkgs.cmake
     pkgs.gnumake42
     pkgs.gcc
-    
+    pkgs.openssh
+    pkgs.nano
+
   ];
 
   # Sets environment variables in the workspace
