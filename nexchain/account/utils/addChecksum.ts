@@ -1,6 +1,9 @@
 /** @format */
 
+import { loggingDebug } from 'logging/debug'
 import crypto from 'node:crypto'
+
+loggingDebug('addCheckSum', 'adding checksum to address')
 
 // Menambahkan checksum ke alamat
 export const addChecksum = (address: Buffer) => {

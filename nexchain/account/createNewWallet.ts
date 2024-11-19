@@ -8,6 +8,8 @@ import { saveWallet } from './utils/saveWallet'
 import { putNewWallet } from './balance/putNewWallet'
 import { showHeader } from 'cli(Development)/figlet/header'
 import { askQuestion } from 'cli(Development)/question/askQuestion'
+import { logToConsole } from 'logging/logging'
+import { loggingDebug } from 'logging/debug'
 
 // Creates a new wallet address and saves it
 export const createNewWalletAddress = async (): Promise<{
@@ -49,11 +51,16 @@ export const createNewWalletAddress = async (): Promise<{
 	})
 
 	try {
+		loggingDebug('createNewWalletAddress', 'Generating new wallet...')
+		loggingDebug('createNewWalletAddress', 'generating mnemonic')
 		const mnemonic = genRandomMnemonic(phraseLength)
-
+		loggingDebug('createNewWalletAddress', 'mnemonic generated')
+		loggingDebug('createNewWalletAddress', 'generating keys from mnemonic')
 		const { publicKey, privateKey } = generateKeysFromMnemonic(mnemonic)
-
+		loggingDebug('createNewWalletAddress', 'keys generated')
+		loggingDebug('createNewWalletAddress', 'generating address from public key')
 		const walletAddress = generateAddressFromPublicKey(publicKey.slice(2))
+		loggingDebug('createNewWalletAddress', 'address generated')
 
 		putNewWallet(walletAddress)
 
@@ -61,6 +68,8 @@ export const createNewWalletAddress = async (): Promise<{
 			{ mnemonic, privateKey, publicKey, walletAddress },
 			fileName,
 		)
+
+		logToConsole('Wallet created successfully')
 
 		// Return the formatted wallet address
 		return { address: walletAddress, phrase: mnemonic }

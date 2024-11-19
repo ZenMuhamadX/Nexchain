@@ -18,10 +18,12 @@ import { removeContractMemPool } from './storage/mempool/removeContractMempool'
 import _ from 'lodash'
 import { createNewBlock } from './block/createNewBlock'
 import { logToConsole } from 'logging/logging'
+import { loggingDebug } from 'logging/debug'
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
 		logToConsole('Chains called...')
+		loggingDebug('blockchain:constructor', 'Chains Called...')
 	}
 
 	/**
@@ -36,43 +38,75 @@ export class BlockChains {
 		walletMiner: string,
 	): Promise<{ status: boolean; block: Block | undefined }> {
 		try {
+			loggingDebug('blockchain:addBlockToChain', 'Create New Block')
 			const newBlock = await this.createBlock(
 				validTransaction,
 				walletMiner,
 				validContract,
 			)
-
+			loggingDebug('blockchain:addBlockToChain', 'New Block Created', newBlock)
+			loggingDebug('blockchain:addBlockToChain', 'validate merkleRoot')
 			// Verifikasi Merkle Root sebelum menyimpan blok
 			const isValidMerkleRoot = verifyMerkleRoot(
 				newBlock.block.transactions,
 				newBlock.block.merkleRoot,
 			)
+			loggingDebug(
+				'blockchain:addBlockToChain',
+				`merkleRoot valid? ${isValidMerkleRoot} `,
+			)
 			if (!isValidMerkleRoot) {
+				loggingDebug('blockchain:addBlockToChain', 'merkleRoot not valid')
 				throw new Error('Merkle root verification failed.')
 			}
 
+			loggingDebug('blockchain:addBlockToChain', 'giving reward to miner')
 			await this.giveReward(
 				newBlock.block.coinbaseTransaction.receiver,
 				newBlock.block.totalReward,
 			)
-
+			loggingDebug(
+				'blockchain:addBlockToChain',
+				'reward distributed successfully',
+			)
+			loggingDebug('blockchain:addBlockToChain', 'saving block to chain')
 			try {
 				await saveBlock(newBlock) // Simpan blok ke chain
-				if (newBlock.block.contract) {
+				loggingDebug('blockchain:addBlockToChain', 'block saved successfully')
+				loggingDebug(
+					'blockchain:addBlockToChain',
+					'checking contract deployment',
+				)
+				if (newBlock.block.contract?.length !== 0) {
+					loggingDebug('blockchain:addBlockToChain', 'contract found')
+					loggingDebug('blockchain:addBlockToChain', 'deploying contract')
 					this.deployContract(validContract)
 					_.forEach(newBlock.block.contract, (contract) => {
 						removeContractMemPool(contract.contractCodeHash!)
 					})
+					loggingDebug(
+						'blockchain:addBlockToChain',
+						'contract deployed successfully',
+					)
 				}
 			} catch (saveError) {
+				loggingDebug(
+					'blockchain:addBlockToChain',
+					'failed to save block',
+					saveError,
+				)
 				throw new Error('Failed to save block: ' + saveError)
 			}
+			loggingDebug('blockchain:addBlockToChain', 'transaction processed')
 			if (validTransaction.length > 0) {
+				loggingDebug('blockchain:addBlockToChain', 'processing transaction')
 				await processTransact(validTransaction)
+				loggingDebug('blockchain:addBlockToChain', 'transaction processed')
 			}
-
+			loggingDebug('blockchain:addBlockToChain', 'block added successfully')
 			return { block: newBlock, status: true }
 		} catch (error) {
+			loggingDebug('blockchain:addBlockToChain', 'error adding block', error)
 			// Log failure
 			loggingErr({
 				message: error instanceof Error ? error.message : 'Unknown error',
@@ -101,6 +135,7 @@ export class BlockChains {
 		walletMiner: string,
 		validContract: contract[],
 	): Promise<Block> {
+		loggingDebug('blockchain:createBlock', 'creating new block')
 		return await createNewBlock(transactions, walletMiner, validContract)
 	}
 
@@ -110,8 +145,10 @@ export class BlockChains {
 	 * @param reward - The amount of reward to be given.
 	 */
 	private async giveReward(address: string, reward: number) {
+		loggingDebug('blockchain:giveReward', 'checking balance')
 		const oldData = await getBalance(address).catch(() => null)
 		const oldNexuBalance = oldData?.balance
+		loggingDebug('blockchain:giveReward', 'reward given')
 
 		if (!oldNexuBalance) {
 			await putBalance(address, {
@@ -145,10 +182,12 @@ export class BlockChains {
 	 * @returns True if the block and chain are valid, otherwise false.
 	 */
 	public async verify(): Promise<boolean> {
+		loggingDebug('blockchain:verify', 'verifying chain integrity')
 		return await verifyChainIntegrity()!
 	}
 
 	public async deployContract(contract: contract[]): Promise<void> {
+		loggingDebug('blockchain:deployContract', 'deploying contract')
 		await saveContracts(contract)
 	}
 }

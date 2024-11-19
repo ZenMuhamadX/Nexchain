@@ -1,10 +1,12 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { WalletConfig } from 'interface/walletConfig'
+import { loggingDebug } from 'logging/debug'
 import { convertTimestampToDate } from 'nexchain/lib/convertTimestamp'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import path from 'path'
 
 export const setWalletConfig = () => {
+	loggingDebug('setWalletConfig', 'set wallet conf')
 	const dirPath = path.join(__dirname, '../../config/')
 	const filePath = path.join(dirPath, 'wallet.conf.json')
 	if (!existsSync(dirPath)) {
@@ -20,4 +22,5 @@ export const setWalletConfig = () => {
 		network: 'Devnet',
 	}
 	writeFileSync(filePath, JSON.stringify(defaultData, null, 2))
+	loggingDebug('setWalletConfig', `set wallet conf done saved to ${filePath} `)
 }
