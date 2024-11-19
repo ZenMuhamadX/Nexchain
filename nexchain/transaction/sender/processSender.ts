@@ -15,11 +15,12 @@ export const processSender = async (
 	const balanceStatus = await hasSufficientBalance(senderAddress, amount, fee)
 	if (!balanceStatus) {
 		loggingErr({
-			error: 'Insufficient balance',
-			stack: new Error().stack,
+			message: 'Insufficient balance',
+			stack: new Error().stack!,
 			hint: 'Insufficient balance',
-			time: generateTimestampz(),
-			warning: null,
+			timestamp: generateTimestampz(),
+			level: 'error',
+			priority: 'high',
 			context: 'leveldb processTransaction',
 		})
 		return

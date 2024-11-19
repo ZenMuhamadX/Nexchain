@@ -95,12 +95,13 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		return genesisBlock
 	} catch (error) {
 		loggingErr({
-			error: error,
+			message: 'Error creating genesis block.',
 			context: 'createGenesisBlock',
 			hint: 'Error creating genesis block',
-			warning: null,
-			stack: new Error().stack,
-			time: generateTimestampz(),
+			stack: new Error().stack!,
+			timestamp: generateTimestampz(),
+			level: 'error',
+			priority: 'high',
 		})
 		throw new Error('Failed to create genesis block.')
 	}

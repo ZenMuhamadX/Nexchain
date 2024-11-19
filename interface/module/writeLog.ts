@@ -9,10 +9,11 @@ export const logError = (
 	loggingErr({
 		context,
 		hint,
-		warning: null,
-		error,
-		stack: new Error().stack,
-		time: generateTimestampz(),
+		level: 'error',
+		message: error,
+		priority: 'high',
+		timestamp: generateTimestampz(),
+		stack: new Error().stack!,
 	})
 	return false
 }

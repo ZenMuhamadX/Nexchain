@@ -7,6 +7,7 @@ import { structWalletToSave } from 'interface/structWalletToSave'
 import { writeFile } from 'fs/promises'
 import { existsSync, mkdirSync } from 'fs'
 import { askQuestion } from 'cli(Development)/question/askQuestion'
+import { logToConsole } from 'logging/logging'
 
 // Fungsi utama untuk mengimpor dompet dari mnemonic
 export const importWalletFromMnemonic = async (
@@ -21,7 +22,7 @@ export const importWalletFromMnemonic = async (
 
 	const { privateKey, publicKey } = generateKeysFromMnemonic(mnemonic)
 	const address = generateAddressFromPublicKey(publicKey.slice(2))
-	console.info(chalk.greenBright('Wallet found successfully!'))
+	logToConsole('Wallet found successfully!')
 
 	const data: structWalletToSave = {
 		privateKey,
@@ -65,14 +66,14 @@ export const importWalletFromMnemonic = async (
 			})
 
 			if (!overwrite) {
-				console.info(chalk.yellow('Wallet not saved.'))
+				logToConsole('Wallet not saved.')
 				return { privateKey, publicKey, address }
 			}
 		}
 
 		// Menyimpan data wallet ke file
 		await writeFile(filePath, JSON.stringify(data, null, 2))
-		console.info(chalk.green(`Wallet successfully saved to ${filePath}`))
+		logToConsole(`Wallet successfully saved to ${filePath}`)
 	}
 
 	return {

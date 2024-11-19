@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import { structWalletToSave } from 'interface/structWalletToSave'
 import { loadWalletConfig } from '../loadWalletConf'
+import { logToConsole } from 'logging/logging'
 
 // Fungsi untuk memuat kunci dari file atau menghasilkan kunci baru jika belum ada
 export const loadWallet = (): structWalletToSave | undefined => {
@@ -9,10 +10,9 @@ export const loadWallet = (): structWalletToSave | undefined => {
 	// Tentukan path file kunci
 	const walletPath = path.join(__dirname, `../../../wallet/${walletName}.json`)
 	if (!fs.existsSync(walletPath)) {
-		console.info(
-			'Wallet not found please configure your primary wallet in config/wallet.conf.json',
+		logToConsole(
+			'Wallet not found please configure your primary wallet in config/wallet.conf.json if you have no wallet please create',
 		)
-		console.info('if you have no wallet please create')
 		return
 	}
 	// Membaca kunci dari file

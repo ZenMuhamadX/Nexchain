@@ -10,10 +10,11 @@ import { contract } from 'interface/structContract'
 import { saveContractMempool } from 'nexchain/storage/mempool/saveContractMempool'
 import { isContract } from 'nexchain/lib/isContract'
 import { loadContractMempool } from 'nexchain/storage/mempool/loadContractMempool'
+import { logToConsole } from 'logging/logging'
 
 export class MemPool {
 	constructor() {
-		console.log('MemPool called')
+		logToConsole('MemPool called...')
 	}
 
 	/**
@@ -61,7 +62,7 @@ export class MemPool {
 		// Simpan transaksi ke mempool dan riwayat transaksi
 		await saveMempool(transaction)
 		await saveTxHistory(transaction.txHash!, transaction)
-		console.info(`TxnHash: ${transaction.txHash}`)
+		logToConsole(`TxnHash: ${transaction.txHash}`)
 		return transaction
 	}
 

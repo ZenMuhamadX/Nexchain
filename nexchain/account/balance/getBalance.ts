@@ -4,6 +4,7 @@ import { structBalance } from 'interface/structBalance'
 import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
 import { rocksState } from 'nexchain/rocksdb/state'
 import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
+import { logToConsole } from 'logging/logging'
 
 export const getBalance = async (
 	address: string,
@@ -11,11 +12,11 @@ export const getBalance = async (
 	try {
 		const isValidAddr = isValidAddress(address)
 		if (!isValidAddr) {
-			console.info('invalid address')
+			logToConsole('invalid address')
 			return
 		}
 		if (!address) {
-			console.info('address not provided')
+			logToConsole('address not provided')
 			return
 		}
 		const balance: Buffer = (await rocksState
@@ -44,12 +45,13 @@ export const getBalance = async (
 			return
 		}
 		loggingErr({
-			error: error,
-			time: generateTimestampz(),
+			level: 'error',
+			timestamp: generateTimestampz(),
 			context: 'leveldb',
-			stack: new Error().stack,
+			stack: new Error().stack!,
 			hint: 'An unexpected error occurred while getting data.',
-			warning: null,
+			message: 'An unexpected error occurred while getting data.',
+			priority: 'high',
 		})
 		return
 	}

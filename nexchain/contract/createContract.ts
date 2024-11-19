@@ -9,6 +9,7 @@ import { getBalance } from 'nexchain/account/balance/getBalance'
 import { burnNexu } from 'nexchain/transaction/burnNexu'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { MemPool } from 'nexchain/model/memPool/memPool'
+import { logToConsole } from 'logging/logging'
 const mempool = new MemPool()
 
 export const createContract = async (
@@ -58,7 +59,7 @@ export const createContract = async (
 	) as string
 	if (!transferStatus.status) return { status: false, contract: undefined }
 	await mempool.addContract(newContract)
-	console.info(
+	logToConsole(
 		`Your contract created waiting for mined. contract address : ${newContract.contractAddress} `,
 	)
 	return { status: true, contract: newContract }

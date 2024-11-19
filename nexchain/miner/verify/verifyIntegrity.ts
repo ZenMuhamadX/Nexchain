@@ -6,10 +6,11 @@ import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByH
 import { Block } from 'nexchain/model/block/block'
 import { verifySignature } from 'nexchain/sign/verifySIgnature'
 import { verifyMerkleRoot } from './module/verifyMerkleRoot'
+import { logToConsole } from 'logging/logging'
 
 // Function to verify the integrity of the blockchain
 export const verifyChainIntegrity = async (): Promise<boolean> => {
-	console.info('Checking chain integrity...')
+	logToConsole('Checking chain integrity...')
 	let currentHeight = 0
 	while (true) {
 		const block: Block = (await getBlockByHeight(
@@ -17,7 +18,7 @@ export const verifyChainIntegrity = async (): Promise<boolean> => {
 			'json',
 		)) as Block
 		if (!block) {
-			console.info('Chain integrity verified.')
+			logToConsole('Chain integrity verified.')
 			return true
 		}
 		verifySignature(block.block.header.hash as string, block.block.sign)

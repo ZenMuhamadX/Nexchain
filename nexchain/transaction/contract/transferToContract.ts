@@ -3,6 +3,7 @@ import { getContract } from '../../contract/utils/getContract'
 import { processSender } from 'nexchain/transaction/sender/processSender'
 import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
 import { saveContracts } from '../../contract/saveContract'
+import { logToConsole } from 'logging/logging'
 
 interface contractTransfer {
 	contractAddress: string
@@ -14,7 +15,7 @@ interface contractTransfer {
 export const transferToContract = async (
 	data: contractTransfer,
 ): Promise<{ success: boolean }> => {
-	console.info('Transferring to contract...')
+	logToConsole('Transferring to contract...')
 	await processSender(data.sender, data.amount, data.fee)
 	const hasSufficient = await hasSufficientBalance(
 		data.sender,

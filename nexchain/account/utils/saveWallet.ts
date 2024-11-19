@@ -2,6 +2,7 @@ import inquirer from 'inquirer'
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { structWalletToSave } from 'interface/structWalletToSave'
 import path from 'path'
+import { logToConsole } from 'logging/logging'
 
 export const saveWallet = async (
 	data: structWalletToSave,
@@ -43,17 +44,19 @@ export const saveWallet = async (
 
 			if (create) {
 				writeFileSync(filePath, JSON.stringify(data, null, 2))
-				console.log(`Wallet created and saved to ${filePath}`)
-				console.info({
+				logToConsole(`Wallet created and saved to ${filePath}`)
+				console.log({
 					seedPhrase: data.mnemonic,
 					walletAddress: data.walletAddress,
 				})
+				logToConsole('Please Keep Your Phrase')
 			} else {
-				console.log('Wallet not saved')
-				console.info({
+				logToConsole('Wallet not saved')
+				console.log({
 					seedPhrase: data.mnemonic,
 					walletAddress: data.walletAddress,
 				})
+				logToConsole('Please Keep Your Phrase')
 			}
 		}
 	} catch (error) {

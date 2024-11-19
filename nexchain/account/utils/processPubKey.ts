@@ -9,11 +9,12 @@ export const processPubKey = (publicKey: string): Buffer | undefined => {
 		if (typeof publicKey !== 'string' || !/^[0-9a-fA-F]+$/.test(publicKey)) {
 			loggingErr({
 				context: 'processPubKey',
+				level: 'error',
+				priority: 'high',
 				hint: 'Invalid public key',
-				warning: null,
-				error: 'Invalid public key format must be a hexadecimal string.',
-				stack: new Error().stack,
-				time: generateTimestampz(),
+				message: 'Invalid public key format must be a hexadecimal string.',
+				stack: new Error().stack!,
+				timestamp: generateTimestampz(),
 			})
 			return undefined
 		}
@@ -27,10 +28,11 @@ export const processPubKey = (publicKey: string): Buffer | undefined => {
 		loggingErr({
 			context: 'processPubKey',
 			hint: 'Error processing public key',
-			warning: null,
-			error,
-			stack: new Error().stack,
-			time: generateTimestampz(),
+			stack: new Error().stack!,
+			timestamp: generateTimestampz(),
+			level: 'error',
+			priority: 'high',
+			message: 'Error processing public key',
 		})
 		return undefined
 	}

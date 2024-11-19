@@ -67,11 +67,12 @@ export const createNewWalletAddress = async (): Promise<{
 	} catch (error) {
 		loggingErr({
 			context: 'createWalletAddress',
-			error,
-			stack: new Error().stack,
-			time: generateTimestampz(),
-			hint: '',
-			warning: null,
+			message: 'Error creating wallet address',
+			level: 'error',
+			priority: 'high',
+			stack: new Error().stack!,
+			timestamp: generateTimestampz(),
+			hint: 'please try again',
 		})
 		return { address: undefined, phrase: undefined }
 	}

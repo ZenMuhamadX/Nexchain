@@ -8,12 +8,13 @@ export const putNewWallet = async (address: string): Promise<void> => {
 	try {
 		if (!address) {
 			loggingErr({
-				error: 'data address not found',
-				stack: new Error().stack,
+				message: 'data address not found',
+				level: 'error',
+				priority: 'high',
+				stack: new Error().stack!,
 				hint: 'data not found',
-				time: generateTimestampz(),
-				warning: null,
-				context: 'leveldb',
+				timestamp: generateTimestampz(),
+				context: 'leveldb putNewWallet',
 			})
 			return
 		}
@@ -33,12 +34,13 @@ export const putNewWallet = async (address: string): Promise<void> => {
 		})
 	} catch (error) {
 		loggingErr({
-			error: 'Error putting data',
-			time: generateTimestampz(),
-			context: 'leveldb',
-			stack: new Error().stack,
+			message: 'Error putting data',
+			timestamp: generateTimestampz(),
+			level: 'error',
+			priority: 'high',
+			context: 'leveldb putNewWallet',
+			stack: new Error().stack!,
 			hint: 'An unexpected error occurred while putting data.',
-			warning: null,
 		})
 	}
 }

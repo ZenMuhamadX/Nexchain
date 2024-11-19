@@ -22,6 +22,6 @@ export const setPendingBalance = async (data: pendingBalance): Promise<any> => {
 		// Simpan pending balance ke database dengan key berdasarkan userId
 		await rocksState.put(`pendingBalance:${data.address}`, stringData)
 	} catch (error) {
-		console.info(error)
+		console.error(error)
 	}
 }

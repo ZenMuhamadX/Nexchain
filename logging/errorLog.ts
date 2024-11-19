@@ -1,52 +1,53 @@
-/** @format */
-
-import pino from 'pino'
+import winston from 'winston'
 import * as path from 'path'
-import fs from 'node:fs'
-// Define interface for error information
+import fs from 'fs'
+import { logToConsole } from './logging'
+
+// Define ErrorInfo interface
 interface ErrorInfo {
-	error: string | any
-	time: number
-	hint?: string
-	warning?: any
-	stack: any
+	timestamp: number
+	level: 'error'
+	message: string
 	context: string
+	stack: string
+	priority: 'low' | 'high'
+	hint?: string
 }
 
 // Define log directory and file paths
-const logDirPath = path.join(__dirname, '../../logs')
+const logDirPath = path.join(__dirname, '../logs')
 const logFilePath = path.join(logDirPath, 'error_log.log')
 
+// Create log directory if it doesn't exist
 if (!fs.existsSync(logDirPath)) {
 	fs.mkdirSync(logDirPath)
 }
 
-// Create Pino logger with file transport
-const logger = pino({ level: 'error' }, pino.destination(logFilePath))
+// Create Winston logger
+const logger = winston.createLogger({
+	level: 'error',
+	format: winston.format.json(), // Log directly as JSON
+	transports: [
+		new winston.transports.File({ filename: logFilePath }),
+		new winston.transports.Console({
+			format: winston.format.printf((info) => JSON.stringify(info)), // No formatting, just raw JSON
+		}),
+	],
+})
 
-// Function to log error information using Pino
+// Function to log errors
 export const loggingErr = (err: ErrorInfo): void => {
 	if (err) {
-		// Format log message
-		const logMessage = {
-			context: err.context,
-			error: err.error,
-			time: err.time,
-			hint: err.hint || 'N/A',
-			warning: err.warning || 'N/A',
-			stack: err.stack || 'N/A',
-		}
+		const { priority, ...logMessage } = err
 
-		try {
-			// Write error log to file
-			logger.error(logMessage)
+		// Log the error to file
+		logger.info(logMessage)
 
-			// Print error log to console
-			console.error('Error details saved to log file.')
+		// Display only high-priority errors in the console
+		if (priority === 'high') {
 			console.error(logMessage)
-		} catch (error) {
-			// Handle errors occurring during log saving
-			console.error('Error saving error log:', error)
+		} else {
+			logToConsole('Non-critical error logged to file.')
 		}
 	}
 }

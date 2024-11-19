@@ -5,7 +5,6 @@ import { generateTimestampz } from './lib/generateTimestampz'
 import { Block } from './model/block/block'
 import { saveBlock } from './storage/block/saveBlock'
 import { loggingErr } from '../logging/errorLog'
-import { successLog } from '../logging/succesLog'
 import { verifyChainIntegrity } from './miner/verify/verifyIntegrity'
 import { TxInterface } from '../interface/structTx'
 import { putBalance } from './account/balance/putBalance'
@@ -18,10 +17,11 @@ import { saveContracts } from './contract/saveContract'
 import { removeContractMemPool } from './storage/mempool/removeContractMempool'
 import _ from 'lodash'
 import { createNewBlock } from './block/createNewBlock'
+import { logToConsole } from 'logging/logging'
 // Manages the blockchain and its operations
 export class BlockChains {
 	constructor() {
-		console.log('Chains called.')
+		logToConsole('Chains called...')
 	}
 
 	/**
@@ -34,7 +34,7 @@ export class BlockChains {
 		validTransaction: TxInterface[],
 		validContract: contract[],
 		walletMiner: string,
-	): Promise<boolean> {
+	): Promise<{ status: boolean; block: Block | undefined }> {
 		try {
 			const newBlock = await this.createBlock(
 				validTransaction,
@@ -71,28 +71,22 @@ export class BlockChains {
 				await processTransact(validTransaction)
 			}
 
-			// Log success
-			successLog({
-				hash: newBlock.block.header.hash,
-				height: newBlock.block.height,
-				previousHash: newBlock.block.header.previousBlockHash,
-				message: 'Block added to the chain',
-				timestamp: generateTimestampz().toString(),
-				nonce: newBlock.block.header.nonce,
-			})
-
-			return true
+			return { block: newBlock, status: true }
 		} catch (error) {
 			// Log failure
 			loggingErr({
-				error: error instanceof Error ? error.message : 'Unknown error',
+				message: error instanceof Error ? error.message : 'Unknown error',
 				context: 'BlockChains',
-				warning: null,
-				time: generateTimestampz(),
+				level: 'error',
+				priority: 'high',
+				timestamp: generateTimestampz(),
 				hint: 'Error adding block to chain',
-				stack: new Error().stack,
+				stack: new Error().stack!,
 			})
-			return false
+			return {
+				block: undefined,
+				status: false,
+			}
 		}
 	}
 

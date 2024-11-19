@@ -11,12 +11,13 @@ export const putBalance = async (
 	try {
 		if (!address || !balance) {
 			loggingErr({
-				error: 'data not found',
-				stack: new Error().stack,
+				level: 'error',
+				message: 'Error putting data or data not found',
+				stack: new Error().stack!,
 				hint: 'data not found',
-				time: generateTimestampz(),
-				warning: null,
-				context: 'leveldb',
+				timestamp: generateTimestampz(),
+				priority: 'high',
+				context: 'leveldb putBalance',
 			})
 			return
 		}
@@ -30,12 +31,13 @@ export const putBalance = async (
 			}
 	} catch (error) {
 		loggingErr({
-			error: 'Error putting data',
-			time: generateTimestampz(),
-			context: 'leveldb',
-			stack: new Error().stack,
+			message: 'Error putting data',
+			timestamp: generateTimestampz(),
+			level: 'error',
+			priority: 'high',
+			context: 'leveldb putBalance',
+			stack: new Error().stack!,
 			hint: 'An unexpected error occurred while putting data.',
-			warning: null,
 		})
 	}
 }

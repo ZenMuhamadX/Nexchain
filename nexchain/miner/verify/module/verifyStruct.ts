@@ -75,13 +75,14 @@ export const verifyStruct = async (chains: Block) => {
 		contract: Joi.any(),
 	})
 	// Validate the block structure against the schema
-	const { error, warning } = blockStructSchema.validate(chains.block)
+	const { error } = blockStructSchema.validate(chains.block)
 	if (error) {
 		loggingErr({
-			error,
-			stack: new Error().stack,
-			time: generateTimestampz(),
-			warning: warning?.message,
+			message: 'Invalid block structure',
+			stack: new Error().stack!,
+			timestamp: generateTimestampz(),
+			level: 'error',
+			priority: 'high',
 			context: 'Block verifyStruct',
 			hint: 'Invalid block structure',
 		})

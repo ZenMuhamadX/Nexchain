@@ -11,11 +11,12 @@ import { transferToContract } from './contract/transferToContract'
 export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 	if (txData.length === 0) {
 		loggingErr({
-			error: 'data not found',
-			stack: new Error().stack,
+			message: 'data not found',
+			stack: new Error().stack!,
 			hint: 'data not found',
-			time: generateTimestampz(),
-			warning: null,
+			timestamp: generateTimestampz(),
+			level: 'error',
+			priority: 'high',
 			context: 'leveldb processTransaction',
 		})
 		return
@@ -35,11 +36,12 @@ export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 				removeMemPool(tx.txHash!)
 			} catch (error) {
 				loggingErr({
-					error: error instanceof Error ? error.message : 'Unknown error',
-					stack: new Error().stack,
+					message: error instanceof Error ? error.message : 'Unknown error',
+					stack: new Error().stack!,
 					hint: 'Error processing transfer to contract',
-					time: generateTimestampz(),
-					warning: null,
+					timestamp: generateTimestampz(),
+					level: 'error',
+					priority: 'high',
 					context: 'transferToContract',
 				})
 			}
@@ -55,11 +57,12 @@ export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 			removeMemPool(tx.txHash!)
 		} catch (error) {
 			loggingErr({
-				error: error instanceof Error ? error.message : 'Unknown error',
-				stack: new Error().stack,
+				message: error instanceof Error ? error.message : 'Unknown error',
+				stack: new Error().stack!,
 				hint: 'Error processing transaction',
-				time: generateTimestampz(),
-				warning: null,
+				timestamp: generateTimestampz(),
+				level: 'error',
+				priority: 'high',
 				context: 'leveldb processTransaction',
 			})
 		}

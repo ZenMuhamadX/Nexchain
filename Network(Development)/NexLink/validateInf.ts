@@ -4,15 +4,16 @@ import { COMValidate } from '../interface/validate'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 
 export const validateMessageInterface = (data: COM): boolean => {
-	const { error, warning } = COMValidate.validate(data)
+	const { error } = COMValidate.validate(data)
 	if (error) {
 		loggingErr({
 			context: 'validateMessageInterface',
-			error,
-			stack: new Error().stack,
-			time: generateTimestampz(),
-			hint: 'Invalid Command',
-			warning,
+			level: 'error',
+			message: error.message,
+			priority: 'high',
+			timestamp: generateTimestampz(),
+			stack: error.stack!,
+			hint: 'Invalid message format',
 		})
 		return false
 	}

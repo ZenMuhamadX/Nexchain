@@ -1,6 +1,7 @@
 import { loggingErr } from 'logging/errorLog'
 import { getBalance } from '../balance/getBalance'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { logToConsole } from 'logging/logging'
 
 export const hasSufficientBalance = async (
 	address: string,
@@ -8,7 +9,7 @@ export const hasSufficientBalance = async (
 	fee: number,
 ): Promise<boolean | undefined> => {
 	if (!address) {
-		console.info('Address not provided')
+		logToConsole('Address not provided')
 		return false
 	}
 
@@ -27,11 +28,11 @@ export const hasSufficientBalance = async (
 	} catch (error) {
 		loggingErr({
 			context: 'hasSufficientBalance',
-			error: error,
-			stack: new Error().stack,
-			time: generateTimestampz(),
-			hint: '',
-			warning: '',
+			message: 'Balance has not sufficient',
+			stack: new Error().stack!,
+			timestamp: generateTimestampz(),
+			level: 'error',
+			priority: 'high',
 		})
 		return undefined
 	}

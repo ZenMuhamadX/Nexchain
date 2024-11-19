@@ -5,13 +5,12 @@ import { generateTimestampz } from '../lib/generateTimestampz'
 import { loggingErr } from '../../logging/errorLog'
 import { mineLog } from '../../logging/mineLog'
 import { chains } from 'nexchain/block/initBlock'
-import { Block } from 'nexchain/model/block/block'
 import { TxInterface } from 'interface/structTx'
-import { getCurrentBlock } from 'nexchain/block/query/onChain/block/getCurrentBlock'
 import _ from 'lodash'
 import { isChainsValid } from 'nexchain/block/isChainValid'
 import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByHeight'
 import { contract } from 'interface/structContract'
+import { logToConsole } from 'logging/logging'
 
 // Function to mine a block and add it to the blockchain
 export const miningBlock = async (address: string): Promise<void> => {
@@ -28,7 +27,7 @@ export const miningBlock = async (address: string): Promise<void> => {
 	try {
 		// Jika tidak ada transaksi yang pending, info dan lanjutkan proses
 		if (transactions.length === 0) {
-			console.info('Block mined with 0 transactions')
+			logToConsole('Block mined with 0 transactions')
 		} else {
 			// Loop hanya jika ada transaksi
 			_.forEach(transactions, (tx) => {
@@ -41,12 +40,12 @@ export const miningBlock = async (address: string): Promise<void> => {
 		const isAllBlockValid = await isChainsValid()
 		if (!isAllBlockValid) {
 			loggingErr({
-				error: 'Block is not valid',
+				message: 'Block is not valid',
 				context: 'miningBlock',
-				hint: '',
-				time: generateTimestampz(),
-				warning: null,
-				stack: new Error().stack,
+				level: 'error',
+				priority: 'high',
+				timestamp: generateTimestampz(),
+				stack: new Error().stack!,
 			})
 			return
 		}
@@ -57,35 +56,29 @@ export const miningBlock = async (address: string): Promise<void> => {
 			contractPool,
 			address,
 		)
-		if (successMine) {
-			// Log mining details if successful
-			const lastBlock: Block = (await getCurrentBlock('json')) as Block
-			mineLog({
-				difficulty: 3, // Consider making this dynamic or configurable
-				hash: lastBlock?.block.header.hash || 'N/A',
-				mined_at: generateTimestampz(),
-				nonce: lastBlock?.block.header.nonce || 'N/A',
-				miner: address,
-			})
+		if (successMine.status) {
+			mineLog(successMine.block!)
 		} else {
 			loggingErr({
-				error: 'Failed to mine block',
+				message: 'Failed to mine block',
 				context: 'miningBlock',
 				hint: 'Block was not added to the chain',
-				time: generateTimestampz(),
-				warning: null,
-				stack: new Error().stack,
+				timestamp: generateTimestampz(),
+				level: 'error',
+				priority: 'high',
+				stack: new Error().stack!,
 			})
 		}
 	} catch (error) {
 		// Log error details if an exception is thrown
 		loggingErr({
-			error: error instanceof Error ? error.message : 'Unknown error',
+			message: error instanceof Error ? error.message : 'Unknown error',
 			context: 'miningBlock',
 			hint: 'Error mining block',
-			warning: null,
-			time: generateTimestampz(),
-			stack: new Error().stack,
+			level: 'error',
+			priority: 'high',
+			timestamp: generateTimestampz(),
+			stack: new Error().stack!,
 		})
 	}
 }

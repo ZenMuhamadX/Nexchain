@@ -12,7 +12,6 @@ export const saveBlock = async (blockData: Block): Promise<boolean> => {
 		await writeBlockHash(blockHash, blockData)
 		await writeBlockHeight(blockHeight, blockHash)
 		await setBlockState(blockData)
-		console.info(`Block ${blockHash} successfully mined.`)
 		return true
 	} catch (error) {
 		// Tangani error jika proses penyimpanan gagal

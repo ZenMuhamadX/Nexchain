@@ -1,48 +1,42 @@
 /** @format */
 
-import pino from 'pino'
+import winston from 'winston'
 import * as path from 'path'
-import fs from 'node:fs'
-
-// Define interface for mining status
-interface Status {
-	mined_at: number
-	hash: string | any
-	miner: string
-	difficulty: number
-	nonce: number | any
-}
+import fs from 'fs'
+import { Block } from 'nexchain/model/block/block'
+import { logToConsole } from './logging'
 
 // Define log directory and file paths
-const logDirPath = path.join(__dirname, '../../logs')
+const logDirPath = path.join(__dirname, '../logs')
 const logFilePath = path.join(logDirPath, 'mining_log.log')
 
+// Create directory if it doesn't exist
 if (!fs.existsSync(logDirPath)) {
 	fs.mkdirSync(logDirPath)
 }
 
-// Create Pino logger with file transport
-const logger = pino({ level: 'info' }, pino.destination(logFilePath))
+// Create Winston logger
+const logger = winston.createLogger({
+	level: 'info',
+	format: winston.format.combine(
+		winston.format.timestamp({
+			format: 'YYYY-MM-DD HH:mm:ss',
+		}),
+		winston.format.json(),
+	),
+	transports: [
+		new winston.transports.File({
+			filename: logFilePath,
+		}),
+	],
+})
 
-// Function to log mining status using Pino
-export const mineLog = (status: Status): void => {
-	// Format log message
-	const logMessage = {
-		mined_at: status.mined_at,
-		hash: status.hash,
-		miner: status.miner,
-		difficulty: 5,
-		nonce: status.nonce,
-	}
-
+// Function to log mining status using Winston
+export const mineLog = (status: Block): void => {
 	try {
-		// Write log message to file
-		logger.info(logMessage)
-
-		// Optionally print log message to console for confirmation
-		console.info('Mining log saved:', logMessage)
+		logToConsole(`Block ${status.block.header.hash} Created Succesfully`)
+		logger.info(JSON.stringify(status.block))
 	} catch (error) {
-		// Handle errors occurring during log saving
 		console.error('Error saving mining log:', error)
 	}
 }

@@ -4,6 +4,7 @@ import { getContract } from './utils/getContract'
 import { withdrawFromContract } from '../transaction/contract/withdrawFromContract'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { logToConsole } from 'logging/logging'
 
 export class ManageContract {
 	contractAddress: string
@@ -36,7 +37,7 @@ export class ManageContract {
 			fee: 5000,
 		})
 		if (!success) {
-			console.info('Transfer failed')
+			logToConsole('Transfer failed')
 			return false
 		}
 		return true
