@@ -14,7 +14,7 @@
     pkgs.gcc
     pkgs.openssh
     pkgs.nano
-
+    pkgs.wasmer
   ];
 
   # Sets environment variables in the workspace

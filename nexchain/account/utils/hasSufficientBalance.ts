@@ -3,7 +3,7 @@ import { getBalance } from '../balance/getBalance'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { logToConsole } from 'logging/logging'
 import { isContract } from 'nexchain/lib/isContract'
-import { ManageContract } from 'nexchain/contract/contract'
+import { ManageContract } from 'nexchain/contract/manageContract'
 
 /**
  * Checks if the provided address has sufficient balance (either for a contract or a standard address).
