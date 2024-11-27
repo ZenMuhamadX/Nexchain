@@ -15,7 +15,7 @@ import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { getMinerId } from 'Network(Development)/utils/getMinerId'
 import { countHashDifficulty } from './countHashDifficulty'
 import { getBlockByHeight } from './query/onChain/block/getBlockByHeight'
-import { myWalletAddress } from 'nexchain/account/myWalletAddress'
+import { getMyWalletAddress } from 'nexchain/account/myWalletAddress'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0, 'json')
@@ -52,7 +52,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			status: 'confirmed',
 			coinbaseTransaction: {
 				amount: toNexu(500),
-				receiver: myWalletAddress(),
+				receiver: getMyWalletAddress(),
 				extraData: stringToHex('Genesis Block Reward'),
 			},
 			metadata: {

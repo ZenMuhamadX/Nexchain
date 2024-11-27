@@ -4,27 +4,42 @@ import { loggingDebug } from 'logging/debug'
 import { logToConsole } from 'logging/logging'
 import path from 'path'
 
+/**
+ * Loads the wallet configuration file and returns its content as a WalletConfig object.
+ * @returns {WalletConfig | null} The wallet configuration object, or null if the file does not exist or an error occurs.
+ */
 export const loadWalletConfig = (): WalletConfig | null => {
-	loggingDebug('loadWallet', 'loadWalletConfig')
-	const dirPath = path.join(__dirname, '../../config/')
-	const filePath = path.join(dirPath, 'wallet.conf.json')
+	loggingDebug(
+		'loadWalletConfig',
+		'Initializing wallet configuration loading process.',
+	)
 
-	// Cek apakah direktori dan file ada
-	if (!existsSync(filePath)) {
+	// Define the directory and file paths for the wallet configuration
+	const configDirectoryPath = path.join(__dirname, '../../config/')
+	const walletConfigFilePath = path.join(
+		configDirectoryPath,
+		'wallet.conf.json',
+	)
+
+	// Check if the configuration file exists
+	if (!existsSync(walletConfigFilePath)) {
 		logToConsole('Wallet configuration file does not exist.')
-		return null // Jika file tidak ada, kembalikan null
+		return null // Return null if the file does not exist
 	}
 
 	try {
-		// Membaca file dan mengonversi ke objek WalletConfig
-		const data = readFileSync(filePath, 'utf-8')
-		const config: WalletConfig = JSON.parse(data)
+		// Read the file content and parse it into a WalletConfig object
+		const fileContent = readFileSync(walletConfigFilePath, 'utf-8')
+		const walletConfig: WalletConfig = JSON.parse(fileContent)
 
-		loggingDebug('loadWallet', 'wallet config loaded')
+		loggingDebug(
+			'loadWalletConfig',
+			'Wallet configuration successfully loaded.',
+		)
 
-		return config // Mengembalikan objek WalletConfig
+		return walletConfig // Return the parsed WalletConfig object
 	} catch (error) {
 		console.error('Error loading wallet configuration:', error)
-		return null // Kembalikan null jika terjadi kesalahan
+		return null // Return null if an error occurs
 	}
 }

@@ -11,30 +11,34 @@ import { askQuestion } from 'cli(Development)/question/askQuestion'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
 
-// Creates a new wallet address and saves it
+/**
+ * Generates a new wallet address, saves it, and returns the wallet address and mnemonic phrase.
+ * @returns {Promise<{ address: string | undefined, phrase: string | undefined }>} The wallet address and mnemonic phrase, or undefined if an error occurs.
+ */
 export const createNewWalletAddress = async (): Promise<{
 	address: string | undefined
 	phrase: string | undefined
 }> => {
+	// Display the header for the CLI
 	showHeader('NexCLI Wallet')
 	console.log('Generating new wallet...')
 
-	// Pertanyaan konfirmasi untuk membuat wallet baru
-	const createWallet = await askQuestion({
+	// Prompt user to confirm wallet creation
+	const confirmWalletCreation = await askQuestion({
 		type: 'confirm',
 		name: 'createWallet',
 		message: 'Do you want to create a new wallet?',
 		default: true,
 	})
 
-	// Jika pengguna tidak ingin membuat wallet baru, keluar dari fungsi
-	if (!createWallet) {
+	// Exit the CLI if the user declines wallet creation
+	if (!confirmWalletCreation) {
 		console.log('Exiting CLI...')
-		process.exit(0) // Keluar dari CLI
+		process.exit(0) // Exit process
 	}
 
-	// Mengambil input pengguna untuk phraseLength dan fileName
-	const phraseLength = await askQuestion({
+	// Prompt user to choose mnemonic phrase length
+	const phraseLengthChoice = await askQuestion({
 		type: 'list',
 		name: 'phraseLength',
 		message: 'Select phrase length:',
@@ -44,7 +48,8 @@ export const createNewWalletAddress = async (): Promise<{
 		],
 	})
 
-	const fileName = await askQuestion({
+	// Prompt user to input the wallet configuration file name
+	const walletFileName = await askQuestion({
 		type: 'input',
 		name: 'fileName',
 		message: 'Enter file name:',
@@ -52,37 +57,51 @@ export const createNewWalletAddress = async (): Promise<{
 
 	try {
 		loggingDebug('createNewWalletAddress', 'Generating new wallet...')
-		loggingDebug('createNewWalletAddress', 'generating mnemonic')
-		const mnemonic = genRandomMnemonic(phraseLength)
-		loggingDebug('createNewWalletAddress', 'mnemonic generated')
-		loggingDebug('createNewWalletAddress', 'generating keys from mnemonic')
-		const { publicKey, privateKey } = generateKeysFromMnemonic(mnemonic)
-		loggingDebug('createNewWalletAddress', 'keys generated')
-		loggingDebug('createNewWalletAddress', 'generating address from public key')
-		const walletAddress = generateAddressFromPublicKey(publicKey.slice(2))
-		loggingDebug('createNewWalletAddress', 'address generated')
+		loggingDebug('createNewWalletAddress', 'Generating mnemonic phrase...')
 
+		// Generate mnemonic phrase based on user's choice
+		const mnemonicPhrase = genRandomMnemonic(phraseLengthChoice)
+		loggingDebug('createNewWalletAddress', 'Mnemonic phrase generated.')
+
+		// Generate public and private keys from mnemonic
+		loggingDebug('createNewWalletAddress', 'Generating keys from mnemonic...')
+		const { publicKey, privateKey } = generateKeysFromMnemonic(mnemonicPhrase)
+		loggingDebug('createNewWalletAddress', 'Keys generated.')
+
+		// Derive wallet address from the public key
+		loggingDebug(
+			'createNewWalletAddress',
+			'Generating wallet address from public key...',
+		)
+		const walletAddress = generateAddressFromPublicKey(publicKey.slice(2))
+		loggingDebug('createNewWalletAddress', 'Wallet address generated.')
+
+		// Update the wallet balance with the new wallet address
 		putNewWallet(walletAddress)
 
+		// Save the wallet details to a file
 		await saveWallet(
-			{ mnemonic, privateKey, publicKey, walletAddress },
-			fileName,
+			{ mnemonic: mnemonicPhrase, privateKey, publicKey, walletAddress },
+			walletFileName,
 		)
 
-		logToConsole('Wallet created successfully')
+		logToConsole('Wallet created successfully.')
 
-		// Return the formatted wallet address
-		return { address: walletAddress, phrase: mnemonic }
+		// Return the wallet address and mnemonic phrase
+		return { address: walletAddress, phrase: mnemonicPhrase }
 	} catch (error) {
+		// Log the error and provide a hint for resolution
 		loggingErr({
-			context: 'createWalletAddress',
+			context: 'createNewWalletAddress',
 			message: 'Error creating wallet address',
 			level: 'error',
 			priority: 'high',
 			stack: new Error().stack!,
 			timestamp: generateTimestampz(),
-			hint: 'please try again',
+			hint: 'Please try again.',
 		})
+
+		// Return undefined values in case of an error
 		return { address: undefined, phrase: undefined }
 	}
 }

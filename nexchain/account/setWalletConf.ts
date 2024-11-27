@@ -6,21 +6,43 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import path from 'path'
 
 export const setWalletConfig = () => {
-	loggingDebug('setWalletConfig', 'set wallet conf')
-	const dirPath = path.join(__dirname, '../../config/')
-	const filePath = path.join(dirPath, 'wallet.conf.json')
-	if (!existsSync(dirPath)) {
-		mkdirSync(dirPath, { recursive: true })
+	// Log the start of the wallet configuration setup process
+	loggingDebug('setWalletConfig', 'Initializing wallet configuration setup.')
+
+	// Define the directory and file paths for the wallet configuration
+	const configDirectoryPath = path.join(__dirname, '../../config/')
+	const walletConfigFilePath = path.join(
+		configDirectoryPath,
+		'wallet.conf.json',
+	)
+
+	// Create the configuration directory if it doesn't exist
+	if (!existsSync(configDirectoryPath)) {
+		mkdirSync(configDirectoryPath, { recursive: true })
 	}
-	if (existsSync(filePath)) {
+
+	// If the configuration file already exists, exit the function
+	if (existsSync(walletConfigFilePath)) {
 		return
 	}
-	const defaultData: WalletConfig = {
-		createdAt: convertTimestampToDate(generateTimestampz()),
-		isBackup: false,
-		primaryWalletName: 'main',
-		network: 'Devnet',
+
+	// Define the default wallet configuration data
+	const defaultWalletConfig: WalletConfig = {
+		createdAt: convertTimestampToDate(generateTimestampz()), // Timestamp of creation
+		isBackup: false, // Indicates whether the wallet has been backed up
+		primaryWalletName: 'main', // Default wallet name
+		network: 'Devnet', // Default network (e.g., Devnet or Mainnet)
 	}
-	writeFileSync(filePath, JSON.stringify(defaultData, null, 2))
-	loggingDebug('setWalletConfig', `set wallet conf done saved to ${filePath} `)
+
+	// Write the default configuration to the wallet configuration file
+	writeFileSync(
+		walletConfigFilePath,
+		JSON.stringify(defaultWalletConfig, null, 2),
+	)
+
+	// Log the successful completion of the wallet configuration setup
+	loggingDebug(
+		'setWalletConfig',
+		`Wallet configuration successfully saved to ${walletConfigFilePath}.`,
+	)
 }
