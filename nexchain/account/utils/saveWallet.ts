@@ -23,9 +23,9 @@ export const saveWallet = async (
 			const overwrite = await confirmOverwrite()
 			if (overwrite) {
 				saveToFile(filePath, data)
-				console.log(`Wallet saved to ${filePath}`)
+				logToConsole(`Wallet saved to ${filePath}`)
 			} else {
-				console.log('Wallet not saved.')
+				logToConsole('Wallet not saved.')
 			}
 		} else {
 			const create = await confirmCreation(fileName)
