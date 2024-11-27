@@ -1,5 +1,5 @@
 import { askQuestion } from 'cli(Development)/question/askQuestion'
-import { miningBlock } from 'nexchain/miner/mining'
+import { mineBlock } from 'nexchain/miner/mining'
 
 export const CLIMining = async () => {
 	// Meminta alamat dari pengguna
@@ -36,6 +36,6 @@ export const CLIMining = async () => {
 
 	// Loop asinkron untuk mining
 	while (isMining) {
-		await miningBlock(address) // Menunggu hingga miningBlock selesai sebelum memulai lagi
+		await mineBlock(address) // Menunggu hingga miningBlock selesai sebelum memulai lagi
 	}
 }

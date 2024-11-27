@@ -10,13 +10,14 @@ import { burnNexu } from 'nexchain/transaction/burnNexu'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { MemPool } from 'nexchain/model/memPool/memPool'
 import { logToConsole } from 'logging/logging'
+
 const mempool = new MemPool()
 
 export const createContract = async (
 	owner: string,
 ): Promise<{ status: boolean; contract?: contract | undefined }> => {
-	const initialAmount = toNexu(0.01)
-	let totalGas = 10000
+	const initialAmount = toNexu(1)
+	let totalGas = 5000
 	const isValidAddres = isValidAddress(owner)
 	if (!isValidAddres) {
 		console.error(`Invalid owner address`)
@@ -27,7 +28,7 @@ export const createContract = async (
 		console.error(`Insufficient balance to deploy contract.`)
 		return { status: false, contract: undefined }
 	}
-	await burnNexu(owner, (totalGas -= 5000))
+	await burnNexu(owner, totalGas)
 	const nonce = await getOwnerNonce(owner)
 	const contractAddress = createContractAdrress(owner, nonce)
 	const transferStatus = await transferFunds({

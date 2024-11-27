@@ -1,20 +1,21 @@
 import { transactionValidator } from 'interface/validate/txValidator.v'
-import { saveMempool } from 'nexchain/storage/mempool/saveMemPool'
-import { loadMempool } from 'nexchain/storage/mempool/loadMempool'
 import { saveTxHistory } from 'nexchain/transaction/saveTxHistory'
 import { TxInterface } from 'interface/structTx'
 import { getBalance } from 'nexchain/account/balance/getBalance'
-import { getPendingBalance } from 'nexchain/transaction/getPendingBalance'
-import { setPendingBalance } from 'nexchain/transaction/setPendingBalancet'
 import { contract } from 'interface/structContract'
-import { saveContractMempool } from 'nexchain/storage/mempool/saveContractMempool'
 import { isContract } from 'nexchain/lib/isContract'
-import { loadContractMempool } from 'nexchain/storage/mempool/loadContractMempool'
 import { logToConsole } from 'logging/logging'
+import { ManageContract } from 'nexchain/contract/contract'
+import { saveMempool } from 'nexchain/storage/mempool/saveMemPool'
+import { getPendingBalance } from 'nexchain/transaction/getPendingBalance'
+import { setPendingBalance } from 'nexchain/transaction/setPendingBalance'
+import { saveContractMempool } from 'nexchain/storage/mempool/saveContractMempool'
+import { loadContractMempool } from 'nexchain/storage/mempool/loadContractMempool'
+import { loadMempool } from 'nexchain/storage/mempool/loadMempool'
 
 export class MemPool {
 	constructor() {
-		logToConsole('MemPool called...')
+		logToConsole('MemPool initialized...')
 	}
 
 	/**
@@ -27,64 +28,128 @@ export class MemPool {
 	): Promise<boolean | TxInterface> {
 		const isValidTx = await transactionValidator(transaction)
 		if (!isValidTx) {
-			console.log('Transaction validation failed')
+			logToConsole('Transaction validation failed')
 			return false
 		}
 
-		// Ambil saldo utama dan pending balance
-		const balance = await getBalance(transaction.sender)
-		const pendingBalance = await getPendingBalance(transaction.sender) // Ambil pending balance
+		const isSenderContract = isContract(transaction.sender)
 
-		if (!balance) {
-			console.error('Insufficient balance')
-			return false
-		}
+		// Validate balance and update pending balance
+		const isBalanceSufficient = isSenderContract
+			? await this.handleContractTransaction(transaction)
+			: await this.handleUserTransaction(transaction)
 
-		// Hitung available balance
-		const availableBalance = balance.balance - pendingBalance.pendingAmount
+		if (!isBalanceSufficient) return false
 
-		// Cek apakah available balance cukup untuk amount + fee
-		if (availableBalance < transaction.amount + (transaction.fee || 0)) {
-			console.log('Insufficient available balance for the transaction')
-			return false
-		}
-
-		// Update pending balance dengan menambahkan amount transaksi
-		const newPendingAmount =
-			(pendingBalance.pendingAmount || 0) +
-			transaction.amount +
-			(transaction.fee || 0)
-		await setPendingBalance({
-			address: transaction.sender,
-			pendingAmount: newPendingAmount,
-		})
-
-		// Simpan transaksi ke mempool dan riwayat transaksi
+		// Save transaction to mempool and history
 		await saveMempool(transaction)
 		await saveTxHistory(transaction.txHash!, transaction)
-		logToConsole(`TxnHash: ${transaction.txHash}`)
+		logToConsole(`Transaction added. TxnHash: ${transaction.txHash}`)
+
 		return transaction
 	}
 
-	public async addContract(contract: contract) {
-		const isContractAddr = isContract(contract.contractAddress)
-		if (!isContractAddr) {
-			console.error('Invalid contract address')
+	/**
+	 * Validates and updates pending balance for contract transactions.
+	 * @param transaction - Contract transaction.
+	 * @returns True if balance is sufficient, otherwise false.
+	 */
+	private async handleContractTransaction(
+		transaction: TxInterface,
+	): Promise<boolean> {
+		const contractManager = new ManageContract(transaction.sender)
+		const contractBalance = await contractManager.getContractBalance()
+		const pendingBalance = await getPendingBalance(transaction.sender)
+
+		const availableBalance =
+			contractBalance - (pendingBalance.pendingAmount || 0)
+		if (availableBalance < transaction.amount + (transaction.fee || 0)) {
+			logToConsole('Insufficient contract balance for the transaction')
+			return false
+		}
+
+		// Update pending balance
+		await this.updatePendingBalance(
+			transaction.sender,
+			pendingBalance.pendingAmount,
+			transaction,
+		)
+		return true
+	}
+
+	/**
+	 * Validates and updates pending balance for user transactions.
+	 * @param transaction - User transaction.
+	 * @returns True if balance is sufficient, otherwise false.
+	 */
+	private async handleUserTransaction(
+		transaction: TxInterface,
+	): Promise<boolean> {
+		const userBalance = await getBalance(transaction.sender)
+		if (!userBalance) {
+			logToConsole('Insufficient user balance')
+			return false
+		}
+
+		const pendingBalance = await getPendingBalance(transaction.sender)
+		const availableBalance =
+			userBalance.balance - (pendingBalance.pendingAmount || 0)
+
+		if (availableBalance < transaction.amount + (transaction.fee || 0)) {
+			logToConsole('Insufficient user balance for the transaction')
+			return false
+		}
+
+		// Update pending balance
+		await this.updatePendingBalance(
+			transaction.sender,
+			pendingBalance.pendingAmount,
+			transaction,
+		)
+		return true
+	}
+
+	/**
+	 * Updates the pending balance for a given address.
+	 * @param address - The address to update.
+	 * @param currentPending - The current pending balance.
+	 * @param transaction - The transaction to update with.
+	 */
+	private async updatePendingBalance(
+		address: string,
+		currentPending: number | undefined,
+		transaction: TxInterface,
+	): Promise<void> {
+		const newPendingAmount =
+			(currentPending || 0) + transaction.amount + (transaction.fee || 0)
+		await setPendingBalance({ address, pendingAmount: newPendingAmount })
+	}
+
+	/**
+	 * Adds a contract to the contract memory pool.
+	 * @param contract - The contract to add.
+	 */
+	public async addContract(contract: contract): Promise<void> {
+		if (!isContract(contract.contractAddress)) {
+			logToConsole('Invalid contract address')
 			return
 		}
 		await saveContractMempool(contract)
 	}
 
+	/**
+	 * Retrieves all contracts in the memory pool.
+	 * @returns An array of contracts.
+	 */
 	public async getContractPool(): Promise<contract[]> {
 		return await loadContractMempool()
 	}
 
 	/**
-	 * Gets all valid transactions in the memory pool.
+	 * Retrieves all valid transactions in the memory pool.
 	 * @returns An array of transactions.
 	 */
 	public async getValidTransactions(): Promise<TxInterface[]> {
-		const data = await loadMempool()
-		return data as TxInterface[]
+		return (await loadMempool()) as TxInterface[]
 	}
 }

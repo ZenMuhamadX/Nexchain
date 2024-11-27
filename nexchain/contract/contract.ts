@@ -1,16 +1,20 @@
-import { toNexu } from 'nexchain/nexucoin/toNexu'
-import { NXC, contract } from 'interface/structContract'
+import { contract } from 'interface/structContract'
 import { getContract } from './utils/getContract'
-import { withdrawFromContract } from '../transaction/contract/withdrawFromContract'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { logToConsole } from 'logging/logging'
+import {
+	IManageContract,
+	transferToContract,
+	withdrawFromContract,
+} from 'interface/structManageContract'
 
-export class ManageContract {
+export class ManageContract implements IManageContract {
 	contractAddress: string
+
 	constructor(contractAddr: string) {
 		this.contractAddress = contractAddr
 	}
+
 	public async getOwner(): Promise<string> {
 		return (await getContract(this.contractAddress)).owner
 	}
@@ -23,16 +27,13 @@ export class ManageContract {
 		return (await getContract(this.contractAddress)).balance
 	}
 
-	public async transferToContract(
-		amount: NXC,
-		sender: string,
-	): Promise<boolean> {
+	public async transferToContract(data: transferToContract): Promise<boolean> {
 		const success = await transferFunds({
-			amount,
-			format: 'NXC',
+			amount: data.amount,
+			format: data.format,
 			receiver: this.contractAddress,
-			sender,
-			timestamp: generateTimestampz(),
+			sender: data.sender,
+			timestamp: data.timestamp,
 			extraData: 'Transfer to contract',
 			fee: 5000,
 		})
@@ -44,14 +45,21 @@ export class ManageContract {
 	}
 
 	public async withdrawFromContract(
-		amount: NXC,
-		receiver: string,
-	): Promise<void> {
-		await withdrawFromContract(
-			this.contractAddress,
-			toNexu(amount),
-			receiver,
-			5000,
-		)
+		data: withdrawFromContract,
+	): Promise<boolean> {
+		const success = await transferFunds({
+			amount: data.amount,
+			format: 'NXC',
+			receiver: data.receiver,
+			sender: this.contractAddress,
+			timestamp: data.timestamp,
+			extraData: 'Withdraw from contract',
+			fee: 5000,
+		})
+		if (!success) {
+			logToConsole('Withdraw failed')
+			return false
+		}
+		return true
 	}
 }

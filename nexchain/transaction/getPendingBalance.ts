@@ -1,6 +1,6 @@
 import { rocksState } from 'nexchain/rocksdb/state'
 import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
-import { pendingBalance, setPendingBalance } from './setPendingBalancet'
+import { pendingBalance, setPendingBalance } from './setPendingBalance'
 
 /**
  * Fungsi untuk memuat pending balance dari database

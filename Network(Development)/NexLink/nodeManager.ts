@@ -2,7 +2,6 @@ import WebSocket, { WebSocketServer } from 'ws'
 import winston from 'winston'
 import * as path from 'path'
 import { COM } from '../interface/COM'
-import { miningBlock } from 'nexchain/miner/mining'
 import { validateMessageInterface } from './validateInf'
 import { generateMessageId } from '../utils/getMessageId'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
@@ -209,9 +208,6 @@ export class Node {
 				case 'GREETING':
 					logger.info(`Node ${this.id} received greeting:`, data)
 					break
-				case 'MINE':
-					this.handleMiningRequest(data)
-					break
 				case 'REQ_BLOCK':
 					logger.info(`Node ${this.id} received request for block:`, data)
 					break
@@ -230,12 +226,6 @@ export class Node {
 			.catch((err) => {
 				logger.error(`Transaction processing error: ${err}`)
 			})
-	}
-
-	// Handle mining request
-	private handleMiningRequest(data: COM) {
-		miningBlock(data.payload.data)
-		logger.info(`Node ${this.id} received mining request:`, data)
 	}
 
 	// Handle received peer IDs

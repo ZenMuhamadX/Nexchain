@@ -13,7 +13,7 @@ import { contract } from 'interface/structContract'
 import { logToConsole } from 'logging/logging'
 
 // Function to mine a block and add it to the blockchain
-export const miningBlock = async (address: string): Promise<void> => {
+export const mineBlock = async (address: string): Promise<void> => {
 	const isGenesisBlock = await getBlockByHeight(0, 'json').catch(() => null)
 	if (!isGenesisBlock) {
 		console.error('Genesis block not found')

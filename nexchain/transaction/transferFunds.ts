@@ -7,6 +7,7 @@ import { stringToHex } from 'nexchain/hex/stringToHex'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { createSignature } from 'nexchain/sign/createSignature'
 import { isContract } from 'nexchain/lib/isContract'
+import { logToConsole } from 'logging/logging'
 
 export const transferFunds = async (
 	transaction: comTxInterface,
@@ -26,9 +27,6 @@ export const transferFunds = async (
 		console.log('Transaction amount must be at least 1 nexu.')
 		return { status: false, txHash: undefined } // Hentikan eksekusi jika tidak memenuhi syarat
 	}
-	const fee: number = transaction.fee!
-
-	const amountAfterFee = convertedAmount - fee! // Menghitung biaya transaksi
 
 	const isReceiverContract = isContract(transaction.receiver)
 
@@ -37,7 +35,7 @@ export const transferFunds = async (
 	// Buat objek transaksi
 	const convertedTx: TxInterface = {
 		format: 'nexu',
-		amount: amountAfterFee,
+		amount: convertedAmount,
 		receiver: transaction.receiver,
 		sender: transaction.sender,
 		timestamp: transaction.timestamp,
@@ -71,6 +69,6 @@ export const transferFunds = async (
 	// Tambahkan transaksi ke mempool
 	const added = await memPool.addTransaction(convertedTx)
 	if (!added) return { status: false, txHash: undefined }
-	console.log('Transaction added to mempool waiting for mined')
+	logToConsole('Transaction added to mempool waiting for mined')
 	return { status: true, txHash: convertedTx.txHash }
 }

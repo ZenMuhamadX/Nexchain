@@ -49,6 +49,7 @@ export const transactionValidator = async (
 	}
 
 	transaction.status = 'pending'
-	transaction.isValid = transaction.isPending = true
+	transaction.isValid = true
+	transaction.isPending = true
 	return true
 }

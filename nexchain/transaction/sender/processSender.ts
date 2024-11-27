@@ -5,7 +5,7 @@ import { getBalance } from 'nexchain/account/balance/getBalance'
 import { putBalance } from 'nexchain/account/balance/putBalance'
 import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
 import { getPendingBalance } from '../getPendingBalance'
-import { setPendingBalance } from '../setPendingBalancet'
+import { setPendingBalance } from '../setPendingBalance'
 
 export const processSender = async (
 	senderAddress: string,

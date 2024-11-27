@@ -2,6 +2,8 @@ import { loggingErr } from 'logging/errorLog'
 import { getBalance } from '../balance/getBalance'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { logToConsole } from 'logging/logging'
+import { isContract } from 'nexchain/lib/isContract'
+import { ManageContract } from 'nexchain/contract/contract'
 
 export const hasSufficientBalance = async (
 	address: string,
@@ -14,6 +16,16 @@ export const hasSufficientBalance = async (
 	}
 
 	try {
+		if (isContract(address)) {
+			const contract = new ManageContract(address)
+			const balance = await contract.getContractBalance()
+			if (balance >= amount + fee) {
+				return true
+			} else {
+				console.error('Insufficient balance')
+				return false
+			}
+		}
 		const balance = await getBalance(address)
 		if (!balance) {
 			console.error('Balance not found')
