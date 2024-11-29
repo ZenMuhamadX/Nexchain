@@ -1,5 +1,5 @@
-import { showHeader } from 'cli(Development)/figlet/header'
-import { askQuestion } from 'cli(Development)/question/askQuestion'
+import { showHeader } from 'client/figlet/header'
+import { askQuestion } from 'client/question/askQuestion'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
 import fs from 'fs'

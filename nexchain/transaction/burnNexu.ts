@@ -1,5 +1,6 @@
-import { getBalance } from 'nexchain/account/balance/getBalance'
-import { putBalance } from 'nexchain/account/balance/putBalance'
+import { structBalance } from 'interface/structBalance'
+import { getAccount } from 'nexchain/account/balance/getAccount'
+import { putAccount } from 'nexchain/account/balance/putAccount'
 import { isContract } from 'nexchain/lib/isContract'
 
 export const burnNexu = async (fromAddress: string, amount: number) => {
@@ -11,7 +12,7 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 	}
 
 	// Ambil saldo pengirim
-	const oldBalance = await getBalance(fromAddress).catch(() => null)
+	const oldBalance = await getAccount(fromAddress).catch(() => null)
 	if (!oldBalance) {
 		throw new Error('Address not found.')
 	}
@@ -24,7 +25,7 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 	const newBalance = oldBalance.balance - amount
 
 	// Perbarui saldo pengirim
-	await putBalance(fromAddress, {
+	await putAccount(fromAddress, {
 		address: fromAddress,
 		balance: newBalance,
 		decimal: 18,
@@ -33,26 +34,28 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 		nonce: oldBalance.nonce + 1,
 		notes: '1^18 nexu = 1 NXC',
 		symbol: 'nexu',
-		timesTransaction: oldBalance.timesTransaction + 1,
+		transactionCount: oldBalance.transactionCount + 1,
 	})
 
 	// Ambil saldo lama dari alamat burn
-	const oldBurnBalance = await getBalance(burnAddress).catch(() => ({
-		address: burnAddress,
-		balance: 0,
-		decimal: 18,
-		isContract: false,
-		lastTransactionDate: null,
-		nonce: 0,
-		notes: '',
-		symbol: 'nexu',
-		timesTransaction: 0,
-	}))
+	const oldBurnBalance: structBalance = (await getAccount(burnAddress).catch(
+		() => ({
+			address: burnAddress,
+			balance: 0,
+			decimal: 18,
+			isContract: false,
+			lastTransactionDate: null,
+			nonce: 0,
+			notes: '',
+			symbol: 'nexu',
+			transactionCount: 0,
+		}),
+	)) as structBalance
 
 	const newBurnBalance = oldBurnBalance!.balance + amount
 
 	// Perbarui saldo di alamat burn
-	await putBalance(burnAddress, {
+	await putAccount(burnAddress, {
 		address: burnAddress,
 		balance: newBurnBalance,
 		decimal: 18,
@@ -61,6 +64,6 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 		nonce: oldBurnBalance!.nonce + 1,
 		notes: 'Burned by burnNexu function',
 		symbol: 'nexu',
-		timesTransaction: oldBurnBalance!.timesTransaction + 1,
+		transactionCount: oldBurnBalance.transactionCount + 1,
 	})
 }

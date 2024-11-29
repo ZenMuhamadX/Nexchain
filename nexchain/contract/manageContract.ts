@@ -3,12 +3,13 @@ import { getContract } from './utils/getContract'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { logToConsole } from 'logging/logging'
 import {
-	IManageContract,
 	transferToContract,
 	withdrawFromContract,
 } from 'interface/structManageContract'
+import { TxInterface } from 'interface/structTx'
+import { getHistoryByAddress } from 'nexchain/block/query/onChain/Transaction/getHistoryByAddress'
 
-export class ManageContract implements IManageContract {
+export class ManageContract {
 	contractAddress: string
 
 	constructor(contractAddr: string) {
@@ -61,5 +62,11 @@ export class ManageContract implements IManageContract {
 			return false
 		}
 		return true
+	}
+
+	public async getContractTransaction(
+		enc: 'json' | 'hex',
+	): Promise<{ history: TxInterface[]; count: number }> {
+		return await getHistoryByAddress(this.contractAddress, enc)
 	}
 }

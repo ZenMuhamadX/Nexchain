@@ -1,11 +1,11 @@
 import { structBalance } from 'interface/structBalance'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
-import { getBalance } from 'nexchain/account/balance/getBalance'
-import { putBalance } from 'nexchain/account/balance/putBalance'
 import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
 import { getPendingBalance } from '../getPendingBalance'
 import { setPendingBalance } from '../setPendingBalance'
+import { getAccount } from 'nexchain/account/balance/getAccount'
+import { putAccount } from 'nexchain/account/balance/putAccount'
 
 export const processSender = async (
 	senderAddress: string,
@@ -27,12 +27,12 @@ export const processSender = async (
 	}
 
 	// Ambil data saldo saat ini
-	const oldData = await getBalance(senderAddress)
+	const oldData = await getAccount(senderAddress)
 	const calculateBalance = oldData?.balance! - amount
 	const newData: structBalance = {
 		address: senderAddress,
 		balance: calculateBalance,
-		timesTransaction: oldData?.timesTransaction! + 1,
+		transactionCount: oldData?.transactionCount! + 1,
 		isContract: false,
 		lastTransactionDate: generateTimestampz(),
 		nonce: oldData!.nonce + 1,
@@ -40,7 +40,7 @@ export const processSender = async (
 		notes: '1^18 nexu = 1 NXC',
 		symbol: 'nexu',
 	}
-	await putBalance(senderAddress, newData)
+	await putAccount(senderAddress, newData)
 	// Ambil dan perbarui pending balance
 	const pendingBalance = await getPendingBalance(senderAddress)
 	const updatedPendingAmount =

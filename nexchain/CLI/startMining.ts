@@ -1,4 +1,4 @@
-import { askQuestion } from 'cli(Development)/question/askQuestion'
+import { askQuestion } from 'client/question/askQuestion'
 import { mineBlock } from 'nexchain/miner/mining'
 
 export const CLIMining = async () => {

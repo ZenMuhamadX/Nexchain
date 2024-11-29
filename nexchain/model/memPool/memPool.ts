@@ -1,7 +1,6 @@
 import { transactionValidator } from 'interface/validate/txValidator.v'
 import { saveTxHistory } from 'nexchain/transaction/saveTxHistory'
 import { TxInterface } from 'interface/structTx'
-import { getBalance } from 'nexchain/account/balance/getBalance'
 import { contract } from 'interface/structContract'
 import { isContract } from 'nexchain/lib/isContract'
 import { logToConsole } from 'logging/logging'
@@ -12,6 +11,7 @@ import { setPendingBalance } from 'nexchain/transaction/setPendingBalance'
 import { saveContractMempool } from 'nexchain/storage/mempool/saveContractMempool'
 import { loadContractMempool } from 'nexchain/storage/mempool/loadContractMempool'
 import { loadMempool } from 'nexchain/storage/mempool/loadMempool'
+import { getAccount } from 'nexchain/account/balance/getAccount'
 
 export class MemPool {
 	constructor() {
@@ -85,7 +85,7 @@ export class MemPool {
 	private async handleUserTransaction(
 		transaction: TxInterface,
 	): Promise<boolean> {
-		const userBalance = await getBalance(transaction.sender)
+		const userBalance = await getAccount(transaction.sender)
 		if (!userBalance) {
 			logToConsole('Insufficient user balance')
 			return false

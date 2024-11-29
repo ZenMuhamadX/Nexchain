@@ -7,8 +7,6 @@ import { saveBlock } from '../storage/block/saveBlock'
 import { loggingErr } from '../../logging/errorLog'
 import { verifyChainIntegrity } from '../miner/verify/verifyIntegrity'
 import { TxInterface } from '../../interface/structTx'
-import { putBalance } from '../account/balance/putBalance'
-import { getBalance } from '../account/balance/getBalance'
 import { processTransact } from '../transaction/processTransact'
 
 import { verifyMerkleRoot } from '../miner/verify/module/verifyMerkleRoot'
@@ -19,6 +17,8 @@ import _ from 'lodash'
 import { createNewBlock } from '../block/createNewBlock'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
+import { getAccount } from 'nexchain/account/balance/getAccount'
+import { putAccount } from 'nexchain/account/balance/putAccount'
 
 export class BlockChains {
 	constructor() {
@@ -102,13 +102,13 @@ export class BlockChains {
 	}
 
 	private async giveReward(address: string, reward: number): Promise<void> {
-		const oldData = await getBalance(address).catch(() => null)
+		const oldData = await getAccount(address).catch(() => null)
 		const oldNexuBalance = oldData?.balance || 0
 
-		await putBalance(address, {
+		await putAccount(address, {
 			address,
 			balance: oldNexuBalance + reward,
-			timesTransaction: oldData?.timesTransaction! + 1 || 0,
+			transactionCount: oldData?.transactionCount! + 1 || 0,
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
 			nonce: 0,

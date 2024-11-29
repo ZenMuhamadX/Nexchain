@@ -1,6 +1,6 @@
 import chalk from 'chalk'
-import { showHeader } from 'cli(Development)/figlet/header'
-import { askQuestion } from 'cli(Development)/question/askQuestion'
+import { showHeader } from 'client/figlet/header'
+import { askQuestion } from 'client/question/askQuestion'
 import { getBlockByHash } from 'nexchain/block/query/onChain/block/getBlockByHash'
 import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByHeight'
 import { getCurrentBlock } from 'nexchain/block/query/onChain/block/getCurrentBlock'

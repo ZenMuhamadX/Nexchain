@@ -1,6 +1,6 @@
-import { getBalance } from 'nexchain/account/balance/getBalance'
+import { getAccount } from 'nexchain/account/balance/getAccount'
 
 export const getOwnerNonce = async (address: string): Promise<number> => {
-	const wallet = await getBalance(address)
+	const wallet = await getAccount(address)
 	return wallet?.nonce!
 }

@@ -6,7 +6,6 @@ import { Block } from '../model/block/block'
 import { createSignature } from '../sign/createSignature'
 import { generateTimestampz } from '../lib/generateTimestampz'
 import { calculateSize } from '../lib/calculateSize'
-import { putBalance } from 'nexchain/account/balance/putBalance'
 import { calculateTotalFees } from 'nexchain/transaction/utils/totalFees'
 import { saveBlock } from 'nexchain/storage/block/saveBlock'
 import { loadWallet } from 'nexchain/account/utils/loadWallet'
@@ -16,6 +15,7 @@ import { getMinerId } from 'Network(Development)/utils/getMinerId'
 import { countHashDifficulty } from './countHashDifficulty'
 import { getBlockByHeight } from './query/onChain/block/getBlockByHeight'
 import { getMyWalletAddress } from 'nexchain/account/myWalletAddress'
+import { putAccount } from 'nexchain/account/balance/putAccount'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0, 'json')
@@ -80,10 +80,10 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		)
 
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
-		await putBalance(genesisBlock.block.coinbaseTransaction.receiver, {
+		await putAccount(genesisBlock.block.coinbaseTransaction.receiver, {
 			address: genesisBlock.block.coinbaseTransaction.receiver,
 			balance: genesisBlock.block.coinbaseTransaction.amount as number,
-			timesTransaction: 1,
+			transactionCount: 1,
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
 			nonce: 0,

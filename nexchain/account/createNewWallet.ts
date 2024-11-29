@@ -5,11 +5,11 @@ import { generateAddressFromPublicKey } from 'nexchain/keyPair/genAddrFromPubKey
 import { genRandomMnemonic } from 'nexchain/keyPair/genRandomMnemonic'
 import { generateKeysFromMnemonic } from 'nexchain/keyPair/genKeyFromMnemonic'
 import { saveWallet } from './utils/saveWallet'
-import { putNewWallet } from './balance/putNewWallet'
-import { showHeader } from 'cli(Development)/figlet/header'
-import { askQuestion } from 'cli(Development)/question/askQuestion'
+import { showHeader } from 'client/figlet/header'
+import { askQuestion } from 'client/question/askQuestion'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
+import { putNewAccount } from './balance/putNewAccount'
 
 /**
  * Generates a new wallet address, saves it, and returns the wallet address and mnemonic phrase.
@@ -77,7 +77,7 @@ export const createNewWalletAddress = async (): Promise<{
 		loggingDebug('createNewWalletAddress', 'Wallet address generated.')
 
 		// Update the wallet balance with the new wallet address
-		putNewWallet(walletAddress)
+		putNewAccount(walletAddress)
 
 		// Save the wallet details to a file
 		await saveWallet(

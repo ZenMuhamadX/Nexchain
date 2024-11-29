@@ -5,11 +5,11 @@ import { sha256 } from 'nexchain/block/sha256'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
-import { getBalance } from 'nexchain/account/balance/getBalance'
 import { burnNexu } from 'nexchain/transaction/burnNexu'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { MemPool } from 'nexchain/model/memPool/memPool'
 import { logToConsole } from 'logging/logging'
+import { getAccount } from 'nexchain/account/balance/getAccount'
 
 const mempool = new MemPool()
 
@@ -23,7 +23,7 @@ export const createContract = async (
 		console.error(`Invalid owner address`)
 		return { status: false, contract: undefined }
 	}
-	const userBalance = await getBalance(owner).catch(() => null)
+	const userBalance = await getAccount(owner).catch(() => null)
 	if (userBalance!.balance < totalGas) {
 		console.error(`Insufficient balance to deploy contract.`)
 		return { status: false, contract: undefined }
