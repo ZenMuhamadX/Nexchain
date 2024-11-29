@@ -2,7 +2,7 @@ import { TxInterface } from 'interface/structTx'
 import { hexToString } from 'nexchain/hex/hexToString'
 import { HexString } from 'interface/structBlock'
 import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
-import { rocksHistory } from 'nexchain/rocksdb/history'
+import { rocksHistory } from 'nexchain/db/history'
 
 export const getHistoryByTxHash = async (
 	txHash: string,

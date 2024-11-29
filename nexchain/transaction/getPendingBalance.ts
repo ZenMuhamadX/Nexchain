@@ -1,4 +1,4 @@
-import { rocksState } from 'nexchain/rocksdb/state'
+import { rocksState } from 'nexchain/db/state'
 import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
 import { pendingBalance, setPendingBalance } from './setPendingBalance'
 

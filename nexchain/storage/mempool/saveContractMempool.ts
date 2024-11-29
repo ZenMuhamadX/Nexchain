@@ -1,5 +1,5 @@
 import { contract } from 'interface/structContract'
-import { rocksMempool } from 'nexchain/rocksdb/memPool'
+import { rocksMempool } from 'nexchain/db/memPool'
 
 export const saveContractMempool = async (
 	contract: contract,

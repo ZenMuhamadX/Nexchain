@@ -1,5 +1,5 @@
 import { TxInterface } from 'interface/structTx'
-import { rocksMempool } from 'nexchain/rocksdb/memPool'
+import { rocksMempool } from 'nexchain/db/memPool'
 
 export const loadMempool = (): Promise<TxInterface[]> => {
 	return new Promise((resolve, reject) => {

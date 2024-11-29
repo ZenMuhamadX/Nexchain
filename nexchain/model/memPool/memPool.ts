@@ -1,4 +1,4 @@
-import { transactionValidator } from 'interface/validate/txValidator.v'
+import { transactionValidator } from 'interface/validation/txValidator.v'
 import { saveTxHistory } from 'nexchain/transaction/saveTxHistory'
 import { TxInterface } from 'interface/structTx'
 import { contract } from 'interface/structContract'

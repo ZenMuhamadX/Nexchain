@@ -2,7 +2,7 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
 import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
-import { rocksState } from 'nexchain/rocksdb/state'
+import { rocksState } from 'nexchain/db/state'
 import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
 import { logToConsole } from 'logging/logging'
 

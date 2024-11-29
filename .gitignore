@@ -17,3 +17,5 @@ wallet
 *.txt
 *.code-profile
 build
+wallet
+config

@@ -1,7 +1,7 @@
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { Block } from 'nexchain/model/block/block'
 import { encodeToBytes } from 'nexchain/hex/encodeToBytes'
-import { rocksState } from 'nexchain/rocksdb/state'
+import { rocksState } from 'nexchain/db/state'
 
 export interface blockState {
 	currentBlockHeight: number

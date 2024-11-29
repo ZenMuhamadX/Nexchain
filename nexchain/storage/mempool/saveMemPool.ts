@@ -1,5 +1,5 @@
 import { TxInterface } from 'interface/structTx'
-import { rocksMempool } from 'nexchain/rocksdb/memPool'
+import { rocksMempool } from 'nexchain/db/memPool'
 
 export const saveMempool = async (transaction: TxInterface): Promise<void> => {
 	if (!transaction) {

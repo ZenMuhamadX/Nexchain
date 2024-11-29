@@ -1,6 +1,6 @@
 import { stringToHex } from 'nexchain/hex/stringToHex'
 import { Block } from 'nexchain/model/block/block'
-import { rocksBlock } from 'nexchain/rocksdb/block'
+import { rocksBlock } from 'nexchain/db/block'
 
 export const writeBlockHash = async (
 	blockHash: string,

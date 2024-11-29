@@ -7,8 +7,8 @@ import { generateMessageId } from '../utils/getMessageId'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import _ from 'lodash'
 import { transferFunds } from 'nexchain/transaction/transferFunds'
-import { getMinerId } from 'Network(Development)/utils/getMinerId'
-import { rocksState } from 'nexchain/rocksdb/state'
+import { getMinerId } from 'p2p/utils/getMinerId'
+import { rocksState } from 'nexchain/db/state'
 
 // Logger configuration
 const logger = winston.createLogger({

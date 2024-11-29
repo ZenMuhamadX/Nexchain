@@ -1,5 +1,5 @@
 import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
-import { rocksHistory } from 'nexchain/rocksdb/history'
+import { rocksHistory } from 'nexchain/db/history'
 
 export const saveTxAddress = async (
 	sender: string,

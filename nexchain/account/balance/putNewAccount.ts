@@ -2,7 +2,7 @@ import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
-import { rocksState } from 'nexchain/rocksdb/state'
+import { rocksState } from 'nexchain/db/state'
 
 /**
  * Creates and saves a new wallet with an initial balance to the database.

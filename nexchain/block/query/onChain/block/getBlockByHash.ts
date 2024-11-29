@@ -1,7 +1,7 @@
 import { HexString } from 'interface/structBlock'
 import { hexToString } from 'nexchain/hex/hexToString'
 import { Block } from 'nexchain/model/block/block'
-import { rocksBlock } from 'nexchain/rocksdb/block'
+import { rocksBlock } from 'nexchain/db/block'
 
 export const getBlockByHash = async (
 	hash: string,

@@ -1,4 +1,4 @@
-import { rocksState } from 'nexchain/rocksdb/state'
+import { rocksState } from 'nexchain/db/state'
 
 /**
  * Fungsi untuk menyimpan pending balance ke database

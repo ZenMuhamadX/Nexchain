@@ -1,5 +1,5 @@
 import { contract } from 'interface/structContract'
-import { rocksContract } from 'nexchain/rocksdb/smartContract'
+import { rocksContract } from 'nexchain/db/smartContract'
 
 export const saveContracts = async (contracts: contract[] | contract) => {
 	if (Array.isArray(contracts)) {

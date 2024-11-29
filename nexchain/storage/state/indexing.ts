@@ -1,4 +1,4 @@
-import { rocksState } from 'nexchain/rocksdb/state'
+import { rocksState } from 'nexchain/db/state'
 
 export const writeBlockHeight = async (
 	blockHeight: number,

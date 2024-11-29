@@ -1,6 +1,6 @@
 import { TxInterface } from 'interface/structTx'
 import { stringToHex } from 'nexchain/hex/stringToHex'
-import { rocksHistory } from 'nexchain/rocksdb/history'
+import { rocksHistory } from 'nexchain/db/history'
 
 interface savedHistory extends TxInterface {
 	metadata?: {

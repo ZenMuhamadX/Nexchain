@@ -1,4 +1,4 @@
-import { rocksMempool } from 'nexchain/rocksdb/memPool'
+import { rocksMempool } from 'nexchain/db/memPool'
 
 export const removeMemPool = (txHash: string) => {
 	try {

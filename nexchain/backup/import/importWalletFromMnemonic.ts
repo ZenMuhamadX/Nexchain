@@ -6,7 +6,7 @@ import { generateKeysFromMnemonic } from 'nexchain/keyPair/genKeyFromMnemonic'
 import { structWalletToSave } from 'interface/structWalletToSave'
 import { writeFile } from 'fs/promises'
 import { existsSync, mkdirSync } from 'fs'
-import { askQuestion } from 'client/question/askQuestion'
+import { askQuestion } from 'client/inquirer/utils/askQuestion'
 import { logToConsole } from 'logging/logging'
 
 // Fungsi utama untuk mengimpor dompet dari mnemonic

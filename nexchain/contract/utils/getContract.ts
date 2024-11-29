@@ -1,6 +1,6 @@
 import { contract } from 'interface/structContract'
 import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
-import { rocksContract } from 'nexchain/rocksdb/smartContract'
+import { rocksContract } from 'nexchain/db/smartContract'
 
 export const getContract = async (
 	contractAddress: string,

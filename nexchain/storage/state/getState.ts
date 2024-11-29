@@ -1,4 +1,4 @@
-import { rocksState } from 'nexchain/rocksdb/state'
+import { rocksState } from 'nexchain/db/state'
 import { blockState } from './setState'
 import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
 
