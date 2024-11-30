@@ -1,6 +1,5 @@
 import { contract } from 'interface/structContract'
 import { getContract } from './utils/getContract'
-import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { logToConsole } from 'logging/logging'
 import {
 	transferToContract,
@@ -8,6 +7,8 @@ import {
 } from 'interface/structManageContract'
 import { TxInterface } from 'interface/structTx'
 import { getHistoryByAddress } from 'nexchain/block/query/onChain/Transaction/getHistoryByAddress'
+import { genTxData } from 'client/transfer/genTxData'
+import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
 
 export class ManageContract {
 	contractAddress: string
@@ -29,7 +30,7 @@ export class ManageContract {
 	}
 
 	public async transferToContract(data: transferToContract): Promise<boolean> {
-		const success = await transferFunds({
+		const txData = await genTxData({
 			amount: data.amount,
 			format: data.format,
 			receiver: this.contractAddress,
@@ -38,6 +39,7 @@ export class ManageContract {
 			extraData: 'Transfer to contract',
 			fee: 5000,
 		})
+		const success = await sendTransactionToRpc(txData.data!)
 		if (!success) {
 			logToConsole('Transfer failed')
 			return false
@@ -48,7 +50,7 @@ export class ManageContract {
 	public async withdrawFromContract(
 		data: withdrawFromContract,
 	): Promise<boolean> {
-		const success = await transferFunds({
+		const txData = await genTxData({
 			amount: data.amount,
 			format: 'NXC',
 			receiver: data.receiver,
@@ -57,6 +59,7 @@ export class ManageContract {
 			extraData: 'Withdraw from contract',
 			fee: 5000,
 		})
+		const success = await sendTransactionToRpc(txData.data!)
 		if (!success) {
 			logToConsole('Withdraw failed')
 			return false

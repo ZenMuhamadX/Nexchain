@@ -36,7 +36,7 @@ const loadPrimaryWalletName = (): string | undefined => {
  * @returns The full file path for the wallet JSON file.
  */
 const getWalletFilePath = (walletName: string | undefined): string => {
-	return path.join(__dirname, `../../../wallet/${walletName}.json`)
+	return path.join(__dirname, `../../wallet/${walletName}.json`)
 }
 
 /**

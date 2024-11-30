@@ -1,15 +1,15 @@
 /** @format */
 import { loggingErr } from 'logging/errorLog'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
-import { generateAddressFromPublicKey } from 'nexchain/keyPair/genAddrFromPubKey'
-import { genRandomMnemonic } from 'nexchain/keyPair/genRandomMnemonic'
-import { generateKeysFromMnemonic } from 'nexchain/keyPair/genKeyFromMnemonic'
 import { saveWallet } from './utils/saveWallet'
 import { showHeader } from 'client/figlet/header'
 import { askQuestion } from 'client/inquirer/utils/askQuestion'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
 import { putNewAccount } from './balance/putNewAccount'
+import { genRandomMnemonic } from 'key/genRandomMnemonic'
+import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
+import { generateAddressFromPublicKey } from 'key/genAddrFromPubKey'
 
 /**
  * Generates a new wallet address, saves it, and returns the wallet address and mnemonic phrase.

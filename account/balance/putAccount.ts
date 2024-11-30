@@ -2,7 +2,7 @@ import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { rocksState } from 'nexchain/db/state'
-import { encodeToBytes } from '../../hex/encodeToBytes'
+import { encodeToBytes } from 'nexchain/hex/encodeToBytes'
 
 /**
  * Updates the balance for a given address in RocksDB.

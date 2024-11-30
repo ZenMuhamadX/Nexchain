@@ -6,10 +6,11 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { burnNexu } from 'nexchain/transaction/burnNexu'
-import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { MemPool } from 'nexchain/model/memPool/memPool'
 import { logToConsole } from 'logging/logging'
-import { getAccount } from 'nexchain/account/balance/getAccount'
+import { getAccount } from 'account/balance/getAccount'
+import { genTxData } from 'client/transfer/genTxData'
+import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
 
 const mempool = new MemPool()
 
@@ -31,7 +32,7 @@ export const createContract = async (
 	await burnNexu(owner, totalGas)
 	const nonce = await getOwnerNonce(owner)
 	const contractAddress = createContractAdrress(owner, nonce)
-	const transferStatus = await transferFunds({
+	const txData = await genTxData({
 		amount: initialAmount,
 		receiver: contractAddress,
 		sender: owner,
@@ -40,11 +41,12 @@ export const createContract = async (
 		fee: totalGas,
 		extraData: 'Contract deploy',
 	})
+	const transact = await sendTransactionToRpc(txData.data!)
 	const newContract: contract = {
 		balance: 0,
 		contractAddress: createContractAdrress(owner, nonce),
 		contractCodeHash: '',
-		deploymentTransactionHash: transferStatus.txHash!,
+		deploymentTransactionHash: txData.txHash!,
 		deployedAt: generateTimestampz(),
 		owner: owner,
 		metadata: {
@@ -58,7 +60,7 @@ export const createContract = async (
 		JSON.stringify(newContract),
 		'hex',
 	) as string
-	if (!transferStatus.status) return { status: false, contract: undefined }
+	if (!transact) return { status: false, contract: undefined }
 	await mempool.addContract(newContract)
 	logToConsole(
 		`Your contract created waiting for mined. contract address : ${newContract.contractAddress} `,

@@ -1,9 +1,9 @@
 import { contract } from 'interface/structContract'
-import { getContract } from '../../contract/utils/getContract'
+import { getContract } from './getContract'
 import { processSender } from 'nexchain/transaction/sender/processSender'
-import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
-import { saveContracts } from '../../contract/saveContract'
+import { saveContracts } from '../saveContract'
 import { logToConsole } from 'logging/logging'
+import { hasSufficientBalance } from 'account/utils/hasSufficientBalance'
 
 interface contractTransfer {
 	contractAddress: string

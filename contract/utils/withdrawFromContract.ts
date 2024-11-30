@@ -1,7 +1,7 @@
 import { NXC } from 'interface/structContract'
 import { processReceiver } from 'nexchain/transaction/receiver/processReceiver'
-import { getContract } from '../../contract/utils/getContract'
-import { saveContracts } from '../../contract/saveContract'
+import { getContract } from './getContract'
+import { saveContracts } from '../saveContract'
 
 interface WithdrawParams {
 	contractAddress: string
