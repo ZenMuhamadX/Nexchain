@@ -1,5 +1,4 @@
 import { txInterfaceValidator } from './joi/txInterface'
-import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
 import { validateTransactionAmount } from 'interface/module/isValidTxAmount'
 import { logError } from 'interface/module/writeLog'
 import { validateTransactionSignature } from 'interface/module/isValidTxSign'
@@ -9,6 +8,7 @@ import { validateAddresses } from 'interface/module/isValidAddress'
 import { validateAddressLengths } from 'interface/module/isValidAddressLength'
 import { TxInterface } from 'interface/structTx'
 import { isNexu } from 'nexchain/nexucoin/isNexu'
+import { hasSufficientBalance } from 'account/utils/hasSufficientBalance'
 
 export const transactionValidator = async (
 	transaction: TxInterface,

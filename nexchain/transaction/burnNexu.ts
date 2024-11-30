@@ -1,6 +1,6 @@
+import { getAccount } from 'account/balance/getAccount'
+import { putAccount } from 'account/balance/putAccount'
 import { structBalance } from 'interface/structBalance'
-import { getAccount } from 'nexchain/account/balance/getAccount'
-import { putAccount } from 'nexchain/account/balance/putAccount'
 import { isContract } from 'nexchain/lib/isContract'
 
 export const burnNexu = async (fromAddress: string, amount: number) => {

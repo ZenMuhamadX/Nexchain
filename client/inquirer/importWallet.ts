@@ -1,7 +1,7 @@
+import { importWalletFromMnemonic } from 'account/backup/import/importWalletFromMnemonic'
 import chalk from 'chalk'
 import { showHeader } from 'client/figlet/header'
 import { askQuestion } from 'client/inquirer/utils/askQuestion'
-import { importWalletFromMnemonic } from 'nexchain/backup/import/importWalletFromMnemonic'
 
 export const CLIImportWallet = async () => {
 	showHeader('NexRecovery')

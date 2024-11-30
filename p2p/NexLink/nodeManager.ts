@@ -6,7 +6,6 @@ import { validateMessageInterface } from './validateInf'
 import { generateMessageId } from '../utils/getMessageId'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import _ from 'lodash'
-import { transferFunds } from 'nexchain/transaction/transferFunds'
 import { getMinerId } from 'p2p/utils/getMinerId'
 import { rocksState } from 'nexchain/db/state'
 
@@ -199,9 +198,6 @@ export class Node {
 			logger.info(`Node ${this.id} processing command from client:`, data)
 			// Handle message types
 			switch (data.type) {
-				case 'CREATE_TRANSACTION':
-					this.handleCreateTransaction(data)
-					break
 				case 'PEERS_ID':
 					this.handlePeerIds(data.payload.data)
 					break
@@ -215,17 +211,6 @@ export class Node {
 					logger.warn(`Node ${this.id}: Unknown message type:`, data.type)
 			}
 		}
-	}
-
-	// Handle transaction creation
-	private handleCreateTransaction(data: COM) {
-		transferFunds(data.payload.data)
-			.then(() => {
-				logger.info(`Transaction processed: ${data.payload.data}`)
-			})
-			.catch((err) => {
-				logger.error(`Transaction processing error: ${err}`)
-			})
 	}
 
 	// Handle received peer IDs

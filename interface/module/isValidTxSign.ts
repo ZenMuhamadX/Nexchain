@@ -1,4 +1,4 @@
-import { verifySignature } from 'nexchain/sign/verifySIgnature'
+import { verifySignature } from 'sign/verifySIgnature'
 import { validateField } from './validateField'
 import { TxInterface } from 'interface/structTx'
 

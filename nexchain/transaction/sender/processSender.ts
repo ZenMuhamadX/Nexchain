@@ -1,11 +1,11 @@
 import { structBalance } from 'interface/structBalance'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
-import { hasSufficientBalance } from 'nexchain/account/utils/hasSufficientBalance'
 import { getPendingBalance } from '../getPendingBalance'
 import { setPendingBalance } from '../setPendingBalance'
-import { getAccount } from 'nexchain/account/balance/getAccount'
-import { putAccount } from 'nexchain/account/balance/putAccount'
+import { getAccount } from 'account/balance/getAccount'
+import { putAccount } from 'account/balance/putAccount'
+import { hasSufficientBalance } from 'account/utils/hasSufficientBalance'
 
 export const processSender = async (
 	senderAddress: string,

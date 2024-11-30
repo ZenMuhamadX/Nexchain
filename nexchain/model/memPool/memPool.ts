@@ -4,14 +4,14 @@ import { TxInterface } from 'interface/structTx'
 import { contract } from 'interface/structContract'
 import { isContract } from 'nexchain/lib/isContract'
 import { logToConsole } from 'logging/logging'
-import { ManageContract } from 'nexchain/contract/manageContract'
+import { ManageContract } from 'contract/manageContract'
 import { saveMempool } from 'nexchain/storage/mempool/saveMemPool'
 import { getPendingBalance } from 'nexchain/transaction/getPendingBalance'
 import { setPendingBalance } from 'nexchain/transaction/setPendingBalance'
 import { saveContractMempool } from 'nexchain/storage/mempool/saveContractMempool'
 import { loadContractMempool } from 'nexchain/storage/mempool/loadContractMempool'
 import { loadMempool } from 'nexchain/storage/mempool/loadMempool'
-import { getAccount } from 'nexchain/account/balance/getAccount'
+import { getAccount } from 'account/balance/getAccount'
 
 export class MemPool {
 	constructor() {
@@ -25,11 +25,11 @@ export class MemPool {
 	 */
 	public async addTransaction(
 		transaction: TxInterface,
-	): Promise<boolean | TxInterface> {
+	): Promise<{ isValid: boolean; data?: TxInterface }> {
 		const isValidTx = await transactionValidator(transaction)
 		if (!isValidTx) {
 			logToConsole('Transaction validation failed')
-			return false
+			return { isValid: isValidTx, data: transaction }
 		}
 
 		const isSenderContract = isContract(transaction.sender)
@@ -39,14 +39,14 @@ export class MemPool {
 			? await this.handleContractTransaction(transaction)
 			: await this.handleUserTransaction(transaction)
 
-		if (!isBalanceSufficient) return false
+		if (!isBalanceSufficient) return { isValid: false, data: transaction }
 
 		// Save transaction to mempool and history
 		await saveMempool(transaction)
 		await saveTxHistory(transaction.txHash!, transaction)
 		logToConsole(`Transaction added. TxnHash: ${transaction.txHash}`)
 
-		return transaction
+		return { isValid: true, data: transaction }
 	}
 
 	/**

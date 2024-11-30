@@ -1,4 +1,3 @@
-import { getAccount } from 'nexchain/account/balance/getAccount'
 import { JSONRPCServer } from 'json-rpc-2.0'
 import { toNxc } from 'nexchain/nexucoin/toNxc'
 import { getBlockByHash } from 'nexchain/block/query/onChain/block/getBlockByHash'
@@ -9,6 +8,10 @@ import { structBalance } from 'interface/structBalance'
 import { getHistoryByTxHash } from 'nexchain/block/query/onChain/Transaction/getHistoryByTx'
 import { getHistoryByAddress } from 'nexchain/block/query/onChain/Transaction/getHistoryByAddress'
 import { Block } from 'nexchain/model/block/block'
+import { getAccount } from 'account/balance/getAccount'
+import { addTxToMempool } from 'nexchain/transaction/addTxToMempool'
+import { decode } from 'msgpack-lite'
+import { TxInterface } from 'interface/structTx'
 
 const rpc = new JSONRPCServer()
 
@@ -83,5 +86,13 @@ rpc.addMethod('nex_getTransactionByTxHash', async (txHash: string) => {
 rpc.addMethod('nex_getTransactionsByAddress', async (address: string) => {
 	return await getHistoryByAddress(address, 'json')
 })
+
+rpc.addMethod(
+	'nex_sendTransaction',
+	async (data: { type: string; data: Buffer }) => {
+		const decodedData: TxInterface = decode(data.data)
+		return await addTxToMempool(decodedData)
+	},
+)
 
 export { rpc }

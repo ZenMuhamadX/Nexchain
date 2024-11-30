@@ -6,8 +6,8 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { saveTxAddress } from './saveTxAddress'
 import { saveTxHistory } from './saveTxHistory'
 import { processReceiver } from './receiver/processReceiver'
-import { transferToContract } from 'nexchain/contract/utils/transferToContract'
-import { withdrawFromContract } from 'nexchain/contract/utils/withdrawFromContract'
+import { transferToContract } from 'contract/utils/transferToContract'
+import { withdrawFromContract } from 'contract/utils/withdrawFromContract'
 
 export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 	if (txData.length === 0) {

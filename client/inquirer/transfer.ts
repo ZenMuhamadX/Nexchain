@@ -1,10 +1,11 @@
 import { showHeader } from 'client/figlet/header'
 import { askQuestion } from 'client/inquirer/utils/askQuestion'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
-import { transferFunds } from 'nexchain/transaction/transferFunds'
 import fs from 'fs'
 import path from 'path'
 import { structWalletToSave } from 'interface/structWalletToSave'
+import { genTxData } from 'client/transfer/genTxData'
+import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
 
 // Fungsi untuk membaca nama file wallet dari direktori
 const getWalletFiles = (directory: string) => {
@@ -110,7 +111,7 @@ export const CLITransfer = async () => {
 	// Jika konfirmasi adalah 'y', lanjutkan transaksi; jika tidak, batalkan
 	if (confirm) {
 		const timestamp = generateTimestampz()
-		await transferFunds({
+		const txData = await genTxData({
 			amount,
 			format,
 			receiver,
@@ -119,7 +120,12 @@ export const CLITransfer = async () => {
 			extraData,
 			fee,
 		})
-		console.log('Transaction successfully processed!')
+		if (!txData.status) {
+			console.log('Transaction failed')
+			process.exit(1)
+		}
+		await sendTransactionToRpc(txData.data!)
+		console.log('Transaction sent successfully!')
 	} else {
 		console.log('Transaction cancelled.')
 		process.exit(0) // Menghentikan aplikasi dengan status 0 (berhasil)

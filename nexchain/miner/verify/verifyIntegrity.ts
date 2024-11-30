@@ -4,9 +4,9 @@ import { verifyHashLength } from './module/verifyHashLength'
 import { verifyBlockHash } from './module/verifyBlockHash'
 import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByHeight'
 import { Block } from 'nexchain/model/block/block'
-import { verifySignature } from 'nexchain/sign/verifySIgnature'
 import { verifyMerkleRoot } from './module/verifyMerkleRoot'
 import { logToConsole } from 'logging/logging'
+import { verifySignature } from 'sign/verifySIgnature'
 
 // Function to verify the integrity of the blockchain
 export const verifyChainIntegrity = async (): Promise<boolean> => {

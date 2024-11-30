@@ -2,7 +2,7 @@ import { validateMnemonic } from './validateMnemonic'
 import bip39 from 'bip39'
 import BIP32Factory from 'bip32'
 import * as ecc from 'tiny-secp256k1'
-import { uint8ToHex } from 'nexchain/backup/lib/bytesToHex'
+import { uint8ToHex } from 'account/backup/lib/bytesToHex'
 
 const bip32 = BIP32Factory(ecc)
 // Fungsi untuk menghasilkan kunci dari mnemonic

@@ -11,14 +11,14 @@ import { processTransact } from '../transaction/processTransact'
 
 import { verifyMerkleRoot } from '../miner/verify/module/verifyMerkleRoot'
 import { contract } from 'interface/structContract'
-import { saveContracts } from '../contract/saveContract'
+import { saveContracts } from '../../contract/saveContract'
 import { removeContractMemPool } from '../storage/mempool/removeContractMempool'
 import _ from 'lodash'
 import { createNewBlock } from '../block/createNewBlock'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
-import { getAccount } from 'nexchain/account/balance/getAccount'
-import { putAccount } from 'nexchain/account/balance/putAccount'
+import { putAccount } from 'account/balance/putAccount'
+import { getAccount } from 'account/balance/getAccount'
 
 export class BlockChains {
 	constructor() {

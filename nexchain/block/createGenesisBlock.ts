@@ -3,19 +3,19 @@
 import { loggingErr } from '../../logging/errorLog'
 import { proofOfWork } from '../miner/Pow'
 import { Block } from '../model/block/block'
-import { createSignature } from '../sign/createSignature'
 import { generateTimestampz } from '../lib/generateTimestampz'
 import { calculateSize } from '../lib/calculateSize'
 import { calculateTotalFees } from 'nexchain/transaction/utils/totalFees'
 import { saveBlock } from 'nexchain/storage/block/saveBlock'
-import { loadWallet } from 'nexchain/account/utils/loadWallet'
 import { stringToHex } from 'nexchain/hex/stringToHex'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { getMinerId } from 'p2p/utils/getMinerId'
 import { countHashDifficulty } from './countHashDifficulty'
 import { getBlockByHeight } from './query/onChain/block/getBlockByHeight'
-import { getMyWalletAddress } from 'nexchain/account/myWalletAddress'
-import { putAccount } from 'nexchain/account/balance/putAccount'
+import { loadWallet } from 'account/utils/loadWallet'
+import { getMyWalletAddress } from 'account/myWalletAddress'
+import { createSignature } from 'sign/createSignature'
+import { putAccount } from 'account/balance/putAccount'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0, 'json')

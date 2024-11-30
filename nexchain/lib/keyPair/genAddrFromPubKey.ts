@@ -1,6 +1,6 @@
+import { addChecksum } from 'account/utils/addChecksum'
+import { processPubKey } from 'account/utils/processPubKey'
 import { keccak256 } from 'js-sha3'
-import { addChecksum } from 'nexchain/account/utils/addChecksum'
-import { processPubKey } from 'nexchain/account/utils/processPubKey'
 
 // Fungsi untuk menghasilkan alamat dari public key
 export const generateAddressFromPublicKey = (publicKey: string) => {
