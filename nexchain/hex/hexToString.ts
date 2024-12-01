@@ -1,11 +1,18 @@
 import { HexString } from 'interface/structBlock'
 
-export const hexToString = (hex: HexString) => {
-	let str = ''
-	const parsedHex = hex.slice(2)
-	for (let i = 0; i < parsedHex.length; i += 2) {
-		const code = parseInt(parsedHex.substring(i, i + 2), 16)
-		str += String.fromCharCode(code)
+/**
+ * Decode hex (basis 16) back to string
+ * @param hex - Hexadecimal string to decode
+ * @returns Decoded string
+ */
+export const hexToString = (hex: HexString): string => {
+	// Remove the `0x` prefix if present
+	const cleanHex = hex.startsWith('0x') ? hex.slice(2) : hex
+
+	let output = ''
+	for (let i = 0; i < cleanHex.length; i += 2) {
+		const code = parseInt(cleanHex.slice(i, i + 2), 16)
+		output += String.fromCharCode(code)
 	}
-	return str
+	return output
 }
