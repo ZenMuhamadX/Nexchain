@@ -36,9 +36,6 @@ export const processSender = async (
 		isContract: false,
 		lastTransactionDate: generateTimestampz(),
 		nonce: oldData!.nonce + 1,
-		decimal: 18,
-		notes: '1^18 nexu = 1 NXC',
-		symbol: 'nexu',
 	}
 	await putAccount(senderAddress, newData)
 	// Ambil dan perbarui pending balance

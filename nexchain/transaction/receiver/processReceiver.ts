@@ -17,9 +17,6 @@ export const processReceiver = async (
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
 			nonce: 1,
-			decimal: 18,
-			notes: '1^18 nexu = 1 NXC',
-			symbol: 'nexu',
 		}
 		await putAccount(recieverAddress, newData)
 		return
@@ -32,9 +29,6 @@ export const processReceiver = async (
 		isContract: false,
 		lastTransactionDate: generateTimestampz(),
 		nonce: oldData.nonce + 1,
-		decimal: 18,
-		notes: '1^18 nexu = 1 NXC',
-		symbol: 'nexu',
 	}
 	await putAccount(recieverAddress, newData)
 }

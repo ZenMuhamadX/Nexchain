@@ -50,9 +50,6 @@ const createInitialBalance = (address: string): structBalance => {
 		isContract: false,
 		nonce: 0,
 		lastTransactionDate: null,
-		decimal: 18,
-		notes: '1^18 nexu = 1 NXC',
-		symbol: 'nexu',
 	}
 }
 
