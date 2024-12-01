@@ -4,7 +4,7 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import fs from 'fs'
 import path from 'path'
 import { structWalletToSave } from 'interface/structWalletToSave'
-import { genTxData } from 'client/transfer/genTxData'
+import { genTxData } from 'client/lib/genTxData'
 import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
 
 // Fungsi untuk membaca nama file wallet dari direktori
@@ -124,7 +124,7 @@ export const CLITransfer = async () => {
 			console.log('Transaction failed')
 			process.exit(1)
 		}
-		await sendTransactionToRpc(txData.data!)
+		await sendTransactionToRpc(txData.base64Data!)
 		console.log('Transaction sent successfully!')
 	} else {
 		console.log('Transaction cancelled.')

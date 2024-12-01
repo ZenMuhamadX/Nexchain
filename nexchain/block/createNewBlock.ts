@@ -13,7 +13,7 @@ import { calculateSize } from 'nexchain/lib/calculateSize'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { cutBlockReward } from './cutReward'
 import { loadWallet } from 'account/utils/loadWallet'
-import { createSignature } from 'sign/createSignature'
+import { createSignature } from 'sign/createSign'
 
 export const createNewBlock = async (
 	transactions: TxInterface[],

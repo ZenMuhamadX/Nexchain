@@ -1,6 +1,6 @@
 import { contract } from 'interface/structContract'
 import { createContractAdrress } from 'nexchain/lib/createContractAddress'
-import { getOwnerNonce } from './utils/getOwnerNonce'
+import { getOwnerNonce } from '../../contract/utils/getOwnerNonce'
 import { sha256 } from 'nexchain/block/sha256'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
@@ -9,7 +9,7 @@ import { burnNexu } from 'nexchain/transaction/burnNexu'
 import { MemPool } from 'nexchain/model/memPool/memPool'
 import { logToConsole } from 'logging/logging'
 import { getAccount } from 'account/balance/getAccount'
-import { genTxData } from 'client/transfer/genTxData'
+import { genTxData } from 'client/lib/genTxData'
 import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
 
 const mempool = new MemPool()
@@ -32,7 +32,7 @@ export const createContract = async (
 	await burnNexu(owner, totalGas)
 	const nonce = await getOwnerNonce(owner)
 	const contractAddress = createContractAdrress(owner, nonce)
-	const txData = await genTxData({
+	const txData = genTxData({
 		amount: initialAmount,
 		receiver: contractAddress,
 		sender: owner,
@@ -41,7 +41,7 @@ export const createContract = async (
 		fee: totalGas,
 		extraData: 'Contract deploy',
 	})
-	const transact = await sendTransactionToRpc(txData.data!)
+	const transact = await sendTransactionToRpc(txData.base64Data!)
 	const newContract: contract = {
 		balance: 0,
 		contractAddress: createContractAdrress(owner, nonce),

@@ -7,7 +7,7 @@ import {
 } from 'interface/structManageContract'
 import { TxInterface } from 'interface/structTx'
 import { getHistoryByAddress } from 'nexchain/block/query/onChain/Transaction/getHistoryByAddress'
-import { genTxData } from 'client/transfer/genTxData'
+import { genTxData } from 'client/lib/genTxData'
 import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
 
 export class ManageContract {
@@ -39,7 +39,7 @@ export class ManageContract {
 			extraData: 'Transfer to contract',
 			fee: 5000,
 		})
-		const success = await sendTransactionToRpc(txData.data!)
+		const success = await sendTransactionToRpc(txData.base64Data!)
 		if (!success) {
 			logToConsole('Transfer failed')
 			return false
@@ -59,7 +59,7 @@ export class ManageContract {
 			extraData: 'Withdraw from contract',
 			fee: 5000,
 		})
-		const success = await sendTransactionToRpc(txData.data!)
+		const success = await sendTransactionToRpc(txData.base64Data!)
 		if (!success) {
 			logToConsole('Withdraw failed')
 			return false

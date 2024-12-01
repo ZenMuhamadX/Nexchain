@@ -12,6 +12,7 @@ import { saveContractMempool } from 'nexchain/storage/mempool/saveContractMempoo
 import { loadContractMempool } from 'nexchain/storage/mempool/loadContractMempool'
 import { loadMempool } from 'nexchain/storage/mempool/loadMempool'
 import { getAccount } from 'account/balance/getAccount'
+import { formatStr } from 'nexchain/lib/formatStr'
 
 export class MemPool {
 	constructor() {
@@ -44,7 +45,9 @@ export class MemPool {
 		// Save transaction to mempool and history
 		await saveMempool(transaction)
 		await saveTxHistory(transaction.txHash!, transaction)
-		logToConsole(`Transaction added. TxnHash: ${transaction.txHash}`)
+		logToConsole(
+			`Transaction added to mempool TxHash: ${formatStr(transaction.txHash!)}...`,
+		)
 
 		return { isValid: true, data: transaction }
 	}

@@ -3,11 +3,11 @@ import { TxInterface } from 'interface/structTx'
 import { processSender } from './sender/processSender'
 import { removeMemPool } from 'nexchain/storage/mempool/removeMempool'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
-import { saveTxAddress } from './saveTxAddress'
 import { saveTxHistory } from './saveTxHistory'
 import { processReceiver } from './receiver/processReceiver'
 import { transferToContract } from 'contract/utils/transferToContract'
 import { withdrawFromContract } from 'contract/utils/withdrawFromContract'
+import { saveTxByAddress } from './saveTxByAddress'
 
 export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 	if (txData.length === 0) {
@@ -32,7 +32,7 @@ export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 					fee: tx.fee!,
 					sender: tx.sender,
 				})
-				await saveTxAddress(tx.sender, tx.receiver, tx.txHash!)
+				await saveTxByAddress(tx.sender, tx.receiver, tx.txHash!)
 				await saveTxHistory(tx.txHash!, tx)
 				removeMemPool(tx.txHash!)
 			} catch (error) {
@@ -58,7 +58,7 @@ export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 					fee: tx.fee!,
 					receiver: tx.receiver,
 				})
-				await saveTxAddress(tx.sender, tx.receiver, tx.txHash!)
+				await saveTxByAddress(tx.sender, tx.receiver, tx.txHash!)
 				await saveTxHistory(tx.txHash!, tx)
 				removeMemPool(tx.txHash!)
 			} catch (error) {
@@ -79,7 +79,7 @@ export const processTransact = async (txData: TxInterface[]): Promise<void> => {
 		try {
 			await processSender(tx.sender, tx.amount, tx.fee!)
 			await processReceiver(tx.receiver, tx.amount)
-			await saveTxAddress(tx.sender, tx.receiver, tx.txHash!)
+			await saveTxByAddress(tx.sender, tx.receiver, tx.txHash!)
 			await saveTxHistory(tx.txHash!, tx)
 			removeMemPool(tx.txHash!)
 		} catch (error) {

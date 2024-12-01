@@ -1,7 +1,7 @@
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { Block } from 'nexchain/model/block/block'
-import { encodeToBytes } from 'nexchain/hex/encodeToBytes'
 import { rocksState } from 'nexchain/db/state'
+import { stringToHex } from 'nexchain/hex/stringToHex'
 
 export interface blockState {
 	currentBlockHeight: number
@@ -23,7 +23,7 @@ export const setBlockState = async (block: Block) => {
 		lastUpdated: generateTimestampz(),
 		blockReward: block.block.blockReward,
 	}
-	const parseState = encodeToBytes(JSON.stringify(blockState))
+	const parseState = stringToHex(JSON.stringify(blockState))
 	await rocksState.put(`blockState`, parseState, {
 		sync: true,
 	})

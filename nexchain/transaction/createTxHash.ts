@@ -13,6 +13,7 @@ export const createTxnHash = (data: TxInterface): string => {
 		extraData: data.extraData,
 		timestamp: data.timestamp,
 		format: 'nexu',
+		fee: data.fee,
 	}
 	const stringData = JSON.stringify(txData)
 	const hash = sha256(stringData, 'hex')

@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import { getHistoryByTxHash } from './getHistoryByTx'
+import { getHistoryByTxHash } from './getHistoryByTxHash'
 import { TxInterface } from 'interface/structTx'
-import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
+import { decodeFromBytes } from 'nexchain/hex/bytes/decodeBytes'
 import { rocksHistory } from 'nexchain/db/history'
 
 export const getHistoryByAddress = async (

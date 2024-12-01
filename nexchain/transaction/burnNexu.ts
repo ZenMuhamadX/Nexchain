@@ -28,12 +28,9 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 	await putAccount(fromAddress, {
 		address: fromAddress,
 		balance: newBalance,
-		decimal: 18,
 		isContract: false,
 		lastTransactionDate: null,
 		nonce: oldBalance.nonce + 1,
-		notes: '1^18 nexu = 1 NXC',
-		symbol: 'nexu',
 		transactionCount: oldBalance.transactionCount + 1,
 	})
 
@@ -58,12 +55,9 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 	await putAccount(burnAddress, {
 		address: burnAddress,
 		balance: newBurnBalance,
-		decimal: 18,
 		isContract: false,
 		lastTransactionDate: null,
 		nonce: oldBurnBalance!.nonce + 1,
-		notes: 'Burned by burnNexu function',
-		symbol: 'nexu',
 		transactionCount: oldBurnBalance.transactionCount + 1,
 	})
 }

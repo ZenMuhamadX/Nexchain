@@ -5,14 +5,17 @@ import { stringToHex } from 'nexchain/hex/stringToHex'
 import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { isContract } from 'nexchain/lib/isContract'
 import { loadWallet } from 'account/utils/loadWallet'
-import { createSignature } from 'sign/createSignature'
+import { createSignature } from 'sign/createSign'
+import { encodeTx } from 'nexchain/hex/tx/encodeTx'
+import { logToConsole } from 'logging/logging'
 
 export const genTxData = (
 	transaction: comTxInterface,
 ): {
 	status: boolean
 	txHash?: string | undefined
-	data: TxInterface | undefined
+	base64Data: string | undefined
+	rawData: TxInterface | undefined
 } => {
 	let convertedAmount = transaction.amount
 
@@ -25,7 +28,12 @@ export const genTxData = (
 	const minAmount = 1 // Minimum 1 Nexu
 	if (convertedAmount < minAmount) {
 		console.log('Transaction amount must be at least 1 nexu.')
-		return { status: false, txHash: undefined, data: undefined } // Hentikan eksekusi jika tidak memenuhi syarat
+		return {
+			status: false,
+			txHash: undefined,
+			base64Data: undefined,
+			rawData: undefined,
+		} // Hentikan eksekusi jika tidak memenuhi syarat
 	}
 
 	const isReceiverContract = isContract(transaction.receiver)
@@ -65,6 +73,14 @@ export const genTxData = (
 			timestamp: completedTx.timestamp,
 		}),
 	)
+	const base64Data = encodeTx(completedTx)
+	logToConsole(`Your transaction has been sent to node and waiting for mined`)
+	logToConsole(`TxHash : ${completedTx.txHash}`)
 
-	return { status: true, txHash: completedTx.txHash, data: completedTx }
+	return {
+		status: true,
+		txHash: completedTx.txHash,
+		base64Data,
+		rawData: completedTx,
+	}
 }

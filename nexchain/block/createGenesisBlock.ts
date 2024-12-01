@@ -14,7 +14,7 @@ import { countHashDifficulty } from './countHashDifficulty'
 import { getBlockByHeight } from './query/onChain/block/getBlockByHeight'
 import { loadWallet } from 'account/utils/loadWallet'
 import { getMyWalletAddress } from 'account/myWalletAddress'
-import { createSignature } from 'sign/createSignature'
+import { createSignature } from 'sign/createSign'
 import { putAccount } from 'account/balance/putAccount'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
@@ -87,9 +87,6 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
 			nonce: 0,
-			decimal: 18,
-			notes: '1^18 nexu = 1 NXC',
-			symbol: 'nexu',
 		})
 		await saveBlock(genesisBlock)
 		return genesisBlock

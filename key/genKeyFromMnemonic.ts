@@ -14,7 +14,7 @@ export const generateKeysFromMnemonic = (mnemonic: string) => {
 	const childNode = masterNode.derivePath("m/44'/60'/0'/0/0")
 
 	const privateKey = uint8ToHex(childNode.privateKey!)
-	const publicKey = uint8ToHex(childNode.publicKey)
+	const publicKey = uint8ToHex(childNode.publicKey!)
 
 	return { privateKey: `0x${privateKey}`, publicKey: `0x${publicKey}` }
 }

@@ -76,7 +76,7 @@ const checkStandardBalance = async (
 	if (balance.balance >= amount + fee) {
 		return true
 	} else {
-		logToConsole('Insufficient wallet balance')
+		logToConsole('Insufficient balance')
 		return false
 	}
 }

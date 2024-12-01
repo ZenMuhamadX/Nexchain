@@ -112,9 +112,6 @@ export class BlockChains {
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
 			nonce: 0,
-			decimal: 18,
-			notes: '1^18 nexu = 1 NXC',
-			symbol: 'nexu',
 		})
 		loggingDebug('blockchain:giveReward', 'reward distributed successfully')
 	}
