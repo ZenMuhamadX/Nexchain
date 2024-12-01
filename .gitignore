@@ -7,7 +7,6 @@ node_modules
 dist
 base
 logs
-key
 blocks
 myWallet
 MyBackup
