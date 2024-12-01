@@ -5,13 +5,13 @@ import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByH
 import { getBlockState } from 'nexchain/storage/state/getState'
 import { getCurrentBlock } from 'nexchain/block/query/onChain/block/getCurrentBlock'
 import { structBalance } from 'interface/structBalance'
-import { getHistoryByTxHash } from 'nexchain/block/query/onChain/Transaction/getHistoryByTx'
+import { getHistoryByTxHash } from 'nexchain/block/query/onChain/Transaction/getHistoryByTxHash'
 import { getHistoryByAddress } from 'nexchain/block/query/onChain/Transaction/getHistoryByAddress'
 import { Block } from 'nexchain/model/block/block'
 import { getAccount } from 'account/balance/getAccount'
 import { addTxToMempool } from 'nexchain/transaction/addTxToMempool'
-import { decode } from 'msgpack-lite'
 import { TxInterface } from 'interface/structTx'
+import { decodeTx } from 'nexchain/hex/tx/decodeTx'
 
 const rpc = new JSONRPCServer()
 
@@ -87,12 +87,9 @@ rpc.addMethod('nex_getTransactionsByAddress', async (address: string) => {
 	return await getHistoryByAddress(address, 'json')
 })
 
-rpc.addMethod(
-	'nex_sendTransaction',
-	async (data: { type: string; data: Buffer }) => {
-		const decodedData: TxInterface = decode(data.data)
-		return await addTxToMempool(decodedData)
-	},
-)
+rpc.addMethod('nex_sendTransaction', async (data: string) => {
+	const decodedData: TxInterface = decodeTx(data)
+	return await addTxToMempool(decodedData)
+})
 
 export { rpc }
