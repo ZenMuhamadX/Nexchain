@@ -1,10 +1,11 @@
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
-import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
 import { rocksState } from 'nexchain/db/state'
 import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
 import { logToConsole } from 'logging/logging'
+import { HexString } from 'interface/structBlock'
+import { hexToString } from 'nexchain/hex/hexToString'
 
 /**
  * Fetches the balance of an address from the RocksDB state.
@@ -21,13 +22,13 @@ export const getAccount = async (
 		}
 
 		// Fetch balance from the RocksDB state
-		const balanceBuffer = await fetchBalanceFromDB(address)
-		if (!balanceBuffer) {
+		const balanceHex = await fetchBalanceFromDB(address)
+		if (!balanceHex) {
 			return createDefaultBalance(address)
 		}
 
 		// Decode and parse balance data
-		return parseBalanceData(balanceBuffer, address)
+		return parseBalanceData(balanceHex, address)
 	} catch (error) {
 		handleUnexpectedError(error, 'getBalance')
 		return
@@ -56,11 +57,13 @@ const isValidInput = (address: string): boolean => {
  * @param address - The address to fetch the balance for.
  * @returns A Promise resolving to the balance as a Buffer or null if not found.
  */
-const fetchBalanceFromDB = async (address: string): Promise<Buffer | null> => {
+const fetchBalanceFromDB = async (
+	address: string,
+): Promise<HexString | null> => {
 	const data = await rocksState
 		.get(address, { fillCache: true, asBuffer: true })
 		.catch(() => null)
-	return data as Buffer
+	return data as HexString
 }
 
 /**
@@ -75,9 +78,6 @@ const createDefaultBalance = (address: string): structBalance => ({
 	isContract: false,
 	lastTransactionDate: null,
 	nonce: 0,
-	decimal: 18,
-	notes: '',
-	symbol: 'nexu',
 })
 
 /**
@@ -87,11 +87,11 @@ const createDefaultBalance = (address: string): structBalance => ({
  * @returns A structBalance object parsed from the data.
  */
 const parseBalanceData = (
-	balanceBuffer: Buffer,
+	hexAccount: HexString,
 	address: string,
 ): structBalance => {
 	try {
-		return JSON.parse(decodeFromBytes(balanceBuffer))
+		return JSON.parse(hexToString(hexAccount))
 	} catch {
 		logToConsole(`Failed to decode balance data for address: ${address}`)
 		return createDefaultBalance(address)

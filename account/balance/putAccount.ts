@@ -2,7 +2,8 @@ import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { rocksState } from 'nexchain/db/state'
-import { encodeToBytes } from 'nexchain/hex/encodeToBytes'
+import { stringToHex } from 'nexchain/hex/stringToHex'
+import { HexString } from 'interface/structBlock'
 
 /**
  * Updates the balance for a given address in RocksDB.
@@ -59,10 +60,10 @@ const logInvalidInputError = (): void => {
 /**
  * Encodes the balance data to a byte format.
  * @param balance - The balance object to encode.
- * @returns A Buffer containing the encoded balance data.
+ * @returns A hex containing the encoded balance data.
  */
-const encodeBalanceData = (balance: structBalance): Buffer => {
-	return encodeToBytes(JSON.stringify(balance))
+const encodeBalanceData = (balance: structBalance): HexString => {
+	return stringToHex(JSON.stringify(balance))
 }
 
 /**
@@ -72,7 +73,7 @@ const encodeBalanceData = (balance: structBalance): Buffer => {
  */
 const saveToDB = async (
 	address: string,
-	encodedBalance: Buffer,
+	encodedBalance: HexString,
 ): Promise<void> => {
 	await rocksState.put(address, encodedBalance, {
 		sync: false, // Option for asynchronous write
