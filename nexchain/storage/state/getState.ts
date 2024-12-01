@@ -1,14 +1,15 @@
 import { rocksState } from 'nexchain/db/state'
 import { blockState } from './setState'
-import { decodeFromBytes } from 'nexchain/hex/decodeBytes'
+import { hexToString } from 'nexchain/hex/hexToString'
+import { HexString } from 'interface/structBlock'
 
 export const getBlockState = async (): Promise<blockState | undefined> => {
-	const data: Buffer = (await rocksState.get(`blockState`, {
-		asBuffer: true,
+	const data = (await rocksState.get(`blockState`, {
+		asBuffer: false,
 		fillCache: true,
-	})) as Buffer
+	})) as HexString
 	if (data) {
-		return JSON.parse(decodeFromBytes(data)) as blockState
+		return JSON.parse(hexToString(data)) as blockState
 	} else {
 		return undefined
 	}
