@@ -1,5 +1,5 @@
 import { showHeader } from 'client/figlet/header'
-import { askQuestion } from 'client/inquirer/utils/askQuestion'
+import { askQuestion } from 'client/inquirer/askQuestion'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import fs from 'fs'
 import path from 'path'

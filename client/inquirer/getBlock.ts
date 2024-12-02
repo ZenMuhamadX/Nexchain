@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import { showHeader } from 'client/figlet/header'
-import { askQuestion } from 'client/inquirer/utils/askQuestion'
+import { askQuestion } from 'client/inquirer/askQuestion'
 import { getBlockByHash } from 'nexchain/block/query/onChain/block/getBlockByHash'
 import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByHeight'
 import { getCurrentBlock } from 'nexchain/block/query/onChain/block/getCurrentBlock'
@@ -69,7 +69,7 @@ export const CLIQueryBlock = async () => {
 			getBlockByHash(inputValue, encoding)
 			break
 		case 'current':
-			getCurrentBlock(encoding)
+			console.log(await getCurrentBlock(encoding))
 			break
 		default:
 			console.log('Invalid choice')

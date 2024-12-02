@@ -1,4 +1,4 @@
-import { askQuestion } from 'client/inquirer/utils/askQuestion'
+import { askQuestion } from 'client/inquirer/askQuestion'
 import { mineBlock } from 'nexchain/miner/mining'
 
 export const CLIMining = async () => {

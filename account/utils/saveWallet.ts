@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { structWalletToSave } from 'interface/structWalletToSave'
 import path from 'path'
 import { logToConsole } from 'logging/logging'
-import { askQuestion } from 'client/inquirer/utils/askQuestion'
+import { askQuestion } from 'client/inquirer/askQuestion'
 
 /**
  * Saves a wallet to a file, with user prompts for overwriting or confirmation.

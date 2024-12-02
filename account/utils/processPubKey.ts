@@ -10,6 +10,7 @@ import { loggingDebug } from 'logging/debug'
  */
 export const processPubKey = (publicKey: string): Buffer | undefined => {
 	loggingDebug('processPubKey', 'Processing public key...')
+	console.log(publicKey)
 
 	try {
 		if (!isValidHexPublicKey(publicKey)) {
