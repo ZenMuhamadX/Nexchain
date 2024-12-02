@@ -1,7 +1,6 @@
-import chalk from 'chalk'
-import { rpcClient } from 'client/rpc-client/rpcClient'
+import { clientSideTxValidate } from 'client/lib/clientValidateTx'
+import { client } from 'client/rpc-client/rpcClient'
 import { TxInterface } from 'interface/structTx'
-import { transactionValidator } from 'interface/validation/txValidator.v'
 import { logToConsole } from 'logging/logging'
 import { encodeTx } from 'nexchain/hex/tx/encodeTx'
 
@@ -9,29 +8,23 @@ export const sendTransactionToRpc = async (
 	transaction: TxInterface,
 ): Promise<{ sentStatus: boolean }> => {
 	try {
-		const isValidTx = await transactionValidator(transaction)
+		logToConsole('Validating transaction...')
+		const isValidTx = await clientSideTxValidate(transaction)
 		if (!isValidTx) {
-			return {
-				sentStatus: isValidTx,
-			}
+			logToConsole('Transaction is not valid')
+			return { sentStatus: false }
 		}
+
+		logToConsole('Encoding transaction...')
 		const base64Data = encodeTx(transaction)
-		const isSucces = await rpcClient.request('nex_sendTransaction', base64Data)
-		if (isSucces) {
-			logToConsole('Transaction sent successfully')
-			logToConsole(`Your TxnHash: ${transaction.txHash}`)
-			return { sentStatus: true }
-		} else {
-			logToConsole('Transaction failed to send')
-		}
-		return { sentStatus: false }
+
+		logToConsole('Sending transaction via RPC...')
+		const isSuccess = await client.request('nex_sendTransaction', base64Data)
+		logToConsole(`Transaction sent successfully: ${transaction.txHash}`)
+
+		return { sentStatus: isSuccess }
 	} catch (error) {
-		if (error instanceof Error) {
-			console.error(`Error sending transaction: ${chalk.white(error.message)}`)
-			return { sentStatus: false }
-		} else {
-			console.error('Unknown error sending transaction:', error)
-			return { sentStatus: false }
-		}
+		console.error('Error occurred during transaction:', error)
+		return { sentStatus: false }
 	}
 }
