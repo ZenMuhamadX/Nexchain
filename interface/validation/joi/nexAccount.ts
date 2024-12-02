@@ -8,7 +8,4 @@ export const nexAccountValidator = Joi.object({
 	lastTransactionDate: Joi.number().allow(null), // Tanggal transaksi terakhir (bisa null)
 	nonce: Joi.number().required().min(0), // Nonce untuk menghindari replay attack
 	isContract: Joi.boolean().required(), // Menandakan apakah alamat adalah kontrak pintar
-	decimal: Joi.number().valid(18).required(), // Harus 18
-	symbol: Joi.string().valid('nexu').required(), // Simbol mata uang
-	notes: Joi.string().valid('1^18 nexu = 1 NXC').required(), // Catatan
 })
