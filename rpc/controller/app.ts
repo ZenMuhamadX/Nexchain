@@ -37,7 +37,7 @@ app.post('/rpc', async (req, res): Promise<any> => {
 		// Proses JSON-RPC request
 		const jsonRPCResponse = await rpc.receive(jsonRPCRequest)
 		if (jsonRPCResponse) {
-			res.status(200).json({ ok: true, error: null, data: jsonRPCResponse })
+			res.status(200).json(jsonRPCResponse)
 		} else {
 			// Jika JSON-RPC notification, respons tanpa konten (204)
 			res

@@ -12,6 +12,10 @@ import { getAccount } from 'account/balance/getAccount'
 import { addTxToMempool } from 'nexchain/transaction/addTxToMempool'
 import { TxInterface } from 'interface/structTx'
 import { decodeTx } from 'nexchain/hex/tx/decodeTx'
+import { ManageContract } from 'contract/manageContract'
+import { getPendingBalance } from 'nexchain/transaction/getPendingBalance'
+import { setPendingBalance } from 'nexchain/transaction/setPendingBalance'
+import { createNewWalletAddress } from 'account/createNewWallet'
 
 const rpc = new JSONRPCServer()
 
@@ -22,6 +26,10 @@ interface blockRequest {
 }
 
 // Block
+
+rpc.addMethod('echo', (message: any) => {
+	return message
+})
 
 rpc.addMethod(
 	'nex_getBlockByHash',
@@ -58,8 +66,26 @@ rpc.addMethod('nex_getChainId', async () => {
 
 // Account
 
+rpc.addMethod(
+	'nex_setPendingBalance',
+	async (data: { address: string; pendingAmount: number }) => {
+		return await setPendingBalance({
+			address: data.address,
+			pendingAmount: data.pendingAmount,
+		})
+	},
+)
+
+rpc.addMethod('nex_getPendingBalance', async (address: string) => {
+	return await getPendingBalance(address)
+})
+
 rpc.addMethod('nex_getAccount', async (address: string) => {
 	return await getAccount(address)
+})
+
+rpc.addMethod('nex_getContractBalance', async (address: string) => {
+	return await new ManageContract(address).getContractBalance()
 })
 
 rpc.addMethod('nex_getBalance', async (address: string) => {
@@ -90,6 +116,10 @@ rpc.addMethod('nex_getTransactionsByAddress', async (address: string) => {
 rpc.addMethod('nex_sendTransaction', async (data: string) => {
 	const decodedData: TxInterface = decodeTx(data)
 	return await addTxToMempool(decodedData)
+})
+
+rpc.addMethod('nex_createWallet', async () => {
+	return await createNewWalletAddress()
 })
 
 export { rpc }
