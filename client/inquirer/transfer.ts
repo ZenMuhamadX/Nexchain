@@ -4,8 +4,8 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import fs from 'fs'
 import path from 'path'
 import { structWalletToSave } from 'interface/structWalletToSave'
-import { genTxData } from 'client/lib/genTxData'
 import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
+import { createTransaction } from 'client/lib/createTransaction'
 
 // Fungsi untuk membaca nama file wallet dari direktori
 const getWalletFiles = (directory: string) => {
@@ -84,7 +84,7 @@ export const CLITransfer = async () => {
 		default: 5000,
 	})
 
-	const extraData = await askQuestion({
+	const extraMessage = await askQuestion({
 		type: 'input',
 		name: 'extraData',
 		description: 'Extra message for receiver optional',
@@ -98,7 +98,7 @@ export const CLITransfer = async () => {
 	console.log(`- Receiver: ${receiver}`)
 	console.log(`- Amount: ${amount} ${format}`)
 	console.log(`- Fee: ${fee} nexu`)
-	console.log(`- Extra Message: ${extraData || 'N/A'}`)
+	console.log(`- Extra Message: ${extraMessage || 'N/A'}`)
 
 	const confirm = await askQuestion({
 		type: 'confirm',
@@ -111,20 +111,20 @@ export const CLITransfer = async () => {
 	// Jika konfirmasi adalah 'y', lanjutkan transaksi; jika tidak, batalkan
 	if (confirm) {
 		const timestamp = generateTimestampz()
-		const txData = await genTxData({
+		const txData = createTransaction({
 			amount,
 			format,
 			receiver,
 			sender,
 			timestamp,
-			extraData,
+			extraMessage,
 			fee,
 		})
 		if (!txData.status) {
 			console.log('Transaction failed')
 			process.exit(1)
 		}
-		await sendTransactionToRpc(txData.base64Data!)
+		await sendTransactionToRpc(txData.rawData!)
 		console.log('Transaction sent successfully!')
 	} else {
 		console.log('Transaction cancelled.')

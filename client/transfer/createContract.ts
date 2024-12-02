@@ -9,8 +9,8 @@ import { burnNexu } from 'nexchain/transaction/burnNexu'
 import { MemPool } from 'nexchain/model/memPool/memPool'
 import { logToConsole } from 'logging/logging'
 import { getAccount } from 'account/balance/getAccount'
-import { genTxData } from 'client/lib/genTxData'
 import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
+import { createTransaction } from 'client/lib/createTransaction'
 
 const mempool = new MemPool()
 
@@ -32,16 +32,16 @@ export const createContract = async (
 	await burnNexu(owner, totalGas)
 	const nonce = await getOwnerNonce(owner)
 	const contractAddress = createContractAdrress(owner, nonce)
-	const txData = genTxData({
+	const txData = createTransaction({
 		amount: initialAmount,
 		receiver: contractAddress,
 		sender: owner,
 		format: 'nexu',
 		timestamp: generateTimestampz(),
 		fee: totalGas,
-		extraData: 'Contract deploy',
+		extraMessage: 'Contract deploy',
 	})
-	const transact = await sendTransactionToRpc(txData.base64Data!)
+	const transact = await sendTransactionToRpc(txData.rawData!)
 	const newContract: contract = {
 		balance: 0,
 		contractAddress: createContractAdrress(owner, nonce),

@@ -7,16 +7,15 @@ import { isContract } from 'nexchain/lib/isContract'
 import { loadWallet } from 'account/utils/loadWallet'
 import { createSignature } from 'sign/createSign'
 import { encodeTx } from 'nexchain/hex/tx/encodeTx'
-import { logToConsole } from 'logging/logging'
 
-export const genTxData = (
-	transaction: comTxInterface,
-): {
+export interface returnData {
 	status: boolean
 	txHash?: string | undefined
 	base64Data: string | undefined
 	rawData: TxInterface | undefined
-} => {
+}
+
+export const createTransaction = (transaction: comTxInterface): returnData => {
 	let convertedAmount = transaction.amount
 
 	// Konversi amount ke Nexu jika formatnya adalah NXC
@@ -50,8 +49,8 @@ export const genTxData = (
 		fee: transaction.fee!,
 		isPending: true,
 		isValid: false,
-		extraData:
-			transaction.extraData ||
+		extraMessage:
+			transaction.extraMessage ||
 			'NexChains A Next Generation Blockchain for Everyone',
 		status: 'pending',
 		isReceiverContract,
@@ -74,9 +73,6 @@ export const genTxData = (
 		}),
 	)
 	const base64Data = encodeTx(completedTx)
-	logToConsole(`Your transaction has been sent to node and waiting for mined`)
-	logToConsole(`TxHash : ${completedTx.txHash}`)
-
 	return {
 		status: true,
 		txHash: completedTx.txHash,

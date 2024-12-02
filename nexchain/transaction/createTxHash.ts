@@ -10,7 +10,7 @@ export const createTxnHash = (data: TxInterface): string => {
 		sender: data.sender,
 		receiver: data.receiver,
 		amount: data.amount,
-		extraData: data.extraData,
+		extraMessage: data.extraMessage,
 		timestamp: data.timestamp,
 		format: 'nexu',
 		fee: data.fee,

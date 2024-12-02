@@ -7,26 +7,22 @@ const baseUrl = 'http://localhost:8000'
 export const rpcClient: JSONRPCClient = new JSONRPCClient(
 	async (jsonRPCRequest) => {
 		try {
+			// Kirim permintaan ke server
 			const response = await axios.post(`${baseUrl}/rpc`, jsonRPCRequest, {
 				headers: {
 					'Content-Type': 'application/json',
 				},
 				withXSRFToken: true,
-				baseURL: baseUrl,
-				method: 'POST',
 				timeout: 10000,
-				url: '/rpc',
-				responseType: 'json',
 			})
 
-			// Pass response data back to the JSONRPCClient
-			rpcClient.receive(response.data.data)
+			// Serahkan respons ke JSONRPCClient
+			return rpcClient.receive(response.data)
 		} catch (error: any) {
 			if (jsonRPCRequest.id !== undefined) {
-				// Handle errors properly
+				// Tangani error jika ada ID dalam request
 				throw new Error(error.response?.statusText || error.message)
 			}
-			throw error
 		}
 	},
 )
