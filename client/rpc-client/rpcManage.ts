@@ -6,13 +6,18 @@ import { clientSideTxValidate } from 'client/lib/clientValidateTx'
 import { createTransaction } from 'client/lib/createTransaction'
 import { askQuestion } from 'client/inquirer/askQuestion'
 import { saveWallet } from 'account/utils/saveWallet'
+import { hexToString } from 'nexchain/hex/hexToString'
+import { blockState } from 'nexchain/storage/state/setState'
+import { Block } from 'nexchain/model/block/block'
+import { TxInterface } from 'interface/structTx'
 
 export class jsonRpcRequest {
 	/**
 	 * getAccount
 	 */
 	public async getAccount(address: string): Promise<structBalance> {
-		return await rpcRequest('nex_getAccount', address)
+		const account = await rpcRequest('nex_getAccount', address)
+		return JSON.parse(hexToString(account))
 	}
 	/**
 	 * createWallet
@@ -36,20 +41,23 @@ export class jsonRpcRequest {
 				description: 'Wallet name',
 			})
 			await saveWallet(wallet, walletName)
-			return wallet
+			return JSON.parse(hexToString(wallet))
 		}
-		return wallet
+		return JSON.parse(hexToString(wallet))
 	}
 	/**
 	 * getBalance
 	 */
 	public async getBalance(address: string): Promise<structBalance> {
-		return await rpcRequest('nex_getBalance', address)
+		const balance = await rpcRequest('nex_getBalance', address)
+		return JSON.parse(hexToString(balance))
 	}
 	/**
 	 * sendTransaction
 	 */
-	public async sendTransaction(transaction: comTxInterface) {
+	public async sendTransaction(
+		transaction: comTxInterface,
+	): Promise<{ sentStatus: boolean }> {
 		const completedTx = createTransaction(transaction)
 		try {
 			logToConsole('Validating transaction...')
@@ -71,5 +79,77 @@ export class jsonRpcRequest {
 			console.error('Error occurred during send transaction:', error)
 			return { sentStatus: false }
 		}
+	}
+	/**
+	 * getBlockByHash
+	 */
+	public async getBlockByHash(hash: string): Promise<Block> {
+		return JSON.parse(hexToString(await rpcRequest('nex_getBlockByHash', hash)))
+	}
+	/**
+	 * getBlockByHeight
+	 */
+	public async getBlockByHeight(height: number): Promise<Block> {
+		return JSON.parse(
+			hexToString(await rpcRequest('nex_getBlockByHeight', height)),
+		)
+	}
+	/**
+	 * getBlockTransactionByHeight
+	 */
+	public async getBlockTransactionByHeight(height: number): Promise<number> {
+		return JSON.parse(
+			hexToString(await rpcRequest('nex_getBlockTransactionByHeight', height)),
+		)
+	}
+	/**
+	 * getBlockTransactionByHash
+	 */
+	public async getBlockTransactionByHash(blockHash: string): Promise<number> {
+		return JSON.parse(
+			hexToString(await rpcRequest('nex_getBlockTransactionByHash', blockHash)),
+		)
+	}
+	/**
+	 * getBlockState
+	 */
+	public async getBlockState(): Promise<blockState> {
+		return JSON.parse(hexToString(await rpcRequest('nex_getBlockState', '')))
+	}
+	/**
+	 * getCurrentBlock
+	 */
+	public async getCurrentBlock(): Promise<Block> {
+		return JSON.parse(hexToString(await rpcRequest('nex_getCurrentBlock', '')))
+	}
+	/**
+	 * getChainId
+	 */
+	public async getChainId(): Promise<number> {
+		return await rpcRequest('nex_getChainId', '')
+	}
+	/**
+	 * getTransactionByTxHash
+	 */
+	public async getTransactionByTxHash(txHash: string): Promise<TxInterface> {
+		return JSON.parse(
+			hexToString(await rpcRequest('nex_getTransactionByTxHash', txHash)),
+		)
+	}
+	/**
+	 * getNonceAccount
+	 */
+	public async getNonceAccount(address: string): Promise<number> {
+		return JSON.parse(
+			hexToString(await rpcRequest('nex_getNonceAccount', address)),
+		)
+	}
+	/**
+	 * getTransactionsByAddress
+	 */
+	public async getTransactionsByAddress(address: string): Promise<TxInterface> {
+		return JSON.parse(
+			hexToString(await rpcRequest('nex_getTransactionsByAddress', address)),
+		)
 	}
 }
