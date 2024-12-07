@@ -1,14 +1,14 @@
 import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
-import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { rocksState } from 'nexchain/db/state'
+import { stringToHex } from 'nexchain/hex/stringToHex'
 
 /**
  * Creates and saves a new wallet with an initial balance to the database.
  * @param address - The address of the wallet to create.
  */
-export const putNewAccount = async (address: string): Promise<void> => {
+export const putNewAccount = (address: string): void => {
 	try {
 		if (!address) {
 			logInvalidAddressError()
@@ -16,7 +16,7 @@ export const putNewAccount = async (address: string): Promise<void> => {
 		}
 
 		const initBalance = createInitialBalance(address)
-		await saveWalletToDB(address, initBalance)
+		saveWalletToDB(address, initBalance)
 	} catch (error) {
 		handleUnexpectedError(error)
 	}
@@ -45,7 +45,7 @@ const logInvalidAddressError = (): void => {
 const createInitialBalance = (address: string): structBalance => {
 	return {
 		address,
-		balance: toNexu(0),
+		balance: 0,
 		transactionCount: 0,
 		isContract: false,
 		nonce: 0,
@@ -58,12 +58,10 @@ const createInitialBalance = (address: string): structBalance => {
  * @param address - The address of the wallet.
  * @param balance - The wallet's balance data.
  */
-const saveWalletToDB = async (
-	address: string,
-	balance: structBalance,
-): Promise<void> => {
+const saveWalletToDB = (address: string, balance: structBalance): void => {
 	const encodedBalance = JSON.stringify(balance)
-	await rocksState.put(address, encodedBalance, { sync: false })
+	const hexBalance = stringToHex(encodedBalance)
+	rocksState.put(address, hexBalance, { sync: true })
 }
 
 /**

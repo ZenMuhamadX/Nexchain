@@ -65,12 +65,5 @@ const handleWalletNotFound = (): void => {
  */
 const readWalletData = (walletPath: string): structWalletToSave => {
 	const walletData = fs.readFileSync(walletPath, 'utf8')
-	const data: structWalletToSave = JSON.parse(walletData)
-
-	return {
-		mnemonic: data.mnemonic,
-		privateKey: data.privateKey.slice(2), // Remove 0x prefix from private key
-		publicKey: data.publicKey.slice(2), // Remove 0x prefix from public key
-		walletAddress: data.walletAddress,
-	}
+	return JSON.parse(walletData)
 }
