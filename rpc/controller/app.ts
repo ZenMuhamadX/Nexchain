@@ -16,7 +16,7 @@ app.use(
 		origin: '*', // Mengizinkan semua domain untuk mengakses API
 	}),
 )
-app.use(express.json({ limit: '10kb' }))
+app.use(express.json({ limit: '10Mb' }))
 app.use(limiter)
 app.use(logRequest)
 
@@ -40,14 +40,12 @@ app.post('/rpc', async (req, res): Promise<any> => {
 			res.status(200).json(jsonRPCResponse)
 		} else {
 			// Jika JSON-RPC notification, respons tanpa konten (204)
-			res
-				.status(400)
-				.json({ ok: false, error: 'Invalid JSON-RPC request method' })
+			res.status(400).json('Invalid JSON-RPC request method')
 		}
 	} catch (error) {
 		console.error('Error handling RPC request:', error)
 		// Menambahkan respons error yang lebih aman
-		res.status(500).json({ error: 'Internal server error' })
+		res.status(500).json('Internal server error')
 	}
 })
 
