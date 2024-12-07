@@ -14,6 +14,7 @@ import { toNexu } from 'nexchain/nexucoin/toNexu'
 import { cutBlockReward } from './cutReward'
 import { loadWallet } from 'account/utils/loadWallet'
 import { createSignature } from 'sign/createSign'
+import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
 
 export const createNewBlock = async (
 	transactions: TxInterface[],
@@ -22,8 +23,8 @@ export const createNewBlock = async (
 ): Promise<Block> => {
 	const latestBlock: Block = (await getCurrentBlock('json')) as Block
 	const currentHeight = latestBlock.block.height
-	const { privateKey } = loadWallet()!
-
+	const { phrase } = loadWallet()!
+	const { privateKey } = generateKeysFromMnemonic(phrase)
 	if (!latestBlock) {
 		throw new Error('Latest block is undefined.')
 	}

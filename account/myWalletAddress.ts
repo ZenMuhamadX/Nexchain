@@ -6,5 +6,5 @@ import { loadWallet } from './utils/loadWallet'
  */
 export const getMyWalletAddress = (): string => {
 	// Load the wallet object and return the wallet address
-	return loadWallet()?.walletAddress!
+	return loadWallet()?.address!
 }

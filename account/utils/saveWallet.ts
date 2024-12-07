@@ -32,15 +32,13 @@ export const saveWallet = async (
 			if (create) {
 				saveToFile(filePath, data)
 				console.log({
-					seedPhrase: data.mnemonic,
-					walletAddress: data.walletAddress,
+					data,
 				})
 				logToConsole(`Wallet created and saved to ${filePath}`)
 				logToConsole('Please Keep Your Phrase')
 			} else {
 				console.log({
-					seedPhrase: data.mnemonic,
-					walletAddress: data.walletAddress,
+					data,
 				})
 				logToConsole('Wallet not saved')
 				logToConsole('Please Keep Your Phrase')
@@ -56,7 +54,7 @@ export const saveWallet = async (
  * @returns The path to the wallet directory.
  */
 const getWalletDirectory = (): string => {
-	return path.join(__dirname, '../../../wallet/')
+	return path.join(__dirname, '../../wallet/')
 }
 
 /**

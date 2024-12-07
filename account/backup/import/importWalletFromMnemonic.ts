@@ -12,7 +12,7 @@ import { generateAddressFromPublicKey } from 'key/genAddrFromPubKey'
 // Fungsi utama untuk mengimpor dompet dari mnemonic
 export const importWalletFromMnemonic = async (
 	mnemonic: string,
-): Promise<{ privateKey: string; publicKey: string; address: string }> => {
+): Promise<{ address: string }> => {
 	const isValidMnemonic = bip39.validateMnemonic(mnemonic)
 
 	if (!isValidMnemonic) {
@@ -20,15 +20,13 @@ export const importWalletFromMnemonic = async (
 		process.exit()
 	}
 
-	const { privateKey, publicKey } = generateKeysFromMnemonic(mnemonic)
+	const { publicKey } = generateKeysFromMnemonic(mnemonic)
 	const address = generateAddressFromPublicKey(publicKey.slice(2))
 	logToConsole('Wallet found successfully!')
 
 	const data: structWalletToSave = {
-		privateKey,
-		publicKey,
-		mnemonic,
-		walletAddress: address,
+		phrase: mnemonic,
+		address,
 	}
 
 	// Menanyakan apakah pengguna ingin menyimpan wallet ke file
@@ -67,7 +65,7 @@ export const importWalletFromMnemonic = async (
 
 			if (!overwrite) {
 				logToConsole('Wallet not saved.')
-				return { privateKey, publicKey, address }
+				return { address }
 			}
 		}
 
@@ -77,8 +75,6 @@ export const importWalletFromMnemonic = async (
 	}
 
 	return {
-		privateKey,
-		publicKey,
 		address,
 	}
 }

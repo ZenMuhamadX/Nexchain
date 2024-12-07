@@ -7,6 +7,8 @@ import { isContract } from 'nexchain/lib/isContract'
 import { loadWallet } from 'account/utils/loadWallet'
 import { createSignature } from 'sign/createSign'
 import { encodeTx } from 'nexchain/hex/tx/encodeTx'
+import { logToConsole } from 'logging/logging'
+import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
 
 export interface returnData {
 	status: boolean
@@ -59,7 +61,8 @@ export const createTransaction = (transaction: comTxInterface): returnData => {
 	}
 
 	// Ambil privateKey dari wallet
-	const { privateKey } = loadWallet()!
+	const { phrase } = loadWallet()!
+	const { privateKey } = generateKeysFromMnemonic(phrase)
 	completedTx.txHash = createTxnHash(completedTx)
 	completedTx.sign = createSignature(completedTx.txHash!, privateKey)
 
@@ -72,6 +75,7 @@ export const createTransaction = (transaction: comTxInterface): returnData => {
 			timestamp: completedTx.timestamp,
 		}),
 	)
+	logToConsole('Encoding transaction...')
 	const base64Data = encodeTx(completedTx)
 	return {
 		status: true,

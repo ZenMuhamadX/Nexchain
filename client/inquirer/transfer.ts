@@ -60,7 +60,7 @@ export const CLITransfer = async () => {
 	const walletData = readWalletData(
 		path.join(walletDirectory, selectedWalletFile),
 	)
-	const sender = walletData.walletAddress // Mengambil address dari walletData
+	const sender = walletData.address // Mengambil address dari walletData
 
 	const receiver = await askQuestion({
 		type: 'input',

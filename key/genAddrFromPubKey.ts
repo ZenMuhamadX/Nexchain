@@ -1,4 +1,3 @@
-import { addChecksum } from 'account/utils/addChecksum'
 import { processPubKey } from 'account/utils/processPubKey'
 import { keccak256 } from 'nexchain/block/keccak256'
 
@@ -15,8 +14,5 @@ export const generateAddressFromPublicKey = (publicKey: string) => {
 		address as Buffer,
 	])
 
-	// Add checksum to the versioned address
-	const addressWithCheckSum = addChecksum(versionAddress)
-
-	return `NxC${keccak256(addressWithCheckSum).slice(-40)}`
+	return `NxC${keccak256(versionAddress).slice(-40)}`
 }

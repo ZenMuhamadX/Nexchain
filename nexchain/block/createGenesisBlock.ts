@@ -16,6 +16,7 @@ import { loadWallet } from 'account/utils/loadWallet'
 import { getMyWalletAddress } from 'account/myWalletAddress'
 import { createSignature } from 'sign/createSign'
 import { putAccount } from 'account/balance/putAccount'
+import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block = await getBlockByHeight(0, 'json')
@@ -24,7 +25,8 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		return undefined
 	}
 	try {
-		const { privateKey } = loadWallet()!
+		const wallet = loadWallet()!
+		const { privateKey } = generateKeysFromMnemonic(wallet.phrase)
 		const genesisBlock = new Block({
 			header: {
 				difficulty: 0,
@@ -100,6 +102,6 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			level: 'error',
 			priority: 'high',
 		})
-		throw new Error('Failed to create genesis block.')
+		return
 	}
 }
