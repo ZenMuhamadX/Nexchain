@@ -1,4 +1,4 @@
-import { createNewWalletAddress } from '../account/createNewWallet'
-import { setWalletConfig } from '../account/setWalletConf'
-createNewWalletAddress()
-setWalletConfig()
+import { jsonRpcRequest } from 'client/rpc-client/rpcManage'
+
+const rpc = new jsonRpcRequest()
+rpc.createWallet().then(console.log)

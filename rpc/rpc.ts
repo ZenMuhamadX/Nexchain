@@ -25,11 +25,11 @@ interface blockRequest {
 	format: 'json' | 'hex'
 }
 
-// Block
-
 rpc.addMethod('echo', (message: any) => {
 	return message
 })
+
+// Block
 
 rpc.addMethod(
 	'nex_getBlockByHash',
@@ -118,8 +118,8 @@ rpc.addMethod('nex_sendTransaction', async (data: string) => {
 	return await addTxToMempool(decodedData)
 })
 
-rpc.addMethod('nex_createWallet', async () => {
-	return await createNewWalletAddress()
+rpc.addMethod('nex_createWallet', () => {
+	return createNewWalletAddress()
 })
 
 export { rpc }

@@ -16,7 +16,17 @@ export const client: JSONRPCClient = new JSONRPCClient((jsonRPCRequest) =>
 				.json()
 				.then((jsonRPCResponse) => client.receive(jsonRPCResponse))
 		} else if (jsonRPCRequest.id !== undefined) {
-			return Promise.reject(new Error(response.statusText))
+			console.error({
+				status: response.status,
+				statusText: response.statusText,
+			})
+			return Promise.reject(new Error('JSON-RPC error'))
+		} else if (response.status !== 200) {
+			console.error({
+				status: response.status,
+				statusText: response.statusText,
+			})
+			return Promise.reject(new Error('JSON-RPC error'))
 		}
 		return
 	}),
