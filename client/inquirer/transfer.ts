@@ -4,7 +4,7 @@ import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import fs from 'fs'
 import path from 'path'
 import { structWalletToSave } from 'interface/structWalletToSave'
-import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
+import { sendTransactionToRpc } from 'client/rpc-client/controller/POST/sendTxToRpc'
 import { createTransaction } from 'client/lib/createTransaction'
 
 // Fungsi untuk membaca nama file wallet dari direktori

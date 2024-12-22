@@ -7,7 +7,7 @@ import {
 } from 'interface/structManageContract'
 import { TxInterface } from 'interface/structTx'
 import { getHistoryByAddress } from 'nexchain/block/query/onChain/Transaction/getHistoryByAddress'
-import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
+import { sendTransactionToRpc } from 'client/rpc-client/controller/POST/sendTxToRpc'
 import { createTransaction } from 'client/lib/createTransaction'
 
 export class ManageContract {

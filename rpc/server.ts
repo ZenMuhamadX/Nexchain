@@ -1,4 +1,4 @@
-import { app } from './controller/app'
+import { app } from './app/app'
 
 // Jalankan server
 const PORT = 8000

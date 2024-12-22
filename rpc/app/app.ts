@@ -2,7 +2,7 @@ import express from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
 import { limiter } from 'rpc/middleware/limiter'
-import { rpc } from 'rpc/rpc'
+import { rpc } from 'rpc/method'
 import { logRequest } from 'rpc/middleware/logging'
 
 const app = express()

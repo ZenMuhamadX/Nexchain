@@ -1,5 +1,5 @@
 import { clientSideTxValidate } from 'client/lib/clientValidateTx'
-import { client } from 'client/rpc-client/rpcClient'
+import { client } from 'client/rpc-client/lib/rpcClient'
 import { TxInterface } from 'interface/structTx'
 import { logToConsole } from 'logging/logging'
 import { encodeTx } from 'nexchain/hex/tx/encodeTx'

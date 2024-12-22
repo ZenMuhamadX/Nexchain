@@ -1,6 +1,6 @@
 import { contract } from 'interface/structContract'
 import { createContractAdrress } from 'nexchain/lib/createContractAddress'
-import { getOwnerNonce } from '../../contract/utils/getOwnerNonce'
+import { getOwnerNonce } from '../../../../contract/utils/getOwnerNonce'
 import { sha256 } from 'nexchain/block/sha256'
 import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
 import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
@@ -9,7 +9,7 @@ import { burnNexu } from 'nexchain/transaction/burnNexu'
 import { MemPool } from 'nexchain/model/memPool/memPool'
 import { logToConsole } from 'logging/logging'
 import { getAccount } from 'account/balance/getAccount'
-import { sendTransactionToRpc } from 'client/transfer/sendTxToRpc'
+import { sendTransactionToRpc } from 'client/rpc-client/controller/POST/sendTxToRpc'
 import { createTransaction } from 'client/lib/createTransaction'
 
 const mempool = new MemPool()

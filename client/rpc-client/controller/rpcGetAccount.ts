@@ -1,5 +1,5 @@
 import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
-import { client } from './rpcClient'
+import { client } from '../lib/rpcClient'
 import { structBalance } from 'interface/structBalance'
 
 export const rpcGetAccount = async (

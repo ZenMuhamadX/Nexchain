@@ -1,5 +1,5 @@
 import { structBalance } from 'interface/structBalance'
-import { rpcRequest } from './rpcRequest'
+import { rpcRequest } from './lib/rpcRequest'
 import { comTxInterface } from 'interface/structComTx'
 import { logToConsole } from 'logging/logging'
 import { clientSideTxValidate } from 'client/lib/clientValidateTx'

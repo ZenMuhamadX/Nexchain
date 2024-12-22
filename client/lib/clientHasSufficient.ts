@@ -1,9 +1,9 @@
 import { logToConsole } from 'logging/logging'
 import { isContract } from 'nexchain/lib/isContract'
-import { rpcGetAccount } from 'client/rpc-client/rpcGetAccount'
-import { rpcGetContractBalance } from 'client/rpc-client/rpcGetContractBalance'
+import { rpcGetAccount } from 'client/rpc-client/controller/rpcGetAccount'
+import { rpcGetContractBalance } from 'client/rpc-client/controller/rpcGetContractBalance'
 import { structBalance } from 'interface/structBalance'
-import { rpcGetPendingBalance } from 'client/rpc-client/rpcGetPendingBalance'
+import { rpcGetPendingBalance } from 'client/rpc-client/controller/rpcGetPendingBalance'
 import { toNxc } from 'nexchain/nexucoin/toNxc'
 
 /**

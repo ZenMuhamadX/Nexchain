@@ -1,5 +1,5 @@
 import { isContract } from 'nexchain/lib/isContract'
-import { client } from './rpcClient'
+import { client } from '../lib/rpcClient'
 
 export const rpcGetContractBalance = async (
 	address: string,
