@@ -11,7 +11,7 @@
 		"initial": "bun run ./common/init.ts",
 		"pre": "npx tsc && rm -r dist",
 		"prepare": "husky",
-		"rpc:start":"bun run rpc/server.ts"
+		"rpc:start": "bun run rpc/server.ts"
 	},
 	"repository": {
 		"type": "git",
