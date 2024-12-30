@@ -4,7 +4,7 @@
 //  (found in the LICENSE.Apache file in the root directory).
 
 #pragma once
-
+#include <cstdint>
 #include <string>
 #include <vector>
 

@@ -20,6 +20,10 @@ app.use(express.json({ limit: '10Mb' }))
 app.use(limiter)
 app.use(logRequest)
 
+app.get('/', (_req, res) => {
+	res.status(200).json({ rpc_status: 'OK' })
+})
+
 // Route utama
 app.post('/rpc', async (req, res): Promise<any> => {
 	try {
