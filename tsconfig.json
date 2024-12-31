@@ -43,6 +43,7 @@
 		"node_modules",
 		"jest.config.ts",
 		"eslint.config.mjs",
-		"dist/**/*"
+		"dist/**/*",
+		"nexwallet"
 	]
 }
