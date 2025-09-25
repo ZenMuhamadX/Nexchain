@@ -6,8 +6,8 @@ import {
 	withdrawFromContract,
 } from 'interface/front/structManageContract'
 import { getHistoryByAddress } from 'nexchain core/block/query/onChain/Transaction/getHistoryByAddress'
-import { sendTransactionToRpc } from 'client/rpc-client/controller/POST/sendTxToRpc'
-import { createTransaction } from 'client/lib/createTransaction'
+import { sendTransactionToRpc } from 'rpc/rpc-client/controller/POST/sendTxToRpc'
+import { createTransaction } from 'wallet/lib/createTransaction'
 import { bigIntToString } from 'nexchain core/savers/lib/bigintToString'
 import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
 import { TxInterfaceFront } from 'interface/front/TxinterfaceFront'

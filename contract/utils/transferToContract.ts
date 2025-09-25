@@ -3,7 +3,7 @@ import { getContract } from './getContract'
 import { processSender } from 'nexchain core/transaction/sender/processSender'
 import { saveContracts } from '../saveContract'
 import { logToConsole } from 'logging/logging'
-import { hasSufficientBalance } from 'account/utils/hasSufficientBalance'
+import { hasSufficientBalance } from 'libAccount/utils/hasSufficientBalance'
 
 interface contractTransfer {
 	contractAddress: string

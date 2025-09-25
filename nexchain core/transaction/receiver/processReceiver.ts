@@ -1,4 +1,4 @@
-import { getAccount } from 'account/balance/getAccount'
+import { getAccount } from 'libAccount/balance/getAccount'
 import { putAccountCore } from 'nexchain core/savers/account/putAccountCore'
 import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { structBalanceCore } from 'interface/core/structBalanceCore'

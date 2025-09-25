@@ -1,4 +1,4 @@
-import { getAccount } from 'account/balance/getAccount'
+import { getAccount } from 'libAccount/balance/getAccount'
 
 export const getOwnerNonce = async (address: string): Promise<number> => {
 	const wallet = await getAccount(address)

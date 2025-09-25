@@ -1,11 +1,11 @@
 import { showHeader } from 'client/figlet/header'
-import { askQuestion } from 'client/inquirer/askQuestion'
+import { askQuestion } from 'CLI/inquirer/askQuestion'
 import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import fs from 'fs'
 import path from 'path'
 import { structWalletToSave } from 'interface/common/structWalletToSave'
-import { sendTransactionToRpc } from 'client/rpc-client/controller/POST/sendTxToRpc'
-import { createTransaction } from 'client/lib/createTransaction'
+import { sendTransactionToRpc } from 'rpc/rpc-client/controller/POST/sendTxToRpc'
+import { createTransaction } from 'wallet/lib/createTransaction'
 import { JSONParse } from 'nexchain core/lib/JSONParse'
 
 // Fungsi untuk membaca nama file wallet dari direktori
@@ -24,7 +24,7 @@ export const CLITransfer = async () => {
 	console.log('Enter transaction details:')
 
 	// Ambil wallet dari direktori ../wallet
-	const walletDirectory = path.join(__dirname, '../../wallet')
+	const walletDirectory = path.join(__dirname, '../../account')
 	const walletFiles = getWalletFiles(walletDirectory)
 
 	if (walletFiles.length === 0) {

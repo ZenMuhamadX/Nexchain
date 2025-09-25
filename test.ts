@@ -1,2 +1,2 @@
-import { getMyWalletAddress } from 'account/myWalletAddress'
+import { getMyWalletAddress } from 'libAccount/myWalletAddress'
 console.log(getMyWalletAddress())

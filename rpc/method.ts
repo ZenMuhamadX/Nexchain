@@ -7,12 +7,12 @@ import { structBalance } from 'interface/front/structBalance'
 import { getHistoryByTxHash } from 'nexchain core/block/query/onChain/Transaction/getHistoryByTxHash'
 import { getHistoryByAddress } from 'nexchain core/block/query/onChain/Transaction/getHistoryByAddress'
 import { Block } from 'nexchain core/model/block/block'
-import { getAccount } from 'account/balance/getAccount'
+import { getAccount } from 'libAccount/balance/getAccount'
 import { addTxToMempool } from 'nexchain core/transaction/addTxToMempool'
 import { decodeTx } from 'nexchain core/hex/tx/decodeTx'
 import { ManageContract } from 'contract/manageContract'
 import { getPendingBalance } from 'nexchain core/transaction/getPendingBalance'
-import { createNewWalletAddress } from 'account/createNewWallet'
+import { createNewWalletAddress } from 'libAccount/createNewWallet'
 import { stringToHex } from 'nexchain core/hex/stringToHex'
 import { JSONStringify } from 'nexchain core/lib/JSONStringify'
 import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
@@ -20,7 +20,7 @@ import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 const rpc = new JSONRPCServer()
 
 rpc.addMethod('echo', (message: any) => {
-	return message 
+	return message
 })
 
 // Block

@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { structWalletToSave } from 'interface/common/structWalletToSave'
 import path from 'path'
 import { logToConsole } from 'logging/logging'
-import { askQuestion } from 'client/inquirer/askQuestion'
+import { askQuestion } from 'CLI/inquirer/askQuestion'
 import { JSONStringify } from 'nexchain core/lib/JSONStringify'
 
 /**
@@ -55,7 +55,7 @@ export const saveWallet = async (
  * @returns The path to the wallet directory.
  */
 const getWalletDirectory = (): string => {
-	return path.join(__dirname, '../../wallet/')
+	return path.join(__dirname, '../../account/')
 }
 
 /**

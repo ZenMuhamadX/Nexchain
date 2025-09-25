@@ -4,7 +4,7 @@ import path from 'path'
 import { structWalletToSave } from 'interface/common/structWalletToSave'
 import { writeFile } from 'fs/promises'
 import { existsSync, mkdirSync } from 'fs'
-import { askQuestion } from 'client/inquirer/askQuestion'
+import { askQuestion } from 'CLI/inquirer/askQuestion'
 import { logToConsole } from 'logging/logging'
 import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
 import { generateAddressFromPublicKey } from 'key/genAddrFromPubKey'
@@ -47,7 +47,7 @@ export const importWalletFromMnemonic = async (
 			default: 'wallet',
 		})
 
-		const dirPath = path.join(__dirname, '../../../wallet/')
+		const dirPath = path.join(__dirname, '../../../account/')
 		const filePath = path.join(dirPath, `${fileName}.json`)
 
 		// Membuat direktori jika belum ada

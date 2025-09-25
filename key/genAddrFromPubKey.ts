@@ -1,4 +1,4 @@
-import { processPubKey } from 'account/utils/processPubKey'
+import { processPubKey } from 'libAccount/utils/processPubKey'
 import { keccak256 } from 'nexchain core/block/keccak256'
 
 // Fungsi untuk menghasilkan alamat dari public key
