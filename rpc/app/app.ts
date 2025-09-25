@@ -4,6 +4,7 @@ import cors from 'cors'
 import { limiter } from 'rpc/middleware/limiter'
 import { rpc } from 'rpc/method'
 import { logRequest } from 'rpc/middleware/logging'
+import { createSuccessResponse, createErrorResponse } from 'rpc/lib/response' // Import the response functions
 
 const app = express()
 
@@ -13,7 +14,7 @@ app.use(
 		credentials: true,
 		methods: 'POST',
 		allowedHeaders: ['Content-Type'],
-		origin: '*', // Mengizinkan semua domain untuk mengakses API
+		origin: '*',
 	}),
 )
 app.use(express.json({ limit: '10Mb' }))
