@@ -11,8 +11,8 @@ import { proofOfWork } from 'nexchain core/miner/Pow'
 import { calculateSize } from 'nexchain core/lib/calculateSize'
 import { cutBlockReward } from './cutReward'
 import { loadWallet } from 'libAccount/utils/loadWallet'
-import { createSignature } from 'sign/createSign'
-import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
+import { createSignature } from 'wallet/sign/createSign'
+import { generateKeysFromMnemonic } from 'wallet/key/genKeyFromMnemonic'
 import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
 export const createNewBlock = async (

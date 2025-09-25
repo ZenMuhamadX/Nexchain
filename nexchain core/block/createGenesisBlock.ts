@@ -14,9 +14,9 @@ import { countHashDifficulty } from './countHashDifficulty'
 import { getBlockByHeight } from './query/onChain/block/getBlockByHeight'
 import { loadWallet } from 'libAccount/utils/loadWallet'
 import { getMyWalletAddress } from 'libAccount/myWalletAddress'
-import { createSignature } from 'sign/createSign'
+import { createSignature } from 'wallet/sign/createSign'
 import { putAccountCore } from 'nexchain core/savers/account/putAccountCore'
-import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
+import { generateKeysFromMnemonic } from 'wallet/key/genKeyFromMnemonic'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
 	const block: Block = (await getBlockByHeight(0, 'json')) as Block

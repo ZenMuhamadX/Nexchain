@@ -1,4 +1,4 @@
-import { verifySignature } from 'sign/verifySIgnature'
+import { verifySignature } from 'wallet/sign/verifySignature'
 import { validateField } from './validateField'
 import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
