@@ -38,7 +38,6 @@ export const createContract = async (
 		receiver: contractAddress,
 		sender: owner,
 		format: 'nexu',
-		timestamp: generateTimestampz(),
 		fee: totalGas,
 		extraMessage: 'Contract deploy',
 	})

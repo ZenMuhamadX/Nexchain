@@ -1,12 +1,11 @@
-import { showHeader } from 'client/figlet/header'
 import { askQuestion } from 'CLI/inquirer/askQuestion'
-import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import fs from 'fs'
 import path from 'path'
 import { structWalletToSave } from 'interface/common/structWalletToSave'
 import { sendTransactionToRpc } from 'rpc/rpc-client/controller/POST/sendTxToRpc'
 import { createTransaction } from 'wallet/lib/createTransaction'
 import { JSONParse } from 'nexchain core/lib/JSONParse'
+import { showHeader } from 'CLI/figlet/header'
 
 // Fungsi untuk membaca nama file wallet dari direktori
 const getWalletFiles = (directory: string) => {
@@ -111,13 +110,11 @@ export const CLITransfer = async () => {
 
 	// Jika konfirmasi adalah 'y', lanjutkan transaksi; jika tidak, batalkan
 	if (confirm) {
-		const timestamp = generateTimestampz()
 		const txData = createTransaction({
 			amount,
 			format,
 			receiver,
 			sender,
-			timestamp,
 			extraMessage,
 			fee,
 		})

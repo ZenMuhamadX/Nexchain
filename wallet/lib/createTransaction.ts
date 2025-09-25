@@ -51,7 +51,6 @@ export const createTransaction = (
 		amount: convertedAmount,
 		receiver: transaction.receiver,
 		sender: transaction.sender,
-		timestamp: transaction.timestamp,
 		fee: transaction.fee!,
 		isPending: true,
 		isValid: false,
@@ -76,7 +75,6 @@ export const createTransaction = (
 			amount: completedTx.amount,
 			receiver: completedTx.receiver,
 			sender: completedTx.sender,
-			timestamp: completedTx.timestamp,
 		}),
 	)
 	logToConsole('Encoding transaction...')

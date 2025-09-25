@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { showHeader } from 'client/figlet/header'
+import { showHeader } from 'CLI/figlet/header'
 import { askQuestion } from 'CLI/inquirer/askQuestion'
 import { getBlockByHash } from 'nexchain core/block/query/onChain/block/getBlockByHash'
 import { getBlockByHeight } from 'nexchain core/block/query/onChain/block/getBlockByHeight'

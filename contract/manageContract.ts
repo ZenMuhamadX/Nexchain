@@ -39,7 +39,6 @@ export class ManageContract {
 			format: convertedData.format,
 			receiver: this.contractAddress,
 			sender: convertedData.sender,
-			timestamp: convertedData.timestamp,
 			extraMessage: 'Transfer to contract',
 			fee: 5000n,
 		})
@@ -60,7 +59,6 @@ export class ManageContract {
 			format: 'NXC',
 			receiver: convertedData.receiver,
 			sender: this.contractAddress,
-			timestamp: convertedData.timestamp,
 			extraMessage: 'Withdraw from contract',
 			fee: 5000n,
 		})

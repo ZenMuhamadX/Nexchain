@@ -12,6 +12,7 @@ import { Block } from 'nexchain core/model/block/block'
 import { JSONParse } from 'nexchain core/lib/JSONParse'
 import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
 import { TxInterfaceFront } from 'interface/front/TxinterfaceFront'
+import { RpcSuccessResponse } from 'interface/rpc/response'
 
 export class jsonRpcRequest {
 	/**
@@ -24,8 +25,9 @@ export class jsonRpcRequest {
 	/**
 	 * createWallet
 	 */
-	public async createWallet(): Promise<{ address: string; phrase: string }> {
-		const wallet = await rpcRequest('nex_createWallet', '')
+	public async createWallet(): Promise<RpcSuccessResponse> {
+		const data = await rpcRequest('nex_createWallet', '')
+		const wallet = data.result
 		logToConsole('Wallet created succesfully')
 		const isSaveWallet = await askQuestion({
 			message: 'Do you want to save wallet to file?',
@@ -43,9 +45,9 @@ export class jsonRpcRequest {
 				description: 'Wallet name',
 			})
 			await saveWallet(wallet, walletName)
-			return JSONParse(hexToString(wallet))
+			return wallet
 		}
-		return JSONParse(hexToString(wallet))
+		return wallet
 	}
 	/**
 	 * getBalance
