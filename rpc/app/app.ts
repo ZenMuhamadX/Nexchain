@@ -25,32 +25,23 @@ app.get('/', (_req, res) => {
 	res.status(200).json({ rpc_status: 'OK' })
 })
 
-// Route utama
 app.post('/rpc', async (req, res): Promise<any> => {
 	try {
 		const jsonRPCRequest = req.body
 
-		// Pastikan input JSON RPC sesuai spesifikasi (opsional)
 		if (!jsonRPCRequest || typeof jsonRPCRequest !== 'object') {
-			return res.status(400).json({
-				ok: false,
-				error: 'Invalid JSON-RPC request format',
-				data: null,
-			})
+			return res.status(400).json(createErrorResponse(null, -32600, 'Invalid JSON-RPC request format'))
 		}
 
-		// Proses JSON-RPC request
 		const jsonRPCResponse = await rpc.receive(jsonRPCRequest)
 		if (jsonRPCResponse) {
-			res.status(200).json(jsonRPCResponse)
+			res.status(200).json(createSuccessResponse(jsonRPCRequest.id, jsonRPCResponse))
 		} else {
-			// Jika JSON-RPC notification, respons tanpa konten (204)
-			res.status(400).json('Invalid JSON-RPC request method')
+			res.status(400).json(createErrorResponse(jsonRPCRequest.id, -32601, 'Invalid JSON-RPC request method'))
 		}
 	} catch (error) {
 		console.error('Error handling RPC request:', error)
-		// Menambahkan respons error yang lebih aman
-		res.status(500).json('Internal server error')
+		res.status(500).json(createErrorResponse(null, -32000, 'Internal server error'))
 	}
 })
 

@@ -20,7 +20,7 @@ import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 const rpc = new JSONRPCServer()
 
 rpc.addMethod('echo', (message: any) => {
-	return { data: message }
+	return message 
 })
 
 // Block
