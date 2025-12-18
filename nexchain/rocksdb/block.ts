@@ -1,12 +1,11 @@
 import path from 'path'
 import { initFile } from './init'
-import levelup from 'levelup'
-import RocksDB from 'rocksdb'
+import { Level } from 'level'
 
 initFile()
 const dirPath = path.join(__dirname, '../../base/block')
 
-export const rocksBlock = levelup(RocksDB(dirPath), {
+export const rocksBlock = new Level(dirPath, {
 	valueEncoding: 'utf-8', // Store values in hex format
 	keyEncoding: 'utf-8', // Use UTF-8 encoding for keys
 	cacheSize: 8 * 1024 * 1024, // 8 MB cache to improve data access speed

@@ -24,10 +24,10 @@ export const putBalance = async (
 			balance.timesTransaction = 0
 		}
 		const encodedBalance = encodeToBytes(JSON.stringify(balance))
-		await rocksState.put(address, encodedBalance),
+		;(await rocksState.put(address, encodedBalance),
 			{
 				sync: false,
-			}
+			})
 	} catch (error) {
 		loggingErr({
 			error: 'Error putting data',

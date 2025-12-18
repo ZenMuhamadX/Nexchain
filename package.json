@@ -57,9 +57,9 @@
 		"figlet": "^1.8.0",
 		"husky": "^9.1.6",
 		"inquirer": "^12.0.1",
-		"rocksdb": "./rocksdb",
 		"joi": "^17.13.3",
 		"js-sha3": "^0.9.3",
+		"level": "^10.0.0",
 		"levelup": "^5.1.1",
 		"lodash": "^4.17.21",
 		"msgpack-lite": "^0.1.26",
@@ -67,14 +67,16 @@
 		"pino": "^9.4.0",
 		"pino-multi-stream": "^6.0.0",
 		"prettier": "^3.3.3",
+		"rocksdb": "^5.2.1",
 		"secp256k1": "^5.0.1",
 		"tiny-secp256k1": "^2.2.3",
 		"ts-node": "^10.9.2",
+		"tsc": "^2.0.4",
 		"winston": "^3.15.0",
 		"ws": "^8.18.0"
 	},
 	"peerDependencies": {
-		"typescript": "^5.5.4"
+		"typescript": "^5.9.3"
 	},
 	"keywords": []
 }

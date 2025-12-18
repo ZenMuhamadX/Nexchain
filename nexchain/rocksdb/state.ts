@@ -1,12 +1,11 @@
 import path from 'path'
 import { initFile } from './init'
-import levelup from 'levelup'
-import RocksDB from 'rocksdb'
+import { Level } from 'level'
 
 initFile()
 const dirPath = path.join(__dirname, '../../base/state')
 
-export const rocksState = levelup(RocksDB(dirPath), {
+export const rocksState = new Level(dirPath, {
 	valueEncoding: 'json', // Store state data in JSON format
 	keyEncoding: 'utf-8', // Use UTF-8 encoding for keys
 	cacheSize: 16 * 1024 * 1024, // 16 MB cache for fast access to balances and state
