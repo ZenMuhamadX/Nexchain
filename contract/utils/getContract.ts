@@ -7,7 +7,6 @@ export const getContract = async (
 ): Promise<contract> => {
 	const ownerAddress: Buffer = (await rocksContract.get(contractAddress, {
 		fillCache: false,
-		asBuffer: true,
 	})) as Buffer
 	const data = decodeFromBytes(ownerAddress)
 	return JSON.parse(data) as contract

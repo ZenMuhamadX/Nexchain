@@ -10,7 +10,6 @@ export const getHistoryByTxHash = async (
 ): Promise<TxInterface | HexString> => {
 	const data: Buffer = (await rocksHistory.get(`txnHash:${txHash}`, {
 		fillCache: true,
-		asBuffer: true,
 	})) as Buffer
 	const decodedData = hexToString(decodeFromBytes(data) as HexString)
 	if (enc === 'json') return JSON.parse(decodedData)

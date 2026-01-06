@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { getHistoryByTxHash } from './getHistoryByTxHash'
 import { TxInterface } from 'interface/structTx'
 import { decodeFromBytes } from 'nexchain/hex/bytes/decodeBytes'
@@ -9,9 +8,13 @@ export const getHistoryByAddress = async (
 	enc: 'json' | 'hex',
 ): Promise<{ history: TxInterface[]; count: number }> => {
 	try {
-		const txHashes: Buffer = (await rocksHistory
-			.get(`address:${address}`, { fillCache: true, asBuffer: true })
-			.catch(() => null)) as Buffer
+		const txHashesStr = (await rocksHistory
+			.get(`address:${address}`, { fillCache: true })
+			.catch(() => null)) as string | null
+
+		const txHashes: Buffer | null = txHashesStr
+			? Buffer.from(txHashesStr)
+			: null
 
 		// Jika tidak ada txHashes, kembalikan array kosong
 		if (!txHashes) return { count: 0, history: [] }

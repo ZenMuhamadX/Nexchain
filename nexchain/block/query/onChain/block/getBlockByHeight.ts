@@ -10,10 +10,10 @@ export const getBlockByHeight = async (
 	try {
 		const blockHash = await rocksState.get(`blockHeight:${height}`, {
 			fillCache: true,
-			asBuffer: false,
 		})
 		if (!blockHash) return undefined
 		return await getBlockByHash(blockHash as string, enc)
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		return undefined
 	}

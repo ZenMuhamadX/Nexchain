@@ -61,7 +61,7 @@ const fetchBalanceFromDB = async (
 	address: string,
 ): Promise<HexString | null> => {
 	const data = await rocksState
-		.get(address, { fillCache: true, asBuffer: false })
+		.get(address, { fillCache: true })
 		.catch(() => null)
 	return data as HexString
 }

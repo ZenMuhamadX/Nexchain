@@ -10,7 +10,6 @@ export const getBlockByHash = async (
 ): Promise<Block | HexString> => {
 	const block: HexString = (await rocksBlock.get(`blockHash:${hash}`, {
 		fillCache: true,
-		asBuffer: false,
 	})) as HexString
 	const decodedBlock = base58ToString(block)
 	if (enc === 'json') {
