@@ -1,4 +1,2 @@
-import { jsonRpcRequest } from 'client/rpc-client/rpcManage'
-
-const rpc = new jsonRpcRequest()
-rpc.getCurrentBlock().then(console.log)
+import { getMyWalletAddress } from 'account/myWalletAddress'
+console.log(getMyWalletAddress())
