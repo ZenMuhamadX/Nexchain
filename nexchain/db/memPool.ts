@@ -1,12 +1,11 @@
 import path from 'path'
 import { initFile } from './init'
-import RocksDB from 'rocksdb'
-import levelup from 'levelup'
+import { Level } from 'level'
 
 initFile()
 const dirPath = path.join(__dirname, '../../base/memPool')
 
-export const rocksMempool = levelup(RocksDB(dirPath), {
+export const rocksMempool = new Level(dirPath, {
 	valueEncoding: 'json', // Store transaction data in JSON format
 	keyEncoding: 'utf-8', // Use UTF-8 encoding for keys
 	cacheSize: 8 * 1024 * 1024, // 8 MB cache for fast access to transactions

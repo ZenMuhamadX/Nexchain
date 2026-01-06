@@ -88,7 +88,7 @@
 		"ws": "^8.18.0"
 	},
 	"peerDependencies": {
-		"typescript": "^5.5.4"
+		"typescript": "^5.9.3"
 	},
 	"keywords": [],
 	"type": "module",
