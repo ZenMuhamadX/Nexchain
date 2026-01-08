@@ -40,17 +40,19 @@ export class jsonRpcRequest {
 				name: 'walletName',
 				description: 'Wallet name',
 			})
-			await saveWallet(wallet, walletName)
-			return JSON.parse(hexToString(wallet))
+			const parseWallet = JSON.parse(wallet)
+			await saveWallet(parseWallet, walletName)
+			return parseWallet
 		}
-		return JSON.parse(hexToString(wallet))
+		console.log(JSON.parse(wallet))
+		return JSON.parse(wallet)
 	}
 	/**
 	 * getBalance
 	 */
-	public async getBalance(address: string): Promise<structBalance> {
+	public async getBalance(address: string): Promise<string> {
 		const balance = await rpcRequest('nex_getBalance', address)
-		return JSON.parse(hexToString(balance))
+		return hexToString(balance)
 	}
 	/**
 	 * sendTransaction
@@ -148,8 +150,6 @@ export class jsonRpcRequest {
 	 * getTransactionsByAddress
 	 */
 	public async getTransactionsByAddress(address: string): Promise<TxInterface> {
-		return JSON.parse(
-			hexToString(await rpcRequest('nex_getTransactionsByAddress', address)),
-		)
+		return await rpcRequest('nex_getTransactionsByAddress', address)
 	}
 }

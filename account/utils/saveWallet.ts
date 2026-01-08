@@ -31,15 +31,11 @@ export const saveWallet = async (
 			const create = await confirmCreation(fileName)
 			if (create) {
 				saveToFile(filePath, data)
-				console.log({
-					data,
-				})
+				console.log({ walletData: data })
 				logToConsole(`Wallet created and saved to ${filePath}`)
 				logToConsole('Please Keep Your Phrase')
 			} else {
-				console.log({
-					data,
-				})
+				console.log({ walletData: data })
 				logToConsole('Wallet not saved')
 				logToConsole('Please Keep Your Phrase')
 			}

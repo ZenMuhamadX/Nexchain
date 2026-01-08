@@ -5,7 +5,6 @@ import { HexString } from 'interface/structBlock'
 
 export const getBlockState = async (): Promise<blockState | undefined> => {
 	const data = (await rocksState.get(`blockState`, {
-		asBuffer: false,
 		fillCache: true,
 	})) as HexString
 	if (data) {

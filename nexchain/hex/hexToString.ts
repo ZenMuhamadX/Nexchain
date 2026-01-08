@@ -6,6 +6,7 @@ import { HexString } from 'interface/structBlock'
  * @returns Decoded string
  */
 export const hexToString = (hex: HexString): string => {
+	// if (typeof hex != 'string') return null
 	// Remove the `0x` prefix if present
 	const cleanHex = hex.startsWith('0x') ? hex.slice(2) : hex
 

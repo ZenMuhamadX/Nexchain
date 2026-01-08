@@ -15,11 +15,10 @@ export const getHistoryByAddress = async (
 		const txHashes: Buffer | null = txHashesStr
 			? Buffer.from(txHashesStr)
 			: null
-
 		// Jika tidak ada txHashes, kembalikan array kosong
-		if (!txHashes) return { count: 0, history: [] }
+		if (!txHashesStr) return { count: 0, history: [] }
 
-		const parseTxHash = JSON.parse(decodeFromBytes(txHashes))
+		const parseTxHash = JSON.parse(decodeFromBytes(txHashes!))
 
 		const histories = await Promise.all(
 			parseTxHash.map((txHash: string) => getHistoryByTxHash(txHash, enc)),

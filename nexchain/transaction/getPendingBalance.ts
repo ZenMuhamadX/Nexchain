@@ -23,7 +23,7 @@ export const getPendingBalance = async (
 		}
 
 		// Jika pending balance ada, decode dan parse
-		const parsedBytes = decodeFromBytes(pendingBalanceData as Buffer)
+		const parsedBytes = decodeFromBytes(pendingBalanceData as unknown as Buffer)
 		return JSON.parse(parsedBytes) as pendingBalance
 	} catch (error) {
 		console.error(error)

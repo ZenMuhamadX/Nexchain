@@ -18,6 +18,7 @@ export const createContract = async (
 	owner: string,
 ): Promise<{ status: boolean; contract?: contract | undefined }> => {
 	const initialAmount = toNexu(1)
+	// eslint-disable-next-line prefer-const
 	let totalGas = 5000
 	const isValidAddres = isValidAddress(owner)
 	if (!isValidAddres) {

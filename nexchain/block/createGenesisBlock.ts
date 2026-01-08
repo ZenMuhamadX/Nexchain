@@ -92,6 +92,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		})
 		await saveBlock(genesisBlock)
 		return genesisBlock
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		loggingErr({
 			message: 'Error creating genesis block.',

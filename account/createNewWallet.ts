@@ -12,10 +12,10 @@ import { generateAddressFromPublicKey } from 'key/genAddrFromPubKey'
  * Generates a new wallet address, saves it, and returns the wallet address and mnemonic phrase.
  * @returns { address: string | undefined, phrase: string | undefined } The wallet address and mnemonic phrase, or undefined if an error occurs.
  */
-export const createNewWalletAddress = (): {
+export const createNewWalletAddress = async (): Promise<{
 	address: string | undefined
 	phrase: string | undefined
-} => {
+}> => {
 	try {
 		loggingDebug('createNewWalletAddress', 'Generating new wallet...')
 		loggingDebug('createNewWalletAddress', 'Generating mnemonic phrase...')
@@ -38,13 +38,13 @@ export const createNewWalletAddress = (): {
 		loggingDebug('createNewWalletAddress', 'Wallet address generated.')
 
 		// Update the wallet balance with the new wallet address
-		putNewAccount(walletAddress)
+		await putNewAccount(walletAddress)
 
 		logToConsole('Wallet created successfully.')
 
 		// Return the wallet address and mnemonic phrase
 		return { address: walletAddress, phrase: mnemonicPhrase }
-	} catch (error) {
+	} catch {
 		// Log the error and provide a hint for resolution
 		loggingErr({
 			context: 'createNewWalletAddress',

@@ -1,4 +1,4 @@
-import { openDb } from 'nexchain/db/openDb'
+// import { openDb } from 'nexchain/db/openDb'
 import { app } from './app/app'
 
 // Jalankan server

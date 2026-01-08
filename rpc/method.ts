@@ -72,8 +72,9 @@ rpc.addMethod('nex_getContractBalance', async (address: string) => {
 })
 
 rpc.addMethod('nex_getBalance', async (address: string) => {
-	const balance = await getAccount(address)
-	return stringToHex(`${toNxc(balance?.balance!).toFixed(18)} NXC`)
+	const account = await getAccount(address)
+	// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+	return stringToHex(`${toNxc(account?.balance!).toFixed(18)} NXC`)
 })
 
 rpc.addMethod('nex_getNonceAccount', async (address: string) => {
@@ -85,7 +86,7 @@ rpc.addMethod('nex_getNonceAccount', async (address: string) => {
 
 rpc.addMethod('nex_getTransactionCount', async (address: string) => {
 	const account = (await getAccount(address)) as structBalance
-	return stringToHex(JSON.stringify(account?.transactionCount!))
+	return stringToHex(JSON.stringify(account?.transactionCount))
 })
 
 rpc.addMethod('nex_getTransactionByTxHash', async (txHash: string) => {
@@ -101,8 +102,8 @@ rpc.addMethod('nex_sendTransaction', async (data: string) => {
 	return await addTxToMempool(decodedData)
 })
 
-rpc.addMethod('nex_createWallet', () => {
-	return stringToHex(JSON.stringify(createNewWalletAddress()))
+rpc.addMethod('nex_createWallet', async () => {
+	return JSON.stringify(await createNewWalletAddress())
 })
 
 export { rpc }

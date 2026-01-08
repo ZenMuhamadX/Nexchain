@@ -25,10 +25,9 @@ const addTxHashToAddress = async (
 		// Cek apakah alamat sudah ada di database
 		const existingTxHashes: Buffer = (await rocksHistory
 			.get(`address:${address}`, {
-				asBuffer: true,
 				fillCache: true,
 			})
-			.catch(() => null)) as Buffer
+			.catch(() => null)) as unknown as Buffer
 
 		let newTxHashes: string[]
 

@@ -8,7 +8,7 @@ import { stringToHex } from 'nexchain/hex/stringToHex'
  * Creates and saves a new wallet with an initial balance to the database.
  * @param address - The address of the wallet to create.
  */
-export const putNewAccount = (address: string): void => {
+export const putNewAccount = async (address: string): Promise<void> => {
 	try {
 		if (!address) {
 			logInvalidAddressError()
@@ -16,7 +16,7 @@ export const putNewAccount = (address: string): void => {
 		}
 
 		const initBalance = createInitialBalance(address)
-		saveWalletToDB(address, initBalance)
+		await saveWalletToDB(address, initBalance)
 	} catch (error) {
 		handleUnexpectedError(error)
 	}
@@ -58,10 +58,13 @@ const createInitialBalance = (address: string): structBalance => {
  * @param address - The address of the wallet.
  * @param balance - The wallet's balance data.
  */
-const saveWalletToDB = (address: string, balance: structBalance): void => {
+const saveWalletToDB = async (
+	address: string,
+	balance: structBalance,
+): Promise<void> => {
 	const encodedBalance = JSON.stringify(balance)
 	const hexBalance = stringToHex(encodedBalance)
-	rocksState.put(address, hexBalance, { sync: true })
+	await rocksState.put(address, hexBalance, { sync: true })
 }
 
 /**
