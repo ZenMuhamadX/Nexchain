@@ -1,0 +1,10 @@
+import { rocksState } from 'nexchain core/db/state'
+
+export const writeBlockHeight = async (
+	blockHeight: number,
+	blockHash: string,
+) => {
+	await rocksState.put(`blockHeight:${blockHeight}`, blockHash, {
+		sync: false,
+	})
+}

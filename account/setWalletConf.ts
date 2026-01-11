@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { WalletConfig } from 'interface/walletConfig'
 import { loggingDebug } from 'logging/debug'
-import { convertTimestampToDate } from 'nexchain/lib/convertTimestamp'
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { convertTimestampToDate } from 'nexchain core/lib/convertTimestamp'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import path from 'path'
 
 export const setWalletConfig = () => {

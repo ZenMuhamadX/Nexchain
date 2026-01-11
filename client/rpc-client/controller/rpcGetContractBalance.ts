@@ -1,4 +1,4 @@
-import { isContract } from 'nexchain/lib/isContract'
+import { isContract } from 'nexchain core/lib/isContract'
 import { client } from '../lib/rpcClient'
 
 export const rpcGetContractBalance = async (

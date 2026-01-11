@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
 import { loggingDebug } from 'logging/debug'
 

@@ -7,7 +7,7 @@ import { validateTransactionFees } from 'interface/module/isValidTxFee'
 import { validateAddresses } from 'interface/module/isValidAddress'
 import { validateAddressLengths } from 'interface/module/isValidAddressLength'
 import { TxInterface } from 'interface/structTx'
-import { isNexu } from 'nexchain/nexucoin/isNexu'
+import { isNexu } from 'nexchain core/nexucoin/isNexu'
 import { hasSufficientBalance } from 'account/utils/hasSufficientBalance'
 
 export const transactionValidator = async (

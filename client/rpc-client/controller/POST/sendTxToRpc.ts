@@ -2,7 +2,7 @@ import { clientSideTxValidate } from 'client/lib/clientValidateTx'
 import { client } from 'client/rpc-client/lib/rpcClient'
 import { TxInterface } from 'interface/structTx'
 import { logToConsole } from 'logging/logging'
-import { encodeTx } from 'nexchain/hex/tx/encodeTx'
+import { encodeTx } from 'nexchain core/hex/tx/encodeTx'
 
 export const sendTransactionToRpc = async (
 	transaction: TxInterface,

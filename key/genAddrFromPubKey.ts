@@ -1,5 +1,5 @@
 import { processPubKey } from 'account/utils/processPubKey'
-import { keccak256 } from 'nexchain/block/keccak256'
+import { keccak256 } from 'nexchain core/block/keccak256'
 
 // Fungsi untuk menghasilkan alamat dari public key
 export const generateAddressFromPublicKey = (publicKey: string) => {

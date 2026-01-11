@@ -4,10 +4,10 @@ import * as path from 'path'
 import { COM } from '../interface/COM'
 import { validateMessageInterface } from './validateInf'
 import { generateMessageId } from '../utils/getMessageId'
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import _ from 'lodash'
 import { getMinerId } from 'p2p/utils/getMinerId'
-import { rocksState } from 'nexchain/db/state'
+import { rocksState } from 'nexchain core/db/state'
 
 // Logger configuration
 const logger = winston.createLogger({

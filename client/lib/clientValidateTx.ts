@@ -7,7 +7,7 @@ import { validateTransactionSignature } from 'interface/module/isValidTxSign'
 import { logError } from 'interface/module/writeLog'
 import { TxInterface } from 'interface/structTx'
 import { txInterfaceValidator } from 'interface/validation/joi/txInterface'
-import { isNexu } from 'nexchain/nexucoin/isNexu'
+import { isNexu } from 'nexchain core/nexucoin/isNexu'
 import { clientHasSufficientBalance } from './clientHasSufficient'
 
 export const clientSideTxValidate = async (

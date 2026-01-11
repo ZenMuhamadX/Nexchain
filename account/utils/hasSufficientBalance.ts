@@ -1,7 +1,7 @@
 import { loggingErr } from 'logging/errorLog'
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { logToConsole } from 'logging/logging'
-import { isContract } from 'nexchain/lib/isContract'
+import { isContract } from 'nexchain core/lib/isContract'
 import { ManageContract } from 'contract/manageContract'
 import { getAccount } from '../balance/getAccount'
 

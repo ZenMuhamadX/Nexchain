@@ -1,5 +1,5 @@
 import { NXC } from 'interface/structContract'
-import { processReceiver } from 'nexchain/transaction/receiver/processReceiver'
+import { processReceiver } from 'nexchain core/transaction/receiver/processReceiver'
 import { getContract } from './getContract'
 import { saveContracts } from '../saveContract'
 

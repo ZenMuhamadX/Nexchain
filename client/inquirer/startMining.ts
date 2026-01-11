@@ -1,5 +1,5 @@
 import { askQuestion } from 'client/inquirer/askQuestion'
-import { mineBlock } from 'nexchain/miner/mining'
+import { mineBlock } from 'nexchain core/miner/mining'
 
 export const CLIMining = async () => {
 	// Meminta alamat dari pengguna

@@ -1,9 +1,9 @@
 import chalk from 'chalk'
 import { showHeader } from 'client/figlet/header'
 import { askQuestion } from 'client/inquirer/askQuestion'
-import { getBlockByHash } from 'nexchain/block/query/onChain/block/getBlockByHash'
-import { getBlockByHeight } from 'nexchain/block/query/onChain/block/getBlockByHeight'
-import { getCurrentBlock } from 'nexchain/block/query/onChain/block/getCurrentBlock'
+import { getBlockByHash } from 'nexchain core/block/query/onChain/block/getBlockByHash'
+import { getBlockByHeight } from 'nexchain core/block/query/onChain/block/getBlockByHeight'
+import { getCurrentBlock } from 'nexchain core/block/query/onChain/block/getCurrentBlock'
 
 export const CLIQueryBlock = async () => {
 	showHeader('NexChain')

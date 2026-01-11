@@ -1,6 +1,6 @@
 import { contract } from 'interface/structContract'
 import { getContract } from './getContract'
-import { processSender } from 'nexchain/transaction/sender/processSender'
+import { processSender } from 'nexchain core/transaction/sender/processSender'
 import { saveContracts } from '../saveContract'
 import { logToConsole } from 'logging/logging'
 import { hasSufficientBalance } from 'account/utils/hasSufficientBalance'

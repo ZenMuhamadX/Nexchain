@@ -3,7 +3,7 @@
 import winston from 'winston'
 import * as path from 'path'
 import fs from 'fs'
-import { Block } from 'nexchain/model/block/block'
+import { Block } from 'nexchain core/model/block/block'
 import { logToConsole } from './logging'
 
 // Define log directory and file paths

@@ -1,7 +1,7 @@
 import { loggingErr } from 'logging/errorLog'
 import { COM } from '../interface/COM'
 import { COMValidate } from '../interface/validate'
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 
 export const validateMessageInterface = (data: COM): boolean => {
 	const { error } = COMValidate.validate(data)

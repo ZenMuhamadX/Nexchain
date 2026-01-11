@@ -1,4 +1,4 @@
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { getIpV4 } from './getIpV4'
 
 export const getMinerId = (): string => {

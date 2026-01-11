@@ -1,6 +1,6 @@
 /** @format */
 
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import chalk from 'chalk'
 
 export const logToConsole = (message: string) => {

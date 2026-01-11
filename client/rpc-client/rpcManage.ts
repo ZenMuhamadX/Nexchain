@@ -6,9 +6,9 @@ import { clientSideTxValidate } from 'client/lib/clientValidateTx'
 import { createTransaction } from 'client/lib/createTransaction'
 import { askQuestion } from 'client/inquirer/askQuestion'
 import { saveWallet } from 'account/utils/saveWallet'
-import { hexToString } from 'nexchain/hex/hexToString'
-import { blockState } from 'nexchain/storage/state/setState'
-import { Block } from 'nexchain/model/block/block'
+import { hexToString } from 'nexchain core/hex/hexToString'
+import { blockState } from 'nexchain core/storage/state/setState'
+import { Block } from 'nexchain core/model/block/block'
 import { TxInterface } from 'interface/structTx'
 
 export class jsonRpcRequest {

@@ -1,6 +1,6 @@
-import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
+import { isValidAddress } from 'nexchain core/transaction/utils/isValidAddress'
 import { client } from '../lib/rpcClient'
-import { pendingBalance } from 'nexchain/transaction/setPendingBalance'
+import { pendingBalance } from 'nexchain core/transaction/setPendingBalance'
 
 export const rpcGetPendingBalance = async (
 	address: string,

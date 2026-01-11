@@ -1,11 +1,11 @@
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
-import { rocksState } from 'nexchain/db/state'
-import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
+import { rocksState } from 'nexchain core/db/state'
+import { isValidAddress } from 'nexchain core/transaction/utils/isValidAddress'
 import { logToConsole } from 'logging/logging'
 import { HexString } from 'interface/structBlock'
-import { hexToString } from 'nexchain/hex/hexToString'
+import { hexToString } from 'nexchain core/hex/hexToString'
 
 /**
  * Fetches the balance of an address from the RocksDB state.

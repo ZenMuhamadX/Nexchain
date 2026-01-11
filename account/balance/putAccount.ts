@@ -1,8 +1,8 @@
 import { loggingErr } from 'logging/errorLog'
 import { structBalance } from 'interface/structBalance'
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
-import { rocksState } from 'nexchain/db/state'
-import { stringToHex } from 'nexchain/hex/stringToHex'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
+import { rocksState } from 'nexchain core/db/state'
+import { stringToHex } from 'nexchain core/hex/stringToHex'
 import { HexString } from 'interface/structBlock'
 
 /**

@@ -1,4 +1,4 @@
-import { isValidAddress } from 'nexchain/transaction/utils/isValidAddress'
+import { isValidAddress } from 'nexchain core/transaction/utils/isValidAddress'
 import { client } from '../lib/rpcClient'
 import { structBalance } from 'interface/structBalance'
 

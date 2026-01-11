@@ -1,6 +1,6 @@
 /** @format */
 import { loggingErr } from 'logging/errorLog'
-import { generateTimestampz } from 'nexchain/lib/generateTimestampz'
+import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
 import { putNewAccount } from './balance/putNewAccount'
