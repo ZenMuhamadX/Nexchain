@@ -1,11 +1,12 @@
 import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
-import { structBalance } from 'interface/structBalance'
+import { structBalance } from 'interface/front/structBalance'
 import { rocksState } from 'nexchain core/db/state'
 import { isValidAddress } from 'nexchain core/transaction/utils/isValidAddress'
 import { logToConsole } from 'logging/logging'
-import { HexString } from 'interface/structBlock'
 import { hexToString } from 'nexchain core/hex/hexToString'
+import { HexString } from 'interface/common/hexString'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
 
 /**
  * Fetches the balance of an address from the RocksDB state.
@@ -73,7 +74,7 @@ const fetchBalanceFromDB = async (
  */
 const createDefaultBalance = (address: string): structBalance => ({
 	address,
-	balance: 0,
+	balance: '0',
 	transactionCount: 0,
 	isContract: false,
 	lastTransactionDate: null,
@@ -91,7 +92,7 @@ const parseBalanceData = (
 	address: string,
 ): structBalance => {
 	try {
-		return JSON.parse(hexToString(hexAccount))
+		return JSONParse(hexToString(hexAccount))
 	} catch {
 		logToConsole(`Failed to decode balance data for address: ${address}`)
 		return createDefaultBalance(address)

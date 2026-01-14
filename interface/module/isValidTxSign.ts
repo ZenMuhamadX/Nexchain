@@ -1,9 +1,9 @@
 import { verifySignature } from 'sign/verifySIgnature'
 import { validateField } from './validateField'
-import { TxInterface } from 'interface/structTx'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
 export const validateTransactionSignature = (
-	transaction: TxInterface,
+	transaction: TxInterfaceCore,
 ): boolean => {
 	return validateField(
 		!verifySignature(transaction.txHash!, transaction.sign),

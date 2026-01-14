@@ -1,25 +1,21 @@
+import { TxInterfaceFront } from 'interface/front/TxinterfaceFront'
 import { getHistoryByTxHash } from './getHistoryByTxHash'
-import { TxInterface } from 'interface/structTx'
-import { decodeFromBytes } from 'nexchain core/hex/bytes/decodeBytes'
 import { rocksHistory } from 'nexchain core/db/history'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
 
 export const getHistoryByAddress = async (
 	address: string,
 	enc: 'json' | 'hex',
-): Promise<{ history: TxInterface[]; count: number }> => {
+): Promise<{ history: TxInterfaceFront[]; count: number }> => {
 	try {
 		const txHashesStr = (await rocksHistory
 			.get(`address:${address}`, { fillCache: true })
 			.catch(() => null)) as string | null
 
-		const txHashes: Buffer | null = txHashesStr
-			? Buffer.from(txHashesStr)
-			: null
-
 		// Jika tidak ada txHashes, kembalikan array kosong
-		if (!txHashes) return { count: 0, history: [] }
+		if (!txHashesStr) return { count: 0, history: [] }
 
-		const parseTxHash = JSON.parse(decodeFromBytes(txHashes))
+		const parseTxHash = JSONParse(txHashesStr)
 
 		const histories = await Promise.all(
 			parseTxHash.map((txHash: string) => getHistoryByTxHash(txHash, enc)),

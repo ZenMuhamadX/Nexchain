@@ -6,7 +6,7 @@ import { Block } from '../model/block/block'
 import { generateTimestampz } from '../lib/generateTimestampz'
 import { calculateSize } from '../lib/calculateSize'
 import { calculateTotalFees } from 'nexchain core/transaction/utils/totalFees'
-import { saveBlock } from 'nexchain core/storage/block/saveBlock'
+import { saveBlock } from 'nexchain core/savers/block/saveBlock'
 import { stringToHex } from 'nexchain core/hex/stringToHex'
 import { toNexu } from 'nexchain core/nexucoin/toNexu'
 import { getMinerId } from 'p2p/utils/getMinerId'
@@ -15,11 +15,11 @@ import { getBlockByHeight } from './query/onChain/block/getBlockByHeight'
 import { loadWallet } from 'account/utils/loadWallet'
 import { getMyWalletAddress } from 'account/myWalletAddress'
 import { createSignature } from 'sign/createSign'
-import { putAccount } from 'account/balance/putAccount'
+import { putAccountCore } from 'nexchain core/savers/account/putAccountCore'
 import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
 
 export const createGenesisBlock = async (): Promise<Block | undefined> => {
-	const block = await getBlockByHeight(0, 'json')
+	const block: Block = (await getBlockByHeight(0, 'json')) as Block
 	if (block) {
 		console.log('Genesis block already exists.')
 		return undefined
@@ -38,9 +38,9 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 				version: '1.0.0',
 				hashingAlgorithm: 'SHA256',
 			},
-			blockReward: toNexu(500),
-			totalTransactionFees: 0,
-			totalReward: toNexu(500),
+			blockReward: toNexu('500'),
+			totalTransactionFees: 0n,
+			totalReward: toNexu('500'),
 			height: 0,
 			merkleRoot:
 				'0000000000000000000000000000000000000000000000000000000000000000',
@@ -53,12 +53,12 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 			},
 			status: 'confirmed',
 			coinbaseTransaction: {
-				amount: toNexu(500),
+				amount: toNexu('500'),
 				receiver: getMyWalletAddress(),
+				// receeiver: 'NxCeae0aadeb2604e2e7c4044677e45bb6ae059dc7a',
 				extraData: stringToHex('Genesis Block Reward'),
 			},
 			metadata: {
-				gasPrice: 0,
 				created_at: generateTimestampz(),
 				txCount: 0,
 				extraData: stringToHex(
@@ -82,9 +82,9 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		)
 
 		genesisBlock.block.size = calculateSize(genesisBlock.block).KB
-		await putAccount(genesisBlock.block.coinbaseTransaction.receiver, {
+		await putAccountCore(genesisBlock.block.coinbaseTransaction.receiver, {
 			address: genesisBlock.block.coinbaseTransaction.receiver,
-			balance: genesisBlock.block.coinbaseTransaction.amount as number,
+			balance: genesisBlock.block.coinbaseTransaction.amount,
 			transactionCount: 1,
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
@@ -94,7 +94,7 @@ export const createGenesisBlock = async (): Promise<Block | undefined> => {
 		return genesisBlock
 	} catch (error) {
 		loggingErr({
-			message: 'Error creating genesis block.',
+			message: error,
 			context: 'createGenesisBlock',
 			hint: 'Error creating genesis block',
 			stack: new Error().stack!,

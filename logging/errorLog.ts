@@ -2,12 +2,13 @@ import winston from 'winston'
 import * as path from 'path'
 import fs from 'fs'
 import { logToConsole } from './logging'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
 
 // Define ErrorInfo interface
 interface ErrorInfo {
 	timestamp: number
 	level: 'error'
-	message: string
+	message: any
 	context: string
 	stack: string
 	priority: 'low' | 'high'
@@ -30,7 +31,7 @@ const logger = winston.createLogger({
 	transports: [
 		new winston.transports.File({ filename: logFilePath }),
 		new winston.transports.Console({
-			format: winston.format.printf((info) => JSON.stringify(info)), // No formatting, just raw JSON
+			format: winston.format.printf((info) => JSONStringify(info)), // No formatting, just raw JSON
 		}),
 	],
 })

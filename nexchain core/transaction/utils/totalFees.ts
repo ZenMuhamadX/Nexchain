@@ -1,14 +1,13 @@
-import { nexu } from 'interface/structContract'
-import { TxInterface } from 'interface/structTx'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 import _ from 'lodash'
 
-export const calculateTotalFees = (transaction: TxInterface[]): nexu => {
-	if (!transaction.length) return 0
+export const calculateTotalFees = (transaction: TxInterfaceCore[]): bigint => {
+	if (!transaction.length) return 0n
 	return _.reduce(
 		transaction,
-		(total, transaction) => {
-			return total + transaction.fee!
+		(total: bigint, transaction: TxInterfaceCore) => {
+			return total + BigInt(transaction.fee!)
 		},
-		0,
+		0n,
 	)
 }

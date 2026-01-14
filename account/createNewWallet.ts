@@ -3,7 +3,7 @@ import { loggingErr } from 'logging/errorLog'
 import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
-import { putNewAccount } from './balance/putNewAccount'
+import { putNewAccount } from '../nexchain core/savers/account/putNewAccount'
 import { genRandomMnemonic } from 'key/genRandomMnemonic'
 import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
 import { generateAddressFromPublicKey } from 'key/genAddrFromPubKey'
@@ -48,7 +48,7 @@ export const createNewWalletAddress = (): {
 		// Log the error and provide a hint for resolution
 		loggingErr({
 			context: 'createNewWalletAddress',
-			message: 'Error creating wallet address',
+			message: error,
 			level: 'error',
 			priority: 'high',
 			stack: new Error().stack!,

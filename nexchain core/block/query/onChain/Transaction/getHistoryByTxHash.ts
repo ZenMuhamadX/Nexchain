@@ -1,17 +1,17 @@
-import { TxInterface } from 'interface/structTx'
 import { hexToString } from 'nexchain core/hex/hexToString'
-import { HexString } from 'interface/structBlock'
-import { decodeFromBytes } from 'nexchain core/hex/bytes/decodeBytes'
 import { rocksHistory } from 'nexchain core/db/history'
+import { HexString } from 'interface/common/hexString'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
+import { TxInterfaceFront } from 'interface/front/TxinterfaceFront'
 
 export const getHistoryByTxHash = async (
 	txHash: string,
 	enc: 'hex' | 'json',
-): Promise<TxInterface | HexString> => {
-	const data: Buffer = (await rocksHistory.get(`txnHash:${txHash}`, {
+): Promise<TxInterfaceFront | HexString> => {
+	const data: HexString = await rocksHistory.get(`txnHash:${txHash}`, {
 		fillCache: true,
-	})) as Buffer
-	const decodedData = hexToString(decodeFromBytes(data) as HexString)
-	if (enc === 'json') return JSON.parse(decodedData)
-	return decodeFromBytes(data) as HexString
+	})
+	const decodedData = hexToString(data)
+	if (enc === 'json') return JSONParse(decodedData)
+	return data
 }

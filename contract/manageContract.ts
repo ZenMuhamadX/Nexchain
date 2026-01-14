@@ -1,14 +1,16 @@
-import { contract } from 'interface/structContract'
+import { contract } from 'interface/front/structContract'
 import { getContract } from './utils/getContract'
 import { logToConsole } from 'logging/logging'
 import {
 	transferToContract,
 	withdrawFromContract,
-} from 'interface/structManageContract'
-import { TxInterface } from 'interface/structTx'
+} from 'interface/front/structManageContract'
 import { getHistoryByAddress } from 'nexchain core/block/query/onChain/Transaction/getHistoryByAddress'
 import { sendTransactionToRpc } from 'client/rpc-client/controller/POST/sendTxToRpc'
 import { createTransaction } from 'client/lib/createTransaction'
+import { bigIntToString } from 'nexchain core/savers/lib/bigintToString'
+import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
+import { TxInterfaceFront } from 'interface/front/TxinterfaceFront'
 
 export class ManageContract {
 	contractAddress: string
@@ -25,19 +27,21 @@ export class ManageContract {
 		return await getContract(this.contractAddress)
 	}
 
-	public async getContractBalance(): Promise<number> {
-		return (await getContract(this.contractAddress)).balance
+	public async getContractBalance(): Promise<string> {
+		return bigIntToString(await getContract(this.contractAddress))
+			.balance as string
 	}
 
 	public async transferToContract(data: transferToContract): Promise<boolean> {
-		const txData = await createTransaction({
-			amount: data.amount,
-			format: data.format,
+		const convertedData = stringToBigInt(data)
+		const txData = createTransaction({
+			amount: convertedData.amount,
+			format: convertedData.format,
 			receiver: this.contractAddress,
-			sender: data.sender,
-			timestamp: data.timestamp,
+			sender: convertedData.sender,
+			timestamp: convertedData.timestamp,
 			extraMessage: 'Transfer to contract',
-			fee: 5000,
+			fee: 5000n,
 		})
 		const success = await sendTransactionToRpc(txData.rawData!)
 		if (!success) {
@@ -50,14 +54,15 @@ export class ManageContract {
 	public async withdrawFromContract(
 		data: withdrawFromContract,
 	): Promise<boolean> {
-		const txData = await createTransaction({
-			amount: data.amount,
+		const convertedData = stringToBigInt(data)
+		const txData = createTransaction({
+			amount: convertedData.amount,
 			format: 'NXC',
-			receiver: data.receiver,
+			receiver: convertedData.receiver,
 			sender: this.contractAddress,
-			timestamp: data.timestamp,
+			timestamp: convertedData.timestamp,
 			extraMessage: 'Withdraw from contract',
-			fee: 5000,
+			fee: 5000n,
 		})
 		const success = await sendTransactionToRpc(txData.rawData!)
 		if (!success) {
@@ -69,7 +74,7 @@ export class ManageContract {
 
 	public async getContractTransaction(
 		enc: 'json' | 'hex',
-	): Promise<{ history: TxInterface[]; count: number }> {
+	): Promise<{ history: TxInterfaceFront[]; count: number }> {
 		return await getHistoryByAddress(this.contractAddress, enc)
 	}
 }

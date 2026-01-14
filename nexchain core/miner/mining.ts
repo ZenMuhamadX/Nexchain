@@ -5,12 +5,12 @@ import { generateTimestampz } from '../lib/generateTimestampz'
 import { loggingErr } from '../../logging/errorLog'
 import { mineLog } from '../../logging/mineLog'
 import { chains } from 'nexchain core/block/initBlock'
-import { TxInterface } from 'interface/structTx'
 import _ from 'lodash'
 import { isChainsValid } from 'nexchain core/block/isChainValid'
 import { getBlockByHeight } from 'nexchain core/block/query/onChain/block/getBlockByHeight'
-import { contract } from 'interface/structContract'
+import { contract } from 'interface/front/structContract'
 import { logToConsole } from 'logging/logging'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
 // Function to mine a block and add it to the blockchain
 export const mineBlock = async (address: string): Promise<void> => {
@@ -21,7 +21,7 @@ export const mineBlock = async (address: string): Promise<void> => {
 	}
 	// Initialize blockchain and memory pool instances
 	const pool = new MemPool()
-	const transactions: TxInterface[] = await pool.getValidTransactions()
+	const transactions: TxInterfaceCore[] = await pool.getValidTransactions()
 	const contractPool: contract[] = await pool.getContractPool()
 
 	try {

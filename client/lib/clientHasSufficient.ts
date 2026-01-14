@@ -1,10 +1,10 @@
 import { logToConsole } from 'logging/logging'
 import { isContract } from 'nexchain core/lib/isContract'
-import { rpcGetAccount } from 'client/rpc-client/controller/rpcGetAccount'
 import { rpcGetContractBalance } from 'client/rpc-client/controller/rpcGetContractBalance'
-import { structBalance } from 'interface/structBalance'
 import { rpcGetPendingBalance } from 'client/rpc-client/controller/rpcGetPendingBalance'
 import { toNxc } from 'nexchain core/nexucoin/toNxc'
+import { structBalanceCore } from 'interface/core/structBalanceCore'
+import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
 
 /**
  * Checks if the provided address has sufficient balance (either for a contract or a standard address).
@@ -15,8 +15,8 @@ import { toNxc } from 'nexchain core/nexucoin/toNxc'
  */
 export const clientHasSufficientBalance = async (
 	address: string,
-	amount: number,
-	fee: number,
+	amount: bigint,
+	fee: bigint,
 ): Promise<boolean | undefined> => {
 	if (!address) {
 		logToConsole('Address not provided')
@@ -30,6 +30,7 @@ export const clientHasSufficientBalance = async (
 		logToConsole('Checking balance...')
 		return await checkStandardBalance(address, amount, fee)
 	} catch (error) {
+		console.error(error)
 		return undefined
 	}
 }
@@ -43,8 +44,8 @@ export const clientHasSufficientBalance = async (
  */
 const checkContractBalance = async (
 	address: string,
-	amount: number,
-	fee: number,
+	amount: bigint,
+	fee: bigint,
 ): Promise<boolean> => {
 	const balance = await rpcGetContractBalance(address)
 	if (balance! >= amount + fee) {
@@ -64,21 +65,24 @@ const checkContractBalance = async (
  */
 const checkStandardBalance = async (
 	address: string,
-	amount: number,
-	fee: number,
+	amount: bigint,
+	fee: bigint,
 ): Promise<boolean> => {
-	const balance: structBalance = (await rpcGetAccount(address)) as structBalance
+	const balance: structBalanceCore = (await loadAccountCore(
+		address,
+	)) as structBalanceCore
 	if (!balance) {
-		logToConsole('Balance not found')
+		logToConsole('Account not found')
 		return false
 	}
 	if (balance.balance >= amount + fee) {
 		const pendingBalance = await rpcGetPendingBalance(address)
 		const availableBalance =
-			balance.balance - (pendingBalance?.pendingAmount || 0)
+			balance.balance - (pendingBalance?.pendingAmount || 0n)
 
-		if (availableBalance < amount + (fee || 0)) {
+		if (availableBalance < amount + (fee || 0n)) {
 			console.error(
+				// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 				`The previous transcation has not been confirmed, and your balance of ${toNxc(pendingBalance?.pendingAmount!)} NXC has been locked for that transaction. Additionally,your available balance is not sufient to complete this transaction`,
 			)
 			return false

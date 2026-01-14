@@ -1,3 +1,4 @@
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
 import { Block } from '../model/block/block'
 
 export const prepareBlockForHashing = ({ block }: Block): string => {
@@ -13,5 +14,5 @@ export const prepareBlockForHashing = ({ block }: Block): string => {
 		blockReward: block.blockReward,
 		transactions: block.transactions,
 	}
-	return JSON.stringify(newBlockStruct)
+	return JSONStringify(newBlockStruct)
 }

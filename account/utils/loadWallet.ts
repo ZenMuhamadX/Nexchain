@@ -1,9 +1,10 @@
 import path from 'path'
 import fs from 'fs'
-import { structWalletToSave } from 'interface/structWalletToSave'
+import { structWalletToSave } from 'interface/common/structWalletToSave'
 import { loadWalletConfig } from '../loadWalletConf'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
 
 /**
  * Loads the wallet data from a file or returns undefined if the wallet is not found.
@@ -65,5 +66,5 @@ const handleWalletNotFound = (): void => {
  */
 const readWalletData = (walletPath: string): structWalletToSave => {
 	const walletData = fs.readFileSync(walletPath, 'utf8')
-	return JSON.parse(walletData)
+	return JSONParse(walletData)
 }

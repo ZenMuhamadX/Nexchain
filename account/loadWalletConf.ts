@@ -1,7 +1,8 @@
 import { existsSync, readFileSync } from 'fs'
-import { WalletConfig } from 'interface/walletConfig'
+import { WalletConfig } from 'interface/common/walletConfig'
 import { loggingDebug } from 'logging/debug'
 import { logToConsole } from 'logging/logging'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
 import path from 'path'
 
 /**
@@ -30,7 +31,7 @@ export const loadWalletConfig = (): WalletConfig | null => {
 	try {
 		// Read the file content and parse it into a WalletConfig object
 		const fileContent = readFileSync(walletConfigFilePath, 'utf-8')
-		const walletConfig: WalletConfig = JSON.parse(fileContent)
+		const walletConfig: WalletConfig = JSONParse(fileContent)
 
 		loggingDebug(
 			'loadWalletConfig',

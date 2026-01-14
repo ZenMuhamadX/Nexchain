@@ -1,8 +1,8 @@
-import { TxInterface } from 'interface/structTx'
 import { validateField } from './validateField'
 import { isValidAddress } from 'nexchain core/transaction/utils/isValidAddress'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
-export const validateAddresses = (transaction: TxInterface): boolean => {
+export const validateAddresses = (transaction: TxInterfaceCore): boolean => {
 	return (
 		validateField(
 			!isValidAddress(transaction.sender),

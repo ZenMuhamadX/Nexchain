@@ -3,7 +3,8 @@ import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { logToConsole } from 'logging/logging'
 import { isContract } from 'nexchain core/lib/isContract'
 import { ManageContract } from 'contract/manageContract'
-import { getAccount } from '../balance/getAccount'
+import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
+import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
 
 /**
  * Checks if the provided address has sufficient balance (either for a contract or a standard address).
@@ -14,8 +15,8 @@ import { getAccount } from '../balance/getAccount'
  */
 export const hasSufficientBalance = async (
 	address: string,
-	amount: number,
-	fee: number,
+	amount: bigint,
+	fee: bigint,
 ): Promise<boolean | undefined> => {
 	if (!address) {
 		logToConsole('Address not provided')
@@ -42,12 +43,12 @@ export const hasSufficientBalance = async (
  */
 const checkContractBalance = async (
 	address: string,
-	amount: number,
-	fee: number,
+	amount: bigint,
+	fee: bigint,
 ): Promise<boolean> => {
 	const contract = new ManageContract(address)
 	const balance = await contract.getContractBalance()
-	if (balance >= amount + fee) {
+	if (stringToBigInt(balance) >= amount + fee) {
 		return true
 	} else {
 		logToConsole('Insufficient contract balance')
@@ -64,10 +65,10 @@ const checkContractBalance = async (
  */
 const checkStandardBalance = async (
 	address: string,
-	amount: number,
-	fee: number,
+	amount: bigint,
+	fee: bigint,
 ): Promise<boolean> => {
-	const balance = await getAccount(address)
+	const balance = await loadAccountCore(address)
 	if (!balance) {
 		logToConsole('Balance not found')
 		return false

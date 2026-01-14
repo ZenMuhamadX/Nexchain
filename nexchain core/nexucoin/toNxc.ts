@@ -1,3 +1,7 @@
-export const toNxc = (nexu: number) => {
-	return nexu / Math.pow(10, 18) // Nexu ke NXC
+import { DECIMALS } from 'nexchain core/DECIMALS/DECIMALS'
+
+export const toNxc = (nexu: bigint): string => {
+	const whole = nexu / DECIMALS
+	const frac = nexu % DECIMALS
+	return `${whole}.${frac.toString().padStart(18, '0')}`
 }

@@ -1,6 +1,6 @@
-import { structBalance } from 'interface/structBalance'
+import { structBalance } from 'interface/front/structBalance'
 import { rpcRequest } from './lib/rpcRequest'
-import { comTxInterface } from 'interface/structComTx'
+import { comTxInterface } from 'interface/front/structComTx'
 import { logToConsole } from 'logging/logging'
 import { clientSideTxValidate } from 'client/lib/clientValidateTx'
 import { createTransaction } from 'client/lib/createTransaction'
@@ -9,7 +9,9 @@ import { saveWallet } from 'account/utils/saveWallet'
 import { hexToString } from 'nexchain core/hex/hexToString'
 import { blockState } from 'nexchain core/storage/state/setState'
 import { Block } from 'nexchain core/model/block/block'
-import { TxInterface } from 'interface/structTx'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
+import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
+import { TxInterfaceFront } from 'interface/front/TxinterfaceFront'
 
 export class jsonRpcRequest {
 	/**
@@ -17,7 +19,7 @@ export class jsonRpcRequest {
 	 */
 	public async getAccount(address: string): Promise<structBalance> {
 		const account = await rpcRequest('nex_getAccount', address)
-		return JSON.parse(hexToString(account))
+		return JSONParse(hexToString(account))
 	}
 	/**
 	 * createWallet
@@ -41,16 +43,16 @@ export class jsonRpcRequest {
 				description: 'Wallet name',
 			})
 			await saveWallet(wallet, walletName)
-			return JSON.parse(hexToString(wallet))
+			return JSONParse(hexToString(wallet))
 		}
-		return JSON.parse(hexToString(wallet))
+		return JSONParse(hexToString(wallet))
 	}
 	/**
 	 * getBalance
 	 */
 	public async getBalance(address: string): Promise<structBalance> {
 		const balance = await rpcRequest('nex_getBalance', address)
-		return JSON.parse(hexToString(balance))
+		return JSONParse(hexToString(balance))
 	}
 	/**
 	 * sendTransaction
@@ -58,7 +60,8 @@ export class jsonRpcRequest {
 	public async sendTransaction(
 		transaction: comTxInterface,
 	): Promise<{ sentStatus: boolean }> {
-		const completedTx = createTransaction(transaction)
+		const convertedTransaction = stringToBigInt(transaction)
+		const completedTx = createTransaction(convertedTransaction)
 		try {
 			logToConsole('Validating transaction...')
 			const isValidTx = await clientSideTxValidate(completedTx.rawData!)
@@ -84,13 +87,13 @@ export class jsonRpcRequest {
 	 * getBlockByHash
 	 */
 	public async getBlockByHash(hash: string): Promise<Block> {
-		return JSON.parse(hexToString(await rpcRequest('nex_getBlockByHash', hash)))
+		return JSONParse(hexToString(await rpcRequest('nex_getBlockByHash', hash)))
 	}
 	/**
 	 * getBlockByHeight
 	 */
 	public async getBlockByHeight(height: number): Promise<Block> {
-		return JSON.parse(
+		return JSONParse(
 			hexToString(await rpcRequest('nex_getBlockByHeight', height)),
 		)
 	}
@@ -98,7 +101,7 @@ export class jsonRpcRequest {
 	 * getBlockTransactionByHeight
 	 */
 	public async getBlockTransactionByHeight(height: number): Promise<number> {
-		return JSON.parse(
+		return JSONParse(
 			hexToString(await rpcRequest('nex_getBlockTransactionByHeight', height)),
 		)
 	}
@@ -106,7 +109,7 @@ export class jsonRpcRequest {
 	 * getBlockTransactionByHash
 	 */
 	public async getBlockTransactionByHash(blockHash: string): Promise<number> {
-		return JSON.parse(
+		return JSONParse(
 			hexToString(await rpcRequest('nex_getBlockTransactionByHash', blockHash)),
 		)
 	}
@@ -114,13 +117,13 @@ export class jsonRpcRequest {
 	 * getBlockState
 	 */
 	public async getBlockState(): Promise<blockState> {
-		return JSON.parse(hexToString(await rpcRequest('nex_getBlockState', '')))
+		return JSONParse(hexToString(await rpcRequest('nex_getBlockState', '')))
 	}
 	/**
 	 * getCurrentBlock
 	 */
 	public async getCurrentBlock(): Promise<Block> {
-		return JSON.parse(hexToString(await rpcRequest('nex_getCurrentBlock', '')))
+		return JSONParse(hexToString(await rpcRequest('nex_getCurrentBlock', '')))
 	}
 	/**
 	 * getChainId
@@ -131,8 +134,10 @@ export class jsonRpcRequest {
 	/**
 	 * getTransactionByTxHash
 	 */
-	public async getTransactionByTxHash(txHash: string): Promise<TxInterface> {
-		return JSON.parse(
+	public async getTransactionByTxHash(
+		txHash: string,
+	): Promise<TxInterfaceFront> {
+		return JSONParse(
 			hexToString(await rpcRequest('nex_getTransactionByTxHash', txHash)),
 		)
 	}
@@ -140,15 +145,17 @@ export class jsonRpcRequest {
 	 * getNonceAccount
 	 */
 	public async getNonceAccount(address: string): Promise<number> {
-		return JSON.parse(
+		return JSONParse(
 			hexToString(await rpcRequest('nex_getNonceAccount', address)),
 		)
 	}
 	/**
 	 * getTransactionsByAddress
 	 */
-	public async getTransactionsByAddress(address: string): Promise<TxInterface> {
-		return JSON.parse(
+	public async getTransactionsByAddress(
+		address: string,
+	): Promise<TxInterfaceFront> {
+		return JSONParse(
 			hexToString(await rpcRequest('nex_getTransactionsByAddress', address)),
 		)
 	}

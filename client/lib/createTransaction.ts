@@ -1,6 +1,4 @@
 import { createTxnHash } from 'nexchain core/transaction/createTxHash'
-import { comTxInterface } from 'interface/structComTx'
-import { TxInterface } from 'interface/structTx'
 import { stringToHex } from 'nexchain core/hex/stringToHex'
 import { toNexu } from 'nexchain core/nexucoin/toNexu'
 import { isContract } from 'nexchain core/lib/isContract'
@@ -9,24 +7,30 @@ import { createSignature } from 'sign/createSign'
 import { encodeTx } from 'nexchain core/hex/tx/encodeTx'
 import { logToConsole } from 'logging/logging'
 import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
+import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
+import { comTxInterfaceCore } from 'interface/core/structComTxCore'
 
 export interface returnData {
 	status: boolean
 	txHash?: string | undefined
 	base64Data: string | undefined
-	rawData: TxInterface | undefined
+	rawData: TxInterfaceCore | undefined
 }
 
-export const createTransaction = (transaction: comTxInterface): returnData => {
-	let convertedAmount = transaction.amount
+export const createTransaction = (
+	transaction: comTxInterfaceCore,
+): returnData => {
+	let convertedAmount = stringToBigInt(transaction.amount)
 
 	// Konversi amount ke Nexu jika formatnya adalah NXC
 	if (transaction.format === 'NXC') {
-		convertedAmount = toNexu(transaction.amount)
+		convertedAmount = toNexu(transaction.amount.toString())
 	}
 
 	// Cek apakah jumlah minimal 1 Nexu terpenuhi
-	const minAmount = 1 // Minimum 1 Nexu
+	const minAmount = 1n // Minimum 1 Nexu
 	if (convertedAmount < minAmount) {
 		console.log('Transaction amount must be at least 1 nexu.')
 		return {
@@ -42,7 +46,7 @@ export const createTransaction = (transaction: comTxInterface): returnData => {
 	const isSenderContract = isContract(transaction.sender)
 
 	// Buat objek transaksi
-	const completedTx: TxInterface = {
+	const completedTx: TxInterfaceCore = {
 		format: 'nexu',
 		amount: convertedAmount,
 		receiver: transaction.receiver,
@@ -67,7 +71,7 @@ export const createTransaction = (transaction: comTxInterface): returnData => {
 	completedTx.sign = createSignature(completedTx.txHash!, privateKey)
 
 	completedTx.hexInput = stringToHex(
-		JSON.stringify({
+		JSONStringify({
 			format: completedTx.format,
 			amount: completedTx.amount,
 			receiver: completedTx.receiver,
@@ -76,7 +80,8 @@ export const createTransaction = (transaction: comTxInterface): returnData => {
 		}),
 	)
 	logToConsole('Encoding transaction...')
-	const base64Data = encodeTx(completedTx)
+	const convertedTransaction = stringToBigInt(completedTx) as TxInterfaceCore
+	const base64Data = encodeTx(convertedTransaction)
 	return {
 		status: true,
 		txHash: completedTx.txHash,

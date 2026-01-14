@@ -1,9 +1,9 @@
-import { getAccount } from 'account/balance/getAccount'
-import { putAccount } from 'account/balance/putAccount'
-import { structBalance } from 'interface/structBalance'
+import { putAccountCore } from 'nexchain core/savers/account/putAccountCore'
 import { isContract } from 'nexchain core/lib/isContract'
+import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
+import { structBalanceCore } from 'interface/core/structBalanceCore'
 
-export const burnNexu = async (fromAddress: string, amount: number) => {
+export const burnNexu = async (fromAddress: string, amount: bigint) => {
 	const burnAddress = 'NxCdead00000000000000000000000000000000dead'
 
 	// Cek apakah alamat pengirim adalah kontrak
@@ -12,7 +12,7 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 	}
 
 	// Ambil saldo pengirim
-	const oldBalance = await getAccount(fromAddress).catch(() => null)
+	const oldBalance = await loadAccountCore(fromAddress).catch(() => null)
 	if (!oldBalance) {
 		throw new Error('Address not found.')
 	}
@@ -25,7 +25,7 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 	const newBalance = oldBalance.balance - amount
 
 	// Perbarui saldo pengirim
-	await putAccount(fromAddress, {
+	await putAccountCore(fromAddress, {
 		address: fromAddress,
 		balance: newBalance,
 		isContract: false,
@@ -35,24 +35,24 @@ export const burnNexu = async (fromAddress: string, amount: number) => {
 	})
 
 	// Ambil saldo lama dari alamat burn
-	const oldBurnBalance: structBalance = (await getAccount(burnAddress).catch(
-		() => ({
-			address: burnAddress,
-			balance: 0,
-			decimal: 18,
-			isContract: false,
-			lastTransactionDate: null,
-			nonce: 0,
-			notes: '',
-			symbol: 'nexu',
-			transactionCount: 0,
-		}),
-	)) as structBalance
+	const oldBurnBalance: structBalanceCore = (await loadAccountCore(
+		burnAddress,
+	).catch(() => ({
+		address: burnAddress,
+		balance: 0,
+		decimal: 18,
+		isContract: false,
+		lastTransactionDate: null,
+		nonce: 0,
+		notes: '',
+		symbol: 'nexu',
+		transactionCount: 0,
+	}))) as structBalanceCore
 
 	const newBurnBalance = oldBurnBalance!.balance + amount
 
 	// Perbarui saldo di alamat burn
-	await putAccount(burnAddress, {
+	await putAccountCore(burnAddress, {
 		address: burnAddress,
 		balance: newBurnBalance,
 		isContract: false,

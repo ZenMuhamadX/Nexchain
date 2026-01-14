@@ -5,13 +5,14 @@ import { validateTransactionFees } from 'interface/module/isValidTxFee'
 import { validateTransactionSenderReceiver } from 'interface/module/isValidTxSenderReciever'
 import { validateTransactionSignature } from 'interface/module/isValidTxSign'
 import { logError } from 'interface/module/writeLog'
-import { TxInterface } from 'interface/structTx'
 import { txInterfaceValidator } from 'interface/validation/joi/txInterface'
 import { isNexu } from 'nexchain core/nexucoin/isNexu'
 import { clientHasSufficientBalance } from './clientHasSufficient'
+import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
 export const clientSideTxValidate = async (
-	transaction: TxInterface,
+	transaction: TxInterfaceCore,
 ): Promise<boolean> => {
 	const { error } = txInterfaceValidator.validate(transaction)
 
@@ -32,13 +33,13 @@ export const clientSideTxValidate = async (
 
 	if (!validateAddressLengths(transaction)) return false
 
-	if (!isNexu(transaction.amount)) return false
+	if (!isNexu(stringToBigInt(transaction.amount))) return false
 
 	if (
 		!(await clientHasSufficientBalance(
 			transaction.sender,
-			transaction.amount,
-			transaction.fee!,
+			stringToBigInt(transaction.amount),
+			stringToBigInt(transaction.fee!),
 		))
 	) {
 		return false

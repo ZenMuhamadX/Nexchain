@@ -28,6 +28,6 @@
 // 		messageId: generateMessageId(),
 // 		timestamp: 123,
 // 	}
-// 	ws.send(JSON.stringify(message))
+// 	ws.send(JSONStringifyify(message))
 // 	ws.close()
 // })

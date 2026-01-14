@@ -3,9 +3,10 @@ import { askQuestion } from 'client/inquirer/askQuestion'
 import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import fs from 'fs'
 import path from 'path'
-import { structWalletToSave } from 'interface/structWalletToSave'
+import { structWalletToSave } from 'interface/common/structWalletToSave'
 import { sendTransactionToRpc } from 'client/rpc-client/controller/POST/sendTxToRpc'
 import { createTransaction } from 'client/lib/createTransaction'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
 
 // Fungsi untuk membaca nama file wallet dari direktori
 const getWalletFiles = (directory: string) => {
@@ -15,7 +16,7 @@ const getWalletFiles = (directory: string) => {
 
 const readWalletData = (filePath: string): structWalletToSave => {
 	const data = fs.readFileSync(filePath, 'utf8')
-	return JSON.parse(data) as structWalletToSave // Pastikan data di dalam file wallet valid JSON
+	return JSONParse(data) as structWalletToSave // Pastikan data di dalam file wallet valid JSON
 }
 
 export const CLITransfer = async () => {

@@ -1,4 +1,5 @@
 import { JSONRPCClient } from 'json-rpc-2.0'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
 
 // JSONRPCClient needs to know how to send a JSON-RPC request.
 // Tell it by passing a function to its constructor. The function must take a JSON-RPC request and send it.
@@ -8,7 +9,7 @@ export const client: JSONRPCClient = new JSONRPCClient((jsonRPCRequest) =>
 		headers: {
 			'content-type': 'application/json',
 		},
-		body: JSON.stringify(jsonRPCRequest),
+		body: JSONStringify(jsonRPCRequest),
 	}).then((response) => {
 		if (response.status === 200) {
 			// Use client.receive when you received a JSON-RPC response.

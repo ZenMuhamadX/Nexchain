@@ -1,7 +1,7 @@
 import { Block } from 'nexchain core/model/block/block'
 import { getBlockByHash } from './getBlockByHash'
-import { HexString } from 'interface/structBlock'
 import { rocksState } from 'nexchain core/db/state'
+import { HexString } from 'interface/common/hexString'
 
 export const getBlockByHeight = async (
 	height: number,

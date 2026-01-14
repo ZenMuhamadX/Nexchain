@@ -1,5 +1,7 @@
 import { decodeFromBytes } from 'nexchain core/hex/bytes/decodeBytes'
 import { rocksHistory } from 'nexchain core/db/history'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
 
 export const saveTxByAddress = async (
 	sender: string,
@@ -25,10 +27,9 @@ const addTxHashToAddress = async (
 		// Cek apakah alamat sudah ada di database
 		const existingTxHashes: Buffer = (await rocksHistory
 			.get(`address:${address}`, {
-				asBuffer: true,
 				fillCache: true,
 			})
-			.catch(() => null)) as Buffer
+			.catch(() => null)) as unknown as Buffer
 
 		let newTxHashes: string[]
 
@@ -37,7 +38,7 @@ const addTxHashToAddress = async (
 			newTxHashes = [txHash]
 		} else {
 			// Jika alamat ada, ambil existing txHash array
-			newTxHashes = JSON.parse(decodeFromBytes(existingTxHashes))
+			newTxHashes = JSONParse(decodeFromBytes(existingTxHashes))
 
 			// Tambahkan txHash baru jika belum ada (untuk menghindari duplikasi)
 			if (!newTxHashes.includes(txHash)) {
@@ -46,7 +47,7 @@ const addTxHashToAddress = async (
 		}
 
 		// Simpan array yang diperbarui kembali ke LevelDB
-		await rocksHistory.put(`address:${address}`, JSON.stringify(newTxHashes))
+		await rocksHistory.put(`address:${address}`, JSONStringify(newTxHashes))
 	} catch (error) {
 		console.error(`Error adding txHash to address ${address}:`, error)
 	}

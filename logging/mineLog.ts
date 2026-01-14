@@ -5,6 +5,7 @@ import * as path from 'path'
 import fs from 'fs'
 import { Block } from 'nexchain core/model/block/block'
 import { logToConsole } from './logging'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
 
 // Define log directory and file paths
 const logDirPath = path.join(__dirname, '../logs')
@@ -35,7 +36,7 @@ const logger = winston.createLogger({
 export const mineLog = (status: Block): void => {
 	try {
 		logToConsole(`Block ${status.block.header.hash} Created Succesfully`)
-		logger.info(JSON.stringify(status.block))
+		logger.info(JSONStringify(status.block))
 	} catch (error) {
 		console.error('Error saving mining log:', error)
 	}

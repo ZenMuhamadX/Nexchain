@@ -1,9 +1,9 @@
-import { TxInterface } from 'interface/structTx'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 import { sha256 } from 'nexchain core/block/sha256'
 import { txToString } from 'nexchain core/hex/tx/txToString'
 
 // Fungsi untuk menghitung Merkle Root dari transaksi
-export const createMerkleRoot = (transactions: TxInterface[]): string => {
+export const createMerkleRoot = (transactions: TxInterfaceCore[]): string => {
 	if (transactions.length === 0) {
 		return sha256('', 'hex') as string
 	}

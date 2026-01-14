@@ -1,8 +1,9 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
-import { WalletConfig } from 'interface/walletConfig'
+import { WalletConfig } from 'interface/common/walletConfig'
 import { loggingDebug } from 'logging/debug'
 import { convertTimestampToDate } from 'nexchain core/lib/convertTimestamp'
 import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
 import path from 'path'
 
 export const setWalletConfig = () => {
@@ -35,10 +36,7 @@ export const setWalletConfig = () => {
 	}
 
 	// Write the default configuration to the wallet configuration file
-	writeFileSync(
-		walletConfigFilePath,
-		JSON.stringify(defaultWalletConfig, null, 2),
-	)
+	writeFileSync(walletConfigFilePath, JSONStringify(defaultWalletConfig))
 
 	// Log the successful completion of the wallet configuration setup
 	loggingDebug(

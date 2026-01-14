@@ -3,22 +3,20 @@
 // BlockChains.ts
 import { generateTimestampz } from '../lib/generateTimestampz'
 import { Block } from '../model/block/block'
-import { saveBlock } from '../storage/block/saveBlock'
 import { loggingErr } from '../../logging/errorLog'
 import { verifyChainIntegrity } from '../miner/verify/verifyIntegrity'
-import { TxInterface } from '../../interface/structTx'
 import { processTransact } from '../transaction/processTransact'
-
 import { verifyMerkleRoot } from '../miner/verify/module/verifyMerkleRoot'
-import { contract } from 'interface/structContract'
+import { contract } from 'interface/front/structContract'
 import { saveContracts } from '../../contract/saveContract'
 import { removeContractMemPool } from '../storage/mempool/removeContractMempool'
-import _ from 'lodash'
 import { createNewBlock } from '../block/createNewBlock'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
-import { putAccount } from 'account/balance/putAccount'
-import { getAccount } from 'account/balance/getAccount'
+import { putAccountCore } from 'nexchain core/savers/account/putAccountCore'
+import { saveBlock } from 'nexchain core/savers/block/saveBlock'
+import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
 export class BlockChains {
 	constructor() {
@@ -33,7 +31,7 @@ export class BlockChains {
 	 * @returns True if the block was added successfully, otherwise false.
 	 */
 	public async addBlockToChain(
-		transactionsToProcess: TxInterface[],
+		transactionsToProcess: TxInterfaceCore[],
 		contractsToDeploy: contract[],
 		minerAddress: string,
 	): Promise<{ status: boolean; block: Block | undefined }> {
@@ -85,7 +83,7 @@ export class BlockChains {
 	}
 
 	private async createBlock(
-		transactions: TxInterface[],
+		transactions: TxInterfaceCore[],
 		walletMiner: string,
 		validContract: contract[],
 	): Promise<Block> {
@@ -101,13 +99,14 @@ export class BlockChains {
 		)
 	}
 
-	private async giveReward(address: string, reward: number): Promise<void> {
-		const oldData = await getAccount(address).catch(() => null)
-		const oldNexuBalance = oldData?.balance || 0
+	private async giveReward(address: string, reward: bigint): Promise<void> {
+		const oldData = await loadAccountCore(address).catch(() => null)
+		const oldNexuBalance = oldData?.balance || 0n
 
-		await putAccount(address, {
+		await putAccountCore(address, {
 			address,
 			balance: oldNexuBalance + reward,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 			transactionCount: oldData?.transactionCount! + 1 || 0,
 			isContract: false,
 			lastTransactionDate: generateTimestampz(),
@@ -155,7 +154,7 @@ export class BlockChains {
 	}
 
 	private async processTransactions(
-		validTransaction: TxInterface[],
+		validTransaction: TxInterfaceCore[],
 	): Promise<void> {
 		loggingDebug('blockchain:processTransactions', 'processing transactions')
 		await processTransact(validTransaction)

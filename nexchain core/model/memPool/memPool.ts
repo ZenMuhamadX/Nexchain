@@ -1,18 +1,19 @@
 import { transactionValidator } from 'interface/validation/txValidator.v'
 import { saveTxHistory } from 'nexchain core/transaction/saveTxHistory'
-import { TxInterface } from 'interface/structTx'
-import { contract } from 'interface/structContract'
+import { contract } from 'interface/front/structContract'
 import { isContract } from 'nexchain core/lib/isContract'
 import { logToConsole } from 'logging/logging'
 import { ManageContract } from 'contract/manageContract'
 import { saveMempool } from 'nexchain core/storage/mempool/saveMemPool'
 import { getPendingBalance } from 'nexchain core/transaction/getPendingBalance'
-import { setPendingBalance } from 'nexchain core/transaction/setPendingBalance'
+import { setPendingBalance } from 'nexchain core/savers/transaction/setPendingBalance'
 import { saveContractMempool } from 'nexchain core/storage/mempool/saveContractMempool'
 import { loadContractMempool } from 'nexchain core/storage/mempool/loadContractMempool'
 import { loadMempool } from 'nexchain core/storage/mempool/loadMempool'
-import { getAccount } from 'account/balance/getAccount'
 import { formatStr } from 'nexchain core/lib/formatStr'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
+import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
+import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
 
 export class MemPool {
 	constructor() {
@@ -25,8 +26,8 @@ export class MemPool {
 	 * @returns True if the transaction was added successfully, otherwise false.
 	 */
 	public async addTransaction(
-		transaction: TxInterface,
-	): Promise<{ isValid: boolean; data?: TxInterface }> {
+		transaction: TxInterfaceCore,
+	): Promise<{ isValid: boolean; data?: TxInterfaceCore }> {
 		const isValidTx = await transactionValidator(transaction)
 		if (!isValidTx) {
 			logToConsole('Transaction validation failed')
@@ -58,15 +59,16 @@ export class MemPool {
 	 * @returns True if balance is sufficient, otherwise false.
 	 */
 	private async handleContractTransaction(
-		transaction: TxInterface,
+		transaction: TxInterfaceCore,
 	): Promise<boolean> {
 		const contractManager = new ManageContract(transaction.sender)
 		const contractBalance = await contractManager.getContractBalance()
+		const bigintContractBalance = stringToBigInt(contractBalance)
 		const pendingBalance = await getPendingBalance(transaction.sender)
 
 		const availableBalance =
-			contractBalance - (pendingBalance.pendingAmount || 0)
-		if (availableBalance < transaction.amount + (transaction.fee || 0)) {
+			bigintContractBalance - (pendingBalance.pendingAmount || 0n)
+		if (availableBalance < transaction.amount + (transaction.fee || 0n)) {
 			logToConsole('Insufficient contract balance for the transaction')
 			return false
 		}
@@ -86,9 +88,9 @@ export class MemPool {
 	 * @returns True if balance is sufficient, otherwise false.
 	 */
 	private async handleUserTransaction(
-		transaction: TxInterface,
+		transaction: TxInterfaceCore,
 	): Promise<boolean> {
-		const userBalance = await getAccount(transaction.sender)
+		const userBalance = await loadAccountCore(transaction.sender)
 		if (!userBalance) {
 			logToConsole('Insufficient user balance')
 			return false
@@ -96,9 +98,9 @@ export class MemPool {
 
 		const pendingBalance = await getPendingBalance(transaction.sender)
 		const availableBalance =
-			userBalance.balance - (pendingBalance.pendingAmount || 0)
+			userBalance.balance - (pendingBalance.pendingAmount || 0n)
 
-		if (availableBalance < transaction.amount + (transaction.fee || 0)) {
+		if (availableBalance < transaction.amount + (transaction.fee || 0n)) {
 			logToConsole('Insufficient user balance for the transaction')
 			return false
 		}
@@ -120,11 +122,11 @@ export class MemPool {
 	 */
 	private async updatePendingBalance(
 		address: string,
-		currentPending: number | undefined,
-		transaction: TxInterface,
+		currentPending: bigint,
+		transaction: TxInterfaceCore,
 	): Promise<void> {
 		const newPendingAmount =
-			(currentPending || 0) + transaction.amount + (transaction.fee || 0)
+			(currentPending || 0n) + transaction.amount + (transaction.fee || 0n)
 		await setPendingBalance({ address, pendingAmount: newPendingAmount })
 	}
 
@@ -152,7 +154,7 @@ export class MemPool {
 	 * Retrieves all valid transactions in the memory pool.
 	 * @returns An array of transactions.
 	 */
-	public async getValidTransactions(): Promise<TxInterface[]> {
-		return (await loadMempool()) as TxInterface[]
+	public async getValidTransactions(): Promise<TxInterfaceCore[]> {
+		return (await loadMempool()) as TxInterfaceCore[]
 	}
 }

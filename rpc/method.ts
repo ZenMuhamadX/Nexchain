@@ -1,26 +1,26 @@
 import { JSONRPCServer } from 'json-rpc-2.0'
-import { toNxc } from 'nexchain core/nexucoin/toNxc'
 import { getBlockByHash } from 'nexchain core/block/query/onChain/block/getBlockByHash'
 import { getBlockByHeight } from 'nexchain core/block/query/onChain/block/getBlockByHeight'
 import { getBlockState } from 'nexchain core/storage/state/getState'
 import { getCurrentBlock } from 'nexchain core/block/query/onChain/block/getCurrentBlock'
-import { structBalance } from 'interface/structBalance'
+import { structBalance } from 'interface/front/structBalance'
 import { getHistoryByTxHash } from 'nexchain core/block/query/onChain/Transaction/getHistoryByTxHash'
 import { getHistoryByAddress } from 'nexchain core/block/query/onChain/Transaction/getHistoryByAddress'
 import { Block } from 'nexchain core/model/block/block'
 import { getAccount } from 'account/balance/getAccount'
 import { addTxToMempool } from 'nexchain core/transaction/addTxToMempool'
-import { TxInterface } from 'interface/structTx'
 import { decodeTx } from 'nexchain core/hex/tx/decodeTx'
 import { ManageContract } from 'contract/manageContract'
 import { getPendingBalance } from 'nexchain core/transaction/getPendingBalance'
 import { createNewWalletAddress } from 'account/createNewWallet'
 import { stringToHex } from 'nexchain core/hex/stringToHex'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
 const rpc = new JSONRPCServer()
 
 rpc.addMethod('echo', (message: any) => {
-	return message
+	return { data: message }
 })
 
 // Block
@@ -34,17 +34,17 @@ rpc.addMethod('nex_getBlockByHeight', async (blockNumber: number) => {
 })
 
 rpc.addMethod('nex_getBlockTransactionByHeight', async (height: number) => {
-	const block = (await getBlockByHeight(height, 'json')) as Block
+	const block = (await getBlockByHeight(height, 'hex')) as Block
 	return block.block.transactions.length
 })
 
 rpc.addMethod('nex_getBlockTransactionByHash', async (hash: string) => {
-	const block = (await getBlockByHash(hash, 'json')) as Block
+	const block = (await getBlockByHash(hash, 'hex')) as Block
 	return block.block.transactions.length
 })
 
 rpc.addMethod('nex_getBlockState', async () => {
-	return stringToHex(JSON.stringify(await getBlockState()))
+	return stringToHex(JSONStringify(await getBlockState()))
 })
 
 rpc.addMethod('nex_getCurrentBlock', async () => {
@@ -58,34 +58,34 @@ rpc.addMethod('nex_getChainId', async () => {
 // Account
 
 rpc.addMethod('nex_getPendingBalance', async (address: string) => {
-	return stringToHex(JSON.stringify(await getPendingBalance(address)))
+	return JSONStringify(await getPendingBalance(address))
 })
 
 rpc.addMethod('nex_getAccount', async (address: string) => {
-	return stringToHex(JSON.stringify(await getAccount(address)))
+	return JSONStringify(await getAccount(address))
 })
 
 rpc.addMethod('nex_getContractBalance', async (address: string) => {
 	return stringToHex(
-		JSON.stringify(await new ManageContract(address).getContractBalance()),
+		JSONStringify(await new ManageContract(address).getContractBalance()),
 	)
 })
 
 rpc.addMethod('nex_getBalance', async (address: string) => {
 	const balance = await getAccount(address)
-	return stringToHex(`${toNxc(balance?.balance!).toFixed(18)} NXC`)
+	return `${balance?.balance} nexu`
 })
 
 rpc.addMethod('nex_getNonceAccount', async (address: string) => {
 	const account = await getAccount(address)
-	return stringToHex(JSON.stringify(account?.nonce))
+	return stringToHex(JSONStringify(account?.nonce))
 })
 
 // Transaction
 
 rpc.addMethod('nex_getTransactionCount', async (address: string) => {
 	const account = (await getAccount(address)) as structBalance
-	return stringToHex(JSON.stringify(account?.transactionCount!))
+	return stringToHex(JSONStringify(account?.transactionCount))
 })
 
 rpc.addMethod('nex_getTransactionByTxHash', async (txHash: string) => {
@@ -97,12 +97,12 @@ rpc.addMethod('nex_getTransactionsByAddress', async (address: string) => {
 })
 
 rpc.addMethod('nex_sendTransaction', async (data: string) => {
-	const decodedData: TxInterface = decodeTx(data)
+	const decodedData: TxInterfaceCore = decodeTx(data)
 	return await addTxToMempool(decodedData)
 })
 
 rpc.addMethod('nex_createWallet', () => {
-	return stringToHex(JSON.stringify(createNewWalletAddress()))
+	return JSONStringify(createNewWalletAddress())
 })
 
 export { rpc }

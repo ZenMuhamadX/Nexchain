@@ -1,4 +1,5 @@
 import { Buffer } from 'buffer'
+import { JSONStringify } from './JSONStringify'
 
 export const calculateSize = (
 	data: object,
@@ -8,7 +9,7 @@ export const calculateSize = (
 	MB: number
 } => {
 	// Mengkonversi data ke string JSON
-	const jsonString = JSON.stringify(data)
+	const jsonString = JSONStringify(data)
 
 	// Menghitung ukuran dalam byte menggunakan Buffer
 	const byte = Buffer.byteLength(jsonString, 'utf8')

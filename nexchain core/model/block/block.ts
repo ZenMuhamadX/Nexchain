@@ -1,11 +1,12 @@
 /** @format */
-import { blockStruct } from '../../../interface/structBlock'
+
+import { structBlockCore } from 'interface/core/structBlockCore'
 
 // models/Block.ts
 // This class represents a block in the blockchain
 export class Block {
-	public block: blockStruct
-	constructor(blockData: blockStruct) {
+	public block: structBlockCore
+	constructor(blockData: structBlockCore) {
 		this.block = {
 			header: {
 				previousBlockHash: blockData.header.previousBlockHash,

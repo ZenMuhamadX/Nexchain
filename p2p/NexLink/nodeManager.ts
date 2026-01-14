@@ -8,6 +8,8 @@ import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import _ from 'lodash'
 import { getMinerId } from 'p2p/utils/getMinerId'
 import { rocksState } from 'nexchain core/db/state'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
 
 // Logger configuration
 const logger = winston.createLogger({
@@ -68,7 +70,7 @@ export class Node {
 	// Handle incoming messages safely
 	private handleIncomingMessage(message: string) {
 		try {
-			const data = JSON.parse(message)
+			const data = JSONParse(message)
 			this.checkMessageStatus(data)
 		} catch (err) {
 			logger.error(`Failed to parse message: ${message}, error: ${err}`)
@@ -110,7 +112,7 @@ export class Node {
 		try {
 			const peers = await rocksState.get('peerList')
 			if (peers) {
-				const ids = JSON.parse(peers.toString())
+				const ids = JSONParse(peers.toString())
 				for (const id of ids) {
 					this.connectToPeer(Number(id))
 				}
@@ -123,7 +125,7 @@ export class Node {
 	// Save peer list to LevelDB
 	private async savePeerList() {
 		try {
-			await rocksState.put('peerList', JSON.stringify(Array.from(this.peerIds)))
+			await rocksState.put('peerList', JSONStringify(Array.from(this.peerIds)))
 		} catch (err) {
 			logger.error(`Error saving peer list: ${err}`)
 		}
@@ -154,7 +156,7 @@ export class Node {
 		data.forwardCount = (data.forwardCount || 0) + 1 // Increment forwardCount
 		_.forEach(this.peers, (peer) => {
 			if (peer.readyState === WebSocket.OPEN) {
-				peer.send(JSON.stringify(data))
+				peer.send(JSONStringify(data))
 			}
 		})
 	}

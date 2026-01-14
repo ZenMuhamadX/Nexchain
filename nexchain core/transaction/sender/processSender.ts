@@ -1,16 +1,16 @@
-import { structBalance } from 'interface/structBalance'
 import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { loggingErr } from 'logging/errorLog'
-import { getPendingBalance } from '../getPendingBalance'
-import { setPendingBalance } from '../setPendingBalance'
-import { getAccount } from 'account/balance/getAccount'
-import { putAccount } from 'account/balance/putAccount'
+import { setPendingBalance } from '../../savers/transaction/setPendingBalance'
 import { hasSufficientBalance } from 'account/utils/hasSufficientBalance'
+import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
+import { structBalanceCore } from 'interface/core/structBalanceCore'
+import { putAccountCore } from 'nexchain core/savers/account/putAccountCore'
+import { loadPendingBalanceCore } from 'nexchain core/loaders/loadPendingBalanceCore'
 
 export const processSender = async (
 	senderAddress: string,
-	amount: number,
-	fee: number,
+	amount: bigint,
+	fee: bigint,
 ) => {
 	const balanceStatus = await hasSufficientBalance(senderAddress, amount, fee)
 	if (!balanceStatus) {
@@ -27,23 +27,25 @@ export const processSender = async (
 	}
 
 	// Ambil data saldo saat ini
-	const oldData = await getAccount(senderAddress)
+	const oldData = await loadAccountCore(senderAddress)
+	// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 	const calculateBalance = oldData?.balance! - amount
-	const newData: structBalance = {
+	const newData: structBalanceCore = {
 		address: senderAddress,
 		balance: calculateBalance,
+		// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 		transactionCount: oldData?.transactionCount! + 1,
 		isContract: false,
 		lastTransactionDate: generateTimestampz(),
 		nonce: oldData!.nonce + 1,
 	}
-	await putAccount(senderAddress, newData)
+	await putAccountCore(senderAddress, newData)
 	// Ambil dan perbarui pending balance
-	const pendingBalance = await getPendingBalance(senderAddress)
+	const pendingBalance = await loadPendingBalanceCore(senderAddress)
 	const updatedPendingAmount =
-		(pendingBalance.pendingAmount || 0) - (amount + fee)
+		(pendingBalance.pendingAmount || 0n) - (amount + fee)
 	await setPendingBalance({
 		address: senderAddress,
-		pendingAmount: Math.max(updatedPendingAmount, 0),
+		pendingAmount: updatedPendingAmount,
 	})
 }

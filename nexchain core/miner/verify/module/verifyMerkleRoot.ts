@@ -5,11 +5,11 @@
  * @returns True if the Merkle Root is valid, otherwise false.
  */
 
-import { TxInterface } from 'interface/structTx'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 import { createMerkleRoot } from 'nexchain core/transaction/utils/createMerkleRoot'
 
 export function verifyMerkleRoot(
-	transactions: TxInterface[],
+	transactions: TxInterfaceCore[],
 	providedMerkleRoot: string,
 ): boolean {
 	// Recalculate the Merkle Root from the transactions.

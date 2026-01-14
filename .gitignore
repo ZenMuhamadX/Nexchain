@@ -19,3 +19,4 @@ build
 wallet
 config
 bun.lock
+tstfunc.ts

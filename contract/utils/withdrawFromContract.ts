@@ -1,20 +1,19 @@
-import { NXC } from 'interface/structContract'
 import { processReceiver } from 'nexchain core/transaction/receiver/processReceiver'
 import { getContract } from './getContract'
 import { saveContracts } from '../saveContract'
 
 interface WithdrawParams {
 	contractAddress: string
-	amount: NXC
+	amount: bigint
 	receiver: string
-	fee: NXC
+	fee: bigint
 }
 
 export const withdrawFromContract = async (data: WithdrawParams) => {
 	const contract = await getContract(data.contractAddress)
 	const totalAmount = data.amount + data.fee // Total yang dibutuhkan termasuk fee
 
-	if (contract.balance < totalAmount) {
+	if (BigInt(contract.balance) < totalAmount) {
 		throw new Error(
 			'Contract balance is not enough for the requested amount and gas fee.',
 		)
@@ -28,7 +27,7 @@ export const withdrawFromContract = async (data: WithdrawParams) => {
 		owner: contract.owner,
 		deploymentTransactionHash: contract.deploymentTransactionHash,
 		status: contract.status,
-		balance: contract.balance - totalAmount,
+		balance: BigInt(contract.balance) - totalAmount,
 		currency: 'nexu',
 	})
 }

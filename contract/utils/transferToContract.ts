@@ -1,4 +1,4 @@
-import { contract } from 'interface/structContract'
+import { contract } from 'interface/front/structContract'
 import { getContract } from './getContract'
 import { processSender } from 'nexchain core/transaction/sender/processSender'
 import { saveContracts } from '../saveContract'
@@ -7,9 +7,9 @@ import { hasSufficientBalance } from 'account/utils/hasSufficientBalance'
 
 interface contractTransfer {
 	contractAddress: string
-	amount: number
+	amount: bigint
 	sender: string
-	fee: number
+	fee: bigint
 }
 
 export const transferToContract = async (

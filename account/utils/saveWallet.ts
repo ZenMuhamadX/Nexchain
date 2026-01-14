@@ -1,8 +1,9 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
-import { structWalletToSave } from 'interface/structWalletToSave'
+import { structWalletToSave } from 'interface/common/structWalletToSave'
 import path from 'path'
 import { logToConsole } from 'logging/logging'
 import { askQuestion } from 'client/inquirer/askQuestion'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
 
 /**
  * Saves a wallet to a file, with user prompts for overwriting or confirmation.
@@ -102,5 +103,5 @@ const confirmCreation = async (fileName: string): Promise<boolean> => {
  * @param data - The wallet data to save.
  */
 const saveToFile = (filePath: string, data: structWalletToSave): void => {
-	writeFileSync(filePath, JSON.stringify(data, null, 2))
+	writeFileSync(filePath, JSONStringify(data))
 }

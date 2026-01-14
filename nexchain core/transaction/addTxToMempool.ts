@@ -1,6 +1,8 @@
-import { TxInterface } from 'interface/structTx'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 import { MemPool } from 'nexchain core/model/memPool/memPool'
 
-export const addTxToMempool = async (data: TxInterface): Promise<boolean> => {
+export const addTxToMempool = async (
+	data: TxInterfaceCore,
+): Promise<boolean> => {
 	return (await new MemPool().addTransaction(data)).isValid
 }

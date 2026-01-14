@@ -1,5 +1,4 @@
 import { loggingErr } from 'logging/errorLog'
-import { TxInterface } from 'interface/structTx'
 import { processSender } from './sender/processSender'
 import { removeMemPool } from 'nexchain core/storage/mempool/removeMempool'
 import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
@@ -8,8 +7,11 @@ import { processReceiver } from './receiver/processReceiver'
 import { transferToContract } from 'contract/utils/transferToContract'
 import { withdrawFromContract } from 'contract/utils/withdrawFromContract'
 import { saveTxByAddress } from './saveTxByAddress'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
-export const processTransact = async (txData: TxInterface[]): Promise<void> => {
+export const processTransact = async (
+	txData: TxInterfaceCore[],
+): Promise<void> => {
 	if (txData.length === 0) {
 		loggingErr({
 			message: 'data not found',

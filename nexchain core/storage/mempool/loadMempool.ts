@@ -1,29 +1,24 @@
-import { TxInterface } from 'interface/structTx'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 import { rocksMempool } from 'nexchain core/db/memPool'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
+import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
 
-export const loadMempool = (): Promise<TxInterface[]> => {
-	return new Promise((resolve, reject) => {
-		const transactions: TxInterface[] = [] // Array untuk menyimpan transaksi
+export const loadMempool = (): Promise<TxInterfaceCore[]> => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const transactions: TxInterfaceCore[] = []
 
-		const readStream = rocksMempool.createReadStream({
-			valueAsBuffer: false,
-			gte: '0x',
-			lt: '0y',
-			values: true,
-			keys: false,
-			limit: 100, // Membatasi jumlah item menjadi 100
-		})
+			for await (const [, value] of rocksMempool.iterator({
+				gte: '0x',
+				lt: '0y',
+				limit: 100,
+			})) {
+				transactions.push(JSONParse(value as string))
+			}
 
-		readStream.on('data', (data) => {
-			transactions.push(JSON.parse(data))
-		})
-
-		readStream.on('end', () => {
-			resolve(transactions) // Kembalikan array transaksi
-		})
-
-		readStream.on('error', (err) => {
+			resolve(stringToBigInt(transactions))
+		} catch (err: any) {
 			reject(err)
-		})
+		}
 	})
 }

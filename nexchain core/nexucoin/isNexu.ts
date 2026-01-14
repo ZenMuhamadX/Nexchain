@@ -1,3 +1,3 @@
-export const isNexu = (value: number) => {
+export const isNexu = (value: bigint) => {
 	return Number.isInteger(value) && value >= 0
 }

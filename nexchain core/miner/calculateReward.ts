@@ -1,7 +1,6 @@
 export const calculateTotalBlockReward = (
-	reward: number,
-	gasPrice: number,
-	totalTxFees: number,
-) => {
-	return reward + gasPrice + totalTxFees
+	reward: bigint,
+	totalTxFees: bigint,
+): bigint => {
+	return reward + totalTxFees
 }

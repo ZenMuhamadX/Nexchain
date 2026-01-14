@@ -1,8 +1,8 @@
-import { HexString } from 'interface/structBlock'
 import { Block } from 'nexchain core/model/block/block'
 import { rocksBlock } from 'nexchain core/db/block'
-import { base58ToString } from 'nexchain core/hex/base58/base58ToString'
-import { stringToHex } from 'nexchain core/hex/stringToHex'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
+import { HexString } from 'interface/common/hexString'
+import { hexToString } from 'nexchain core/hex/hexToString'
 
 export const getBlockByHash = async (
 	hash: string,
@@ -11,9 +11,8 @@ export const getBlockByHash = async (
 	const block: HexString = (await rocksBlock.get(`blockHash:${hash}`, {
 		fillCache: true,
 	})) as HexString
-	const decodedBlock = base58ToString(block)
 	if (enc === 'json') {
-		return JSON.parse(decodedBlock) as Block
+		return JSONParse(hexToString(block))
 	}
-	return stringToHex(decodedBlock)
+	return block
 }
