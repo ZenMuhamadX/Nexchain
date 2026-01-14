@@ -7,7 +7,7 @@ import { hexToString } from 'nexchain core/hex/hexToString'
 import { HexString } from 'interface/common/hexString'
 import { structBalanceCore } from 'interface/core/structBalanceCore'
 import { JSONParse } from 'nexchain core/lib/JSONParse'
-import { stringToBigInt } from './lib/stringToBigint'
+import { stringToBigInt } from '../lib/stringToBigint'
 
 /**
  * Fetches the balance of an address from the RocksDB state.

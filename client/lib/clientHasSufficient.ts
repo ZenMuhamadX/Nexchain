@@ -4,7 +4,7 @@ import { rpcGetContractBalance } from 'client/rpc-client/controller/rpcGetContra
 import { rpcGetPendingBalance } from 'client/rpc-client/controller/rpcGetPendingBalance'
 import { toNxc } from 'nexchain core/nexucoin/toNxc'
 import { structBalanceCore } from 'interface/core/structBalanceCore'
-import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
+import { loadAccountCore } from 'nexchain core/loaders/account/loadAccountCore'
 
 /**
  * Checks if the provided address has sufficient balance (either for a contract or a standard address).

@@ -1,8 +1,8 @@
 /** @format */
 import { Block } from '../../model/block/block'
-import { setBlockState } from '../../storage/state/setState'
+import { setBlockState } from '../state/setState'
 import { writeBlockHash } from './writeBlockHash'
-import { writeBlockHeight } from '../../storage/state/indexing'
+import { writeBlockHeight } from '../state/indexing'
 import { bigIntToString } from 'nexchain core/savers/lib/bigintToString'
 
 // Fungsi untuk menyimpan Block ke dalam file

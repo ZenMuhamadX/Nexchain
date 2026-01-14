@@ -1,7 +1,7 @@
 import { JSONRPCServer } from 'json-rpc-2.0'
 import { getBlockByHash } from 'nexchain core/block/query/onChain/block/getBlockByHash'
 import { getBlockByHeight } from 'nexchain core/block/query/onChain/block/getBlockByHeight'
-import { getBlockState } from 'nexchain core/storage/state/getState'
+import { getBlockState } from 'nexchain core/loaders/state/getState'
 import { getCurrentBlock } from 'nexchain core/block/query/onChain/block/getCurrentBlock'
 import { structBalance } from 'interface/front/structBalance'
 import { getHistoryByTxHash } from 'nexchain core/block/query/onChain/Transaction/getHistoryByTxHash'

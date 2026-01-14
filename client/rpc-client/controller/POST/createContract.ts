@@ -11,7 +11,7 @@ import { logToConsole } from 'logging/logging'
 import { sendTransactionToRpc } from 'client/rpc-client/controller/POST/sendTxToRpc'
 import { createTransaction } from 'client/lib/createTransaction'
 import { JSONStringify } from 'nexchain core/lib/JSONStringify'
-import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
+import { loadAccountCore } from 'nexchain core/loaders/account/loadAccountCore'
 
 const mempool = new MemPool()
 

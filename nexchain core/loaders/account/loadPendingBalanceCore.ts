@@ -5,7 +5,7 @@ import {
 	pendingBalance,
 	setPendingBalance,
 } from 'nexchain core/savers/transaction/setPendingBalance'
-import { stringToBigInt } from './lib/stringToBigint'
+import { stringToBigInt } from '../lib/stringToBigint'
 
 /**
  * Fungsi untuk memuat pending balance dari database

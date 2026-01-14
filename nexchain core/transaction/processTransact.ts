@@ -1,6 +1,6 @@
 import { loggingErr } from 'logging/errorLog'
 import { processSender } from './sender/processSender'
-import { removeMemPool } from 'nexchain core/storage/mempool/removeMempool'
+import { removeMemPool } from 'nexchain core/savers/mempool/removeMempool'
 import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { saveTxHistory } from './saveTxHistory'
 import { processReceiver } from './receiver/processReceiver'

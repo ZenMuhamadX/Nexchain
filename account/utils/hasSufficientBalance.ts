@@ -4,7 +4,7 @@ import { logToConsole } from 'logging/logging'
 import { isContract } from 'nexchain core/lib/isContract'
 import { ManageContract } from 'contract/manageContract'
 import { stringToBigInt } from 'nexchain core/loaders/lib/stringToBigint'
-import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
+import { loadAccountCore } from 'nexchain core/loaders/account/loadAccountCore'
 
 /**
  * Checks if the provided address has sufficient balance (either for a contract or a standard address).

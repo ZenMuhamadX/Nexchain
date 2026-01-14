@@ -1,6 +1,6 @@
 import { putAccountCore } from 'nexchain core/savers/account/putAccountCore'
 import { isContract } from 'nexchain core/lib/isContract'
-import { loadAccountCore } from 'nexchain core/loaders/loadAccountCore'
+import { loadAccountCore } from 'nexchain core/loaders/account/loadAccountCore'
 import { structBalanceCore } from 'interface/core/structBalanceCore'
 
 export const burnNexu = async (fromAddress: string, amount: bigint) => {
