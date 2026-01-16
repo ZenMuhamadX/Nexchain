@@ -12,7 +12,6 @@ myWallet
 MyBackup
 test.ts
 package-lock.json
-*.txt
 *.code-profile
 build
 account

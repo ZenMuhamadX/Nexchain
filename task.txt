@@ -1,0 +1,34 @@
+yang get di rpc buat response kedepan pakek interface front janlupa
+tentukan format rpc nex_sendTransaction
+simpen pubkey kana file wallet
+tanda tangan transaksi di client side dan dikirim ke node sudah tertandatangan jadi pubkey harus disertakan
+
+ulik bug karena baru penggantian tipe data dari number ke bigint
+sebenarnya akun itu jangan ada yang ada itu pubkey sebagai address
+
+wallet side 
+ buat txView Ui (done)
+  receiver
+  amount
+  fee
+  format:nxc
+ konversi ke txWire (done)
+  from 20 bytes
+  to 20 bytes
+  amount uint64
+  fee uin64
+  format : nexu
+  nonce : uint64
+ serialize txWire jadi txBytes (done)
+ hash
+ sign
+ lalu kirim ke rpc 
+
+rpc node side
+ decode hex ke txBytes
+ hash txBytes
+ lalu verif signature pake pubkey atau key yang disediakan
+ buat addres dan harus sama dengan txFrom
+ decode txBytes jadi txWire
+ validasi
+ masukan ke mempool
