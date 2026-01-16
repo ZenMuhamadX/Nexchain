@@ -6,8 +6,8 @@ import { writeFile } from 'fs/promises'
 import { existsSync, mkdirSync } from 'fs'
 import { askQuestion } from 'CLI/inquirer/askQuestion'
 import { logToConsole } from 'logging/logging'
-import { generateKeysFromMnemonic } from 'wallet/key/genKeyFromMnemonic'
-import { generateAddressFromPublicKey } from 'wallet/key/genAddrFromPubKey'
+import { generateKeysFromMnemonic } from 'wallet/crypto/key/genKeyFromMnemonic'
+import { generateAddressFromPublicKey } from 'wallet/crypto/key/genAddrFromPubKey'
 import { JSONStringify } from 'nexchain core/lib/JSONStringify'
 
 // Fungsi utama untuk mengimpor dompet dari mnemonic

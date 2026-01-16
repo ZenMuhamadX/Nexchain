@@ -4,9 +4,9 @@ import { generateTimestampz } from 'nexchain core/lib/generateTimestampz'
 import { logToConsole } from 'logging/logging'
 import { loggingDebug } from 'logging/debug'
 import { putNewAccount } from '../nexchain core/savers/account/putNewAccount'
-import { genRandomMnemonic } from 'wallet/key/genRandomMnemonic'
-import { generateKeysFromMnemonic } from 'wallet/key/genKeyFromMnemonic'
-import { generateAddressFromPublicKey } from 'wallet/key/genAddrFromPubKey'
+import { genRandomMnemonic } from 'wallet/crypto/key/genRandomMnemonic'
+import { generateKeysFromMnemonic } from 'wallet/crypto/key/genKeyFromMnemonic'
+import { generateAddressFromPublicKey } from 'wallet/crypto/key/genAddrFromPubKey'
 
 /**
  * Generates a new wallet address, saves it, and returns the wallet address and mnemonic phrase.

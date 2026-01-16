@@ -4,6 +4,7 @@ import path from 'path'
 import { logToConsole } from 'logging/logging'
 import { askQuestion } from 'CLI/inquirer/askQuestion'
 import { JSONStringify } from 'nexchain core/lib/JSONStringify'
+import { JSONParse } from 'nexchain core/lib/JSONParse'
 
 /**
  * Saves a wallet to a file, with user prompts for overwriting or confirmation.
@@ -11,11 +12,12 @@ import { JSONStringify } from 'nexchain core/lib/JSONStringify'
  * @param fileName - The name of the wallet file (without extension).
  */
 export const saveWallet = async (
-	data: structWalletToSave,
+	data: structWalletToSave | string,
 	fileName: string,
 ): Promise<void> => {
 	const dirPath = getWalletDirectory()
 	const filePath = path.join(dirPath, `${fileName}.json`)
+	data = JSONParse(data as string) as structWalletToSave
 
 	try {
 		ensureDirectoryExists(dirPath)
