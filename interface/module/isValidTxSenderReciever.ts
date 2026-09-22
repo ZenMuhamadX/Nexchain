@@ -1,8 +1,8 @@
-import { TxInterface } from 'interface/structTx'
 import { validateField } from './validateField'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
 export const validateTransactionSenderReceiver = (
-	transaction: TxInterface,
+	transaction: TxInterfaceCore,
 ): boolean => {
 	return validateField(
 		transaction.sender === transaction.receiver,

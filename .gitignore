@@ -7,7 +7,6 @@ node_modules
 dist
 base
 logs
-key
 blocks
 myWallet
 MyBackup
@@ -16,4 +15,8 @@ package-lock.json
 wallet
 *.txt
 *.code-profile
+build
+wallet
+config
 bun.lock
+tstfunc.ts

@@ -1,7 +1,9 @@
-import { TxInterface } from 'interface/structTx'
 import { validateField } from './validateField'
+import { TxInterfaceCore } from 'interface/core/TxInterfaceCore'
 
-export const validateAddressLengths = (transaction: TxInterface): boolean => {
+export const validateAddressLengths = (
+	transaction: TxInterfaceCore,
+): boolean => {
 	return (
 		validateField(
 			transaction.sender.length !== 43,

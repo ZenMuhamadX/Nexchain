@@ -1,0 +1,81 @@
+import chalk from 'chalk'
+import bip39 from 'bip39'
+import path from 'path'
+import { structWalletToSave } from 'interface/common/structWalletToSave'
+import { writeFile } from 'fs/promises'
+import { existsSync, mkdirSync } from 'fs'
+import { askQuestion } from 'client/inquirer/askQuestion'
+import { logToConsole } from 'logging/logging'
+import { generateKeysFromMnemonic } from 'key/genKeyFromMnemonic'
+import { generateAddressFromPublicKey } from 'key/genAddrFromPubKey'
+import { JSONStringify } from 'nexchain core/lib/JSONStringify'
+
+// Fungsi utama untuk mengimpor dompet dari mnemonic
+export const importWalletFromMnemonic = async (
+	mnemonic: string,
+): Promise<{ address: string }> => {
+	const isValidMnemonic = bip39.validateMnemonic(mnemonic)
+
+	if (!isValidMnemonic) {
+		console.log(chalk.red('Invalid mnemonic phrase. Please try again.'))
+		process.exit()
+	}
+
+	const { publicKey } = generateKeysFromMnemonic(mnemonic)
+	const address = generateAddressFromPublicKey(publicKey.slice(2))
+	logToConsole('Wallet found successfully!')
+
+	const data: structWalletToSave = {
+		phrase: mnemonic,
+		address,
+	}
+
+	// Menanyakan apakah pengguna ingin menyimpan wallet ke file
+	const saveToFile = await askQuestion({
+		message: 'Do you want to save the wallet to a file?',
+		type: 'confirm',
+		name: 'saveToFile',
+		default: true,
+	})
+
+	if (saveToFile) {
+		// Meminta nama file jika pengguna memilih untuk menyimpan
+		const fileName = await askQuestion({
+			message: 'Enter the filename to save your wallet:',
+			type: 'input',
+			name: 'fileName',
+			default: 'wallet',
+		})
+
+		const dirPath = path.join(__dirname, '../../../wallet/')
+		const filePath = path.join(dirPath, `${fileName}.json`)
+
+		// Membuat direktori jika belum ada
+		if (!existsSync(dirPath)) {
+			mkdirSync(dirPath, { recursive: true })
+		}
+
+		// Jika file sudah ada, menanyakan apakah ingin menimpa
+		if (existsSync(filePath)) {
+			const overwrite = await askQuestion({
+				message: `File ${fileName}.json already exists. Do you want to overwrite it?`,
+				type: 'confirm',
+				name: 'overwrite',
+				default: false,
+			})
+
+			if (!overwrite) {
+				logToConsole('Wallet not saved.')
+				return { address }
+			}
+		}
+
+		// Menyimpan data wallet ke file
+		await writeFile(filePath, JSONStringify(data))
+		logToConsole(`Wallet successfully saved to ${filePath}`)
+	}
+
+	return {
+		address,
+	}
+}
